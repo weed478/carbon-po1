@@ -40,7 +40,7 @@ public class World {
 
     private static void run(Stream<Direction> moves) {
         Iterator<Direction> iter = moves.iterator();
-        for (int i = 0; iter.hasNext(); ++i) {
+        while (iter.hasNext()) {
             Direction m = iter.next();
             switch (m) {
                 case FORWARD:
