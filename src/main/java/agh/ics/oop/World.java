@@ -11,25 +11,10 @@ public class World {
     public static void main(String[] args) {
         out.println("Start");
         Stream<Direction> moves = Arrays.stream(args)
-                .map(World::parse)
+                .map(Direction::parse)
                 .filter(Objects::nonNull);
         run(moves);
         out.println("Stop");
-    }
-
-    private static Direction parse(String m) {
-        switch (m) {
-            case "f":
-                return Direction.FORWARD;
-            case "b":
-                return Direction.BACKWARD;
-            case "r":
-                return Direction.RIGHT;
-            case "l":
-                return Direction.LEFT;
-            default:
-                return null;
-        }
     }
 
     private static void run(Stream<Direction> moves) {
