@@ -2,6 +2,7 @@ package agh.ics.oop;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import static java.lang.System.out;
@@ -10,17 +11,10 @@ public class World {
     public static void main(String[] args) {
         out.println("Start");
         Stream<Direction> moves = Arrays.stream(args)
-                .filter(World::isMove)
-                .map(World::parse);
+                .map(World::parse)
+                .filter(Objects::nonNull);
         run(moves);
         out.println("Stop");
-    }
-
-    private static boolean isMove(String m) {
-        return m.equals("f") ||
-               m.equals("b") ||
-               m.equals("r") ||
-               m.equals("l");
     }
 
     private static Direction parse(String m) {
@@ -34,7 +28,7 @@ public class World {
             case "l":
                 return Direction.LEFT;
             default:
-                throw new IllegalArgumentException();
+                return null;
         }
     }
 
