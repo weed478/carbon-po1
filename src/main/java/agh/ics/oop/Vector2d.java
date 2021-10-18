@@ -21,7 +21,7 @@ public class Vector2d {
     }
 
     boolean follows(Vector2d o) {
-        return x <= o.x && y <= o.y;
+        return x >= o.x && y >= o.y;
     }
 
     Vector2d upperRight(Vector2d o) {
