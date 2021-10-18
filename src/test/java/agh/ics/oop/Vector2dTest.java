@@ -8,7 +8,7 @@ class Vector2dTest {
 
     @Test
     void testToString() {
-        assertEquals(new Vector2d(123, 321).toString(), "(123, 321)");
+        assertEquals(new Vector2d(123, 321).toString(), "(123,321)");
     }
 
     @Test

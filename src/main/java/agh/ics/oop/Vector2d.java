@@ -13,7 +13,7 @@ public class Vector2d {
 
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ')';
+        return "(" + x + "," + y + ')';
     }
 
     boolean precedes(Vector2d o) {
