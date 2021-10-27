@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,9 +19,9 @@ class OptionsParserTest {
                         MoveDirection.RIGHT,
                         MoveDirection.BACKWARD
                         ),
-                OptionsParser.parse(Arrays.stream(new String[]{
+                OptionsParser.parse(Stream.of(
                         "f", "L", "123", "R", "B"
-                })).collect(Collectors.toList())
+                )).collect(Collectors.toList())
         );
     }
 }
