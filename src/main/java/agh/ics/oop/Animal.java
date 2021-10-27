@@ -4,6 +4,8 @@ public class Animal {
     private MapDirection direction = MapDirection.NORTH;
     private Vector2d pos = new Vector2d(2, 2);
 
+    // 3.10 statyczny zbiór wszystkich zwierząt do pilnowania kolizji
+
     public MapDirection getDirection() {
         return direction;
     }
