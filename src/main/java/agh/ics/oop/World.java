@@ -1,7 +1,6 @@
 package agh.ics.oop;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static java.lang.System.out;
 
@@ -12,10 +11,10 @@ public class World {
     public static void main(String[] args) {
         Animal a = new Animal();
         out.println("Initial: " + a);
-        List<MoveDirection> moves = OptionsParser.parse(Arrays.stream(args));
-        for (MoveDirection dir : moves) {
-            a.move(dir);
-            out.println(dir + ": " + a);
-        }
+        OptionsParser.parse(Arrays.stream(args))
+                .forEachOrdered(dir -> {
+                    a.move(dir);
+                    out.println(dir + ": " + a);
+                });
     }
 }

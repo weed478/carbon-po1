@@ -1,12 +1,10 @@
 package agh.ics.oop;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OptionsParser {
-    public static List<MoveDirection> parse(Stream<String> args) {
+    public static Stream<MoveDirection> parse(Stream<String> args) {
         return args.map(arg -> {
                     switch (arg.toLowerCase()) {
                         case "f":
@@ -21,7 +19,6 @@ public class OptionsParser {
                             return null;
                     }
                 })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull);
     }
 }
