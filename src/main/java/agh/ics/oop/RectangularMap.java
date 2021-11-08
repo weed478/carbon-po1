@@ -1,13 +1,13 @@
 package agh.ics.oop;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RectangularMap implements IWorldMap {
 
     private final Vector2d bottomLeft;
     private final Vector2d topRight;
-    private final Map<Vector2d, Animal> fields = new HashMap<>();
+    private final List<Animal> animals = new ArrayList<>();
     private final MapVisualizer visualizer = new MapVisualizer(this);
 
     public RectangularMap(int width, int height) {
@@ -34,18 +34,22 @@ public class RectangularMap implements IWorldMap {
         if (!canMoveTo(animal.getPos())) {
             return false;
         }
-        fields.put(animal.getPos(), animal);
+        animals.add(animal);
         return true;
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return fields.containsKey(position);
+        return animals.stream()
+                .anyMatch(a -> a.getPos().equals(position));
     }
 
     @Override
     public Object objectAt(Vector2d position) {
-        return fields.get(position);
+        return animals.stream()
+                .filter(a -> a.getPos().equals(position))
+                .findFirst()
+                .orElse(null);
     }
 
     private boolean inBounds(Vector2d position) {
