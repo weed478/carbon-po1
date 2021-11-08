@@ -18,7 +18,7 @@ class AnimalTest {
 
     @Test
     void testMove2() {
-        Animal a = new Animal(null);
+        Animal a = new Animal(new RectangularMap(5, 5));
         a.move(MoveDirection.RIGHT);
         a.move(MoveDirection.FORWARD);
         a.move(MoveDirection.FORWARD);
@@ -29,7 +29,7 @@ class AnimalTest {
 
     @Test
     void testMove() {
-        Animal a = new Animal(null);
+        Animal a = new Animal(new RectangularMap(5, 5));
         assertEquals(new Vector2d(2, 2), a.getPos());
         assertEquals(MapDirection.NORTH, a.getDirection());
 
