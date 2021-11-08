@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnimalTest {
     @Test
     void testToString() {
-        assertEquals("Animal(Północ, (2,2))", new Animal().toString());
+        assertEquals("^", new Animal(null).toString());
     }
 
     @Test

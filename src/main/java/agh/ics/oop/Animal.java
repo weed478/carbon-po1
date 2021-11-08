@@ -54,6 +54,17 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "Animal(" + direction + ", " + pos + ")";
+        switch (direction) {
+            case NORTH:
+                return "^";
+            case SOUTH:
+                return "v";
+            case WEST:
+                return "<";
+            case EAST:
+                return ">";
+            default:
+                throw new IllegalArgumentException("Invalid animal direction");
+        }
     }
 }
