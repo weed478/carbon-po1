@@ -1,20 +1,14 @@
 package agh.ics.oop;
 
 import java.util.Arrays;
-
-import static java.lang.System.out;
+import java.util.stream.Stream;
 
 public class World {
-    static public final Vector2d MAP_BOTTOM_LEFT = new Vector2d(0, 0);
-    static public final Vector2d MAP_TOP_RIGHT = new Vector2d(4, 4);
-
     public static void main(String[] args) {
-        Animal a = new Animal(null);
-        out.println("Initial: " + a);
-        OptionsParser.parse(Arrays.stream(args))
-                .forEachOrdered(dir -> {
-                    a.move(dir);
-                    out.println(dir + ": " + a);
-                });
+        Stream<MoveDirection> directions = OptionsParser.parse(Arrays.stream(args));
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, Arrays.asList(positions));
+        engine.run();
     }
 }
