@@ -5,11 +5,6 @@ public class Animal {
     private Vector2d pos = new Vector2d(2, 2);
     private final IWorldMap map;
 
-    // TODO remove default
-    public Animal() {
-        throw new RuntimeException("Animal default constructor");
-    }
-
     public Animal(IWorldMap map) {
         this.map = map;
     }

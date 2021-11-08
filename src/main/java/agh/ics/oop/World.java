@@ -9,7 +9,7 @@ public class World {
     static public final Vector2d MAP_TOP_RIGHT = new Vector2d(4, 4);
 
     public static void main(String[] args) {
-        Animal a = new Animal();
+        Animal a = new Animal(null);
         out.println("Initial: " + a);
         OptionsParser.parse(Arrays.stream(args))
                 .forEachOrdered(dir -> {

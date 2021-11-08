@@ -12,13 +12,13 @@ class AnimalTest {
 
     @Test
     void testIsAt() {
-        assertTrue(new Animal().isAt(new Vector2d(2, 2)));
-        assertFalse(new Animal().isAt(new Vector2d(2, 3)));
+        assertTrue(new Animal(null).isAt(new Vector2d(2, 2)));
+        assertFalse(new Animal(null).isAt(new Vector2d(2, 3)));
     }
 
     @Test
     void testMove2() {
-        Animal a = new Animal();
+        Animal a = new Animal(null);
         a.move(MoveDirection.RIGHT);
         a.move(MoveDirection.FORWARD);
         a.move(MoveDirection.FORWARD);
@@ -29,7 +29,7 @@ class AnimalTest {
 
     @Test
     void testMove() {
-        Animal a = new Animal();
+        Animal a = new Animal(null);
         assertEquals(new Vector2d(2, 2), a.getPos());
         assertEquals(MapDirection.NORTH, a.getDirection());
 
