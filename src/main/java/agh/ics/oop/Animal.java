@@ -3,8 +3,21 @@ package agh.ics.oop;
 public class Animal {
     private MapDirection direction = MapDirection.NORTH;
     private Vector2d pos = new Vector2d(2, 2);
+    private final IWorldMap map;
 
-    // 3.10 statyczny zbiór wszystkich zwierząt do pilnowania kolizji
+    // TODO remove default
+    public Animal() {
+        throw new RuntimeException("Animal default constructor");
+    }
+
+    public Animal(IWorldMap map) {
+        this.map = map;
+    }
+
+    public Animal(IWorldMap map, Vector2d initialPosition) {
+        this.map = map;
+        this.pos = initialPosition;
+    }
 
     public MapDirection getDirection() {
         return direction;
