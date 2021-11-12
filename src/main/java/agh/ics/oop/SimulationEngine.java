@@ -10,12 +10,15 @@ public class SimulationEngine implements IEngine {
     private final List<Animal> animals = new ArrayList<>();
     private final Stream<MoveDirection> moves;
     private final IWorldMap map;
+    private final GUIVisualizer gui;
 
     public SimulationEngine(Stream<MoveDirection> moves,
                             IWorldMap map,
                             List<Vector2d> initialPositions) {
         this.moves = moves;
         this.map = map;
+
+        gui = new GUIVisualizer(map.toString());
 
         for (Vector2d pos : initialPositions) {
             Animal animal = new Animal(map, pos);
@@ -26,14 +29,17 @@ public class SimulationEngine implements IEngine {
 
     @Override
     public void run() {
-        System.out.println(map);
+        gui.pushMap(map.toString());
+        gui.drawNext();
+
         int currentAnimal = 0;
         Iterator<MoveDirection> moveIter = moves.iterator();
         while (moveIter.hasNext()) {
             MoveDirection m = moveIter.next();
             animals.get(currentAnimal).move(m);
-            System.out.println(map);
             currentAnimal = (currentAnimal + 1) % animals.size();
+
+            gui.pushMap(map.toString());
         }
     }
 }
