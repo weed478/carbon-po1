@@ -15,12 +15,21 @@ class OptionsParserTest {
         assertEquals(
                 Arrays.asList(
                         MoveDirection.FORWARD,
+                        MoveDirection.FORWARD,
+                        MoveDirection.FORWARD,
                         MoveDirection.LEFT,
+                        MoveDirection.LEFT,
+                        MoveDirection.BACKWARD,
+                        MoveDirection.BACKWARD,
                         MoveDirection.RIGHT,
-                        MoveDirection.BACKWARD
+                        MoveDirection.RIGHT
                         ),
                 OptionsParser.parse(Stream.of(
-                        "f", "L", "123", "R", "B"
+                        "f", "F", "forWard",
+                        "L", "lefT",
+                        "123",
+                        "b", "backWarD",
+                        "R", "Right"
                 )).collect(Collectors.toList())
         );
     }
