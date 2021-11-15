@@ -1,16 +1,27 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GrassField implements IWorldMap {
 
     static final Vector2d MARGIN = new Vector2d(2, 2);
     private final MapVisualizer visualizer = new MapVisualizer(this);
     private final List<Animal> animals = new ArrayList<>();
+    private final Map<Vector2d, Grass> grassFields = new HashMap<>();
 
     public GrassField(int numGrass) {
-
+        Random r = new Random();
+        int grassBound = (int) Math.ceil(Math.sqrt(10 * numGrass));
+        for (int i = 0; i < numGrass; i++) {
+            Vector2d p;
+            do {
+                p = new Vector2d(
+                        r.nextInt(grassBound),
+                        r.nextInt(grassBound)
+                );
+            } while (grassFields.containsKey(p));
+            grassFields.put(p, new Grass(p));
+        }
     }
 
     @Override
@@ -35,7 +46,8 @@ public class GrassField implements IWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !isOccupied(position);
+        return animals.stream()
+                .noneMatch(a -> a.getPos().equals(position));
     }
 
     @Override
@@ -49,15 +61,16 @@ public class GrassField implements IWorldMap {
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.stream()
-                .anyMatch(a -> a.getPos().equals(position));
+        return grassFields.containsKey(position) ||
+                animals.stream().anyMatch(a -> a.getPos().equals(position));
     }
 
     @Override
     public Object objectAt(Vector2d position) {
         return animals.stream()
                 .filter(a -> a.getPos().equals(position))
+                .map(a -> (Object) a)
                 .findFirst()
-                .orElse(null);
+                .orElse(grassFields.getOrDefault(position, null));
     }
 }
