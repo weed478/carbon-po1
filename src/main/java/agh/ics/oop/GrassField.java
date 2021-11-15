@@ -67,10 +67,13 @@ public class GrassField implements IWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        return animals.stream()
-                .filter(a -> a.getPos().equals(position))
-                .map(a -> (Object) a)
-                .findFirst()
-                .orElse(grassFields.getOrDefault(position, null));
+        Object o = grassFields.getOrDefault(position, null);
+        if (o == null) {
+            o = animals.stream()
+                    .filter(a -> a.getPos().equals(position))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return o;
     }
 }
