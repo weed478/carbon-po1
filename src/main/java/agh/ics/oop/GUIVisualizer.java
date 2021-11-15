@@ -14,17 +14,17 @@ public class GUIVisualizer {
 
         textArea = new JTextArea();
         textArea.setFont(Font.decode(Font.MONOSPACED));
-        textArea.setBounds(0, 0, 190, 120);
+        textArea.setBounds(0, 0, 500, 500);
         textArea.setText(initialMap);
         frame.add(textArea);
 
         JButton nextButton = new JButton("Move");
-        nextButton.setBounds(190, 0, 80, 30);
+        nextButton.setBounds(500, 0, 80, 30);
         nextButton.addActionListener(e -> drawNext());
         frame.add(nextButton);
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
+        frame.setSize(600, 500);
         frame.setLayout(null);
         frame.setVisible(true);
     }
