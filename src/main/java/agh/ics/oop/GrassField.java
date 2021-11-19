@@ -33,6 +33,7 @@ public class GrassField extends AbstractWorldMap {
 
     public void eatGrass(Vector2d pos) {
         grassFields.remove(pos);
+        growGrass();
     }
 
     public void growGrass() {
