@@ -44,7 +44,7 @@ public class GrassField extends AbstractWorldMap {
                     r.nextInt(grassBound),
                     r.nextInt(grassBound)
             );
-        } while (grassFields.containsKey(p));
+        } while (isOccupied(p));
         grassFields.put(p, new Grass(p));
     }
 }
