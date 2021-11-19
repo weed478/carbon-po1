@@ -7,19 +7,12 @@ import java.util.Random;
 public class GrassField extends AbstractWorldMap {
 
     private final Map<Vector2d, Grass> grassFields = new HashMap<>();
+    private final int grassBound;
 
     public GrassField(int numGrass) {
-        Random r = new Random();
-        int grassBound = (int) Math.ceil(Math.sqrt(10 * numGrass));
+        grassBound = (int) Math.ceil(Math.sqrt(10 * numGrass));
         for (int i = 0; i < numGrass; i++) {
-            Vector2d p;
-            do {
-                p = new Vector2d(
-                        r.nextInt(grassBound),
-                        r.nextInt(grassBound)
-                );
-            } while (grassFields.containsKey(p));
-            grassFields.put(p, new Grass(p));
+            growGrass();
         }
     }
 
@@ -36,5 +29,21 @@ public class GrassField extends AbstractWorldMap {
             o = grassFields.getOrDefault(position, null);
         }
         return o;
+    }
+
+    public void eatGrass(Vector2d pos) {
+        grassFields.remove(pos);
+    }
+
+    public void growGrass() {
+        Random r = new Random();
+        Vector2d p;
+        do {
+            p = new Vector2d(
+                    r.nextInt(grassBound),
+                    r.nextInt(grassBound)
+            );
+        } while (grassFields.containsKey(p));
+        grassFields.put(p, new Grass(p));
     }
 }
