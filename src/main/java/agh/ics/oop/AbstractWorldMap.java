@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractWorldMap implements IWorldMap {
-    private static final Vector2d MARGIN = new Vector2d(2, 2);
+    private static final Vector2d MARGIN = new Vector2d(3, 3);
     private final MapVisualizer visualizer = new MapVisualizer(this);
     private final List<Animal> animals = new ArrayList<>();
 
