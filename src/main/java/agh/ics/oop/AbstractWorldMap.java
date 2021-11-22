@@ -1,22 +1,22 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class AbstractWorldMap implements IWorldMap {
+public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     private static final Vector2d MARGIN = new Vector2d(3, 3);
     private final MapVisualizer visualizer = new MapVisualizer(this);
-    private final List<Animal> animals = new ArrayList<>();
+    private final Map<Vector2d, Animal> animals = new HashMap<>();
 
     // miało być abstract, ale tak myślę jest lepiej
     // bo this.animals jest private i GrassField robi tylko trawę
     protected Rect getDrawingBounds() {
-        Rect bounds = animals.stream()
+        Rect bounds = animals.values().stream()
                 .map(a -> new Rect(a.getPos(), a.getPos()))
                 .findFirst()
                 .orElse(new Rect(0, 0, 0, 0));
 
-        for (Animal a : animals) {
+        for (Animal a : animals.values()) {
             bounds = bounds.extendedTo(a.getPos());
         }
 
@@ -37,26 +37,34 @@ public abstract class AbstractWorldMap implements IWorldMap {
         if (!canMoveTo(animal.getPos())) {
             return false;
         }
-        animals.add(animal);
+        animals.put(animal.getPos(), animal);
+        animal.addObserver(this);
         return true;
     }
 
+    // canMoveTo != isOccupied !!!
+    // isOccupied używane jest przez MapVisualizer
+    // więc trawa i cokolwiek co się rysuje też isOccupied.
+    // canMoveTo jedynie true dla animala
+
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return animals.stream()
-                .noneMatch(a -> a.getPos().equals(position));
+        return !animals.containsKey(position);
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.stream().anyMatch(a -> a.getPos().equals(position));
+        return animals.containsKey(position);
     }
 
     @Override
     public Object objectAt(Vector2d position) {
-        return animals.stream()
-                .filter(a -> a.getPos().equals(position))
-                .findFirst()
-                .orElse(null);
+        return animals.get(position);
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+        Animal a = animals.remove(oldPosition);
+        animals.put(newPosition, a);
     }
 }
