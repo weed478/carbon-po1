@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 public class World {
-    public static void main(String[] args) {
+    private static void run(String[] args) {
         Stream<MoveDirection> directions;
 
         // można włączyć program z argumentami random 13
@@ -16,17 +16,17 @@ public class World {
             Random r = new Random();
             directions = r.ints()
                     .mapToObj(i -> {
-                       switch (i % 4) {
-                           case 0:
-                               return MoveDirection.FORWARD;
-                           case 1:
-                               return MoveDirection.BACKWARD;
-                           case 2:
-                               return MoveDirection.LEFT;
-                           case 3:
-                           default:
-                               return MoveDirection.RIGHT;
-                       }
+                        switch (i % 4) {
+                            case 0:
+                                return MoveDirection.FORWARD;
+                            case 1:
+                                return MoveDirection.BACKWARD;
+                            case 2:
+                                return MoveDirection.LEFT;
+                            case 3:
+                            default:
+                                return MoveDirection.RIGHT;
+                        }
                     })
                     .limit(n);
         }
@@ -38,5 +38,15 @@ public class World {
         List<Vector2d> positions = Arrays.asList(new Vector2d(2,2), new Vector2d(3,4));
         IEngine engine = new SimulationEngine(directions, map, positions);
         engine.run();
+    }
+
+    public static void main(String[] args) {
+        try {
+            run(args);
+        }
+        catch (Exception e) {
+            System.err.println("Kółko graniaste, czworokanciaste, " + e.getMessage() + ", a my wszyscy bęc.");
+            System.exit(0);
+        }
     }
 }
