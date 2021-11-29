@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public class OptionsParser {
@@ -20,9 +19,8 @@ public class OptionsParser {
                         case "right":
                             return MoveDirection.RIGHT;
                         default:
-                            return null;
+                            throw new IllegalArgumentException(arg + " is not legal move specification");
                     }
-                })
-                .filter(Objects::nonNull);
+                });
     }
 }

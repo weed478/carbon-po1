@@ -27,7 +27,6 @@ class OptionsParserTest {
                 OptionsParser.parse(Stream.of(
                         "f", "F", "forWard",
                         "L", "lefT",
-                        "123",
                         "b", "backWarD",
                         "R", "Right"
                 )).collect(Collectors.toList())
