@@ -17,7 +17,7 @@ class RectangularMapTest {
         assertFalse(map.canMoveTo(new Vector2d(1, 0)));
         assertFalse(map.canMoveTo(new Vector2d(-1, 0)));
 
-        assertTrue(map.place(new Animal(map, new Vector2d(0, 0))));
+        map.place(new Animal(map, new Vector2d(0, 0)));
 
         assertTrue(map.isOccupied(new Vector2d(0, 0)));
         assertFalse(map.canMoveTo(new Vector2d(0, 0)));
@@ -29,7 +29,7 @@ class RectangularMapTest {
         RectangularMap map = new RectangularMap(5, 5);
         Animal animal = new Animal(map, new Vector2d(2, 2));
 
-        assertTrue(map.place(animal));
+        map.place(animal);
 
         assertTrue(map.isOccupied(new Vector2d(2, 2)));
         assertFalse(map.isOccupied(new Vector2d(2, 3)));
