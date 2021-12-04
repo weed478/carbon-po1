@@ -6,7 +6,7 @@ import java.util.Set;
 public class Animal {
     private MapDirection direction = MapDirection.NORTH;
     private Vector2d pos = new Vector2d(2, 2);
-    private final IWorldMap map;
+    protected final IWorldMap map;
     private final Set<IPositionChangeObserver> observers = new HashSet<>();
 
     public Animal(IWorldMap map) {
