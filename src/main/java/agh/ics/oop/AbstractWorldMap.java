@@ -7,18 +7,10 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     private static final Vector2d MARGIN = new Vector2d(3, 3);
     private final MapVisualizer visualizer = new MapVisualizer(this);
     private final Map<Vector2d, Animal> animals = new HashMap<>();
+    private final MapBoundary mapBoundary = new MapBoundary();
 
-    // miało być abstract, ale tak myślę jest lepiej
-    // bo this.animals jest private i GrassField robi tylko trawę
     protected Rect getDrawingBounds() {
-        Rect bounds = animals.values().stream()
-                .map(a -> new Rect(a.getPos(), a.getPos()))
-                .findFirst()
-                .orElse(new Rect(0, 0, 0, 0));
-
-        for (Animal a : animals.values()) {
-            bounds = bounds.extendedTo(a.getPos());
-        }
+        Rect bounds = mapBoundary.getBoundary();
 
         return new Rect(
                 bounds.getBL().subtract(MARGIN),
@@ -37,8 +29,12 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         if (!canMoveTo(animal.getPos())) {
             throw new IllegalArgumentException("Cannot place animal at " + animal.getPos());
         }
+
         animals.put(animal.getPos(), animal);
         animal.addObserver(this);
+
+        mapBoundary.add(animal.getPos());
+        animal.addObserver(mapBoundary);
     }
 
     // canMoveTo != isOccupied !!!
