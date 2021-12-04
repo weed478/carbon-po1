@@ -46,6 +46,10 @@ public class Vector2d {
         return add(o.opposite());
     }
 
+    public int taxiDistance(Vector2d v2) {
+        return Math.abs(x - v2.x ) + Math.abs(y - v2.y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
