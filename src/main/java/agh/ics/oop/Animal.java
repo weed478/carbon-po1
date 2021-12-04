@@ -67,8 +67,9 @@ public class Animal {
 
         if (map.canMoveTo(newPos)) {
             tryEat(newPos);
-            positionChanged(this.pos, newPos);
+            Vector2d oldPos = this.pos;
             this.pos = newPos;
+            positionChanged(oldPos, newPos);
         }
     }
 
