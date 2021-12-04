@@ -16,6 +16,11 @@ public class Rect {
     }
 
     @Override
+    public String toString() {
+        return "Rect( " + bl + ", " + tr + " )";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
