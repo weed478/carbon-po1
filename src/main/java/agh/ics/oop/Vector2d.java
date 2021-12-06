@@ -16,33 +16,33 @@ public class Vector2d {
         return "(" + x + "," + y + ')';
     }
 
-    boolean precedes(Vector2d o) {
+    public boolean precedes(Vector2d o) {
         return x <= o.x && y <= o.y;
     }
 
-    boolean follows(Vector2d o) {
+    public boolean follows(Vector2d o) {
         return x >= o.x && y >= o.y;
     }
 
-    Vector2d upperRight(Vector2d o) {
+    public Vector2d upperRight(Vector2d o) {
         return new Vector2d(
                 Math.max(x, o.x),
                 Math.max(y, o.y)
         );
     }
 
-    Vector2d lowerLeft(Vector2d o) {
+    public Vector2d lowerLeft(Vector2d o) {
         return new Vector2d(
                 Math.min(x, o.x),
                 Math.min(y, o.y)
         );
     }
 
-    Vector2d add(Vector2d o) {
+    public Vector2d add(Vector2d o) {
         return new Vector2d(x + o.x, y + o.y);
     }
 
-    Vector2d subtract(Vector2d o) {
+    public Vector2d subtract(Vector2d o) {
         return add(o.opposite());
     }
 
@@ -63,7 +63,7 @@ public class Vector2d {
         return Objects.hash(x, y);
     }
 
-    Vector2d opposite() {
+    public Vector2d opposite() {
         return new Vector2d(-x, -y);
     }
 }
