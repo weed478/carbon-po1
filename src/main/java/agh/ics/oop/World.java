@@ -1,5 +1,8 @@
 package agh.ics.oop;
 
+import agh.ics.oop.gui.App;
+import javafx.application.Application;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -53,7 +56,7 @@ public class World {
 
     public static void main(String[] args) {
         try {
-            run(args);
+            Application.launch(App.class, args);
         }
         catch (Exception e) {
             System.err.println("Kółko graniaste, czworokanciaste, " + e.getMessage() + ", a my wszyscy bęc.");
