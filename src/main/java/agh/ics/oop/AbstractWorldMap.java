@@ -9,7 +9,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final MapBoundary mapBoundary = new MapBoundary();
 
-    protected Rect getDrawingBounds() {
+    public Rect getDrawingBounds() {
         Rect bounds = mapBoundary.getBoundary();
 
         return new Rect(

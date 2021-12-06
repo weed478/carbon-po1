@@ -12,7 +12,7 @@ public class RectangularMap extends AbstractWorldMap {
     }
 
     @Override
-    protected Rect getDrawingBounds() {
+    public Rect getDrawingBounds() {
         return bounds;
     }
 
