@@ -14,7 +14,7 @@ import java.util.List;
 
 public class App extends Application {
 
-    private final AbstractWorldMap map = new GrassField(10);
+    private final IDrawableMap map = new GrassField(10);
     private IEngine engine;
     private final Gridalator gridalator = new Gridalator(map);
 
