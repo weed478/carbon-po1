@@ -66,7 +66,6 @@ public class Animal {
         }
 
         if (map.canMoveTo(newPos)) {
-            tryEat(newPos);
             Vector2d oldPos = this.pos;
             this.pos = newPos;
             positionChanged(oldPos, newPos);
@@ -86,15 +85,6 @@ public class Animal {
                 return ">";
             default:
                 throw new IllegalArgumentException("Invalid animal direction");
-        }
-    }
-
-    private void tryEat(Vector2d pos) {
-        Object inFront = map.objectAt(pos);
-        if (inFront != null && inFront.getClass() == Grass.class) {
-            // if map contains grass it has to be a GrassField
-            GrassField grassField = (GrassField) map;
-            grassField.eatGrass(pos);
         }
     }
 }

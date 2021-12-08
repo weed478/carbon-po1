@@ -5,7 +5,6 @@ import java.util.Map;
 
 public abstract class AbstractWorldMap implements IDrawableMap, IPositionChangeObserver {
     private static final Vector2d MARGIN = new Vector2d(3, 3);
-    private final MapVisualizer visualizer = new MapVisualizer(this);
     private final Map<Vector2d, Animal> animals = new HashMap<>();
     private final MapBoundary mapBoundary = new MapBoundary();
 
@@ -20,12 +19,6 @@ public abstract class AbstractWorldMap implements IDrawableMap, IPositionChangeO
     }
 
     @Override
-    public String toString() {
-        Rect bounds = getDrawingBounds();
-        return visualizer.draw(bounds.getBL(), bounds.getTR());
-    }
-
-    @Override
     public void place(Animal animal) {
         if (!canMoveTo(animal.getPos())) {
             throw new IllegalArgumentException("Cannot place animal at " + animal.getPos());
@@ -37,11 +30,6 @@ public abstract class AbstractWorldMap implements IDrawableMap, IPositionChangeO
         mapBoundary.add(animal.getPos());
         animal.addObserver(mapBoundary);
     }
-
-    // canMoveTo != isOccupied !!!
-    // isOccupied używane jest przez MapVisualizer
-    // więc trawa i cokolwiek co się rysuje też isOccupied.
-    // canMoveTo jedynie true dla animala
 
     @Override
     public boolean canMoveTo(Vector2d position) {
