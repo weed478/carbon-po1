@@ -1,4 +1,6 @@
-package agh.ics.oop;
+package agh.ics.oop.objects;
+
+import agh.ics.oop.core.Vector2d;
 
 public class Grass {
     private final Vector2d pos;

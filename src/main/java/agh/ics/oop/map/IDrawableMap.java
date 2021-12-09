@@ -1,4 +1,6 @@
-package agh.ics.oop;
+package agh.ics.oop.map;
+
+import agh.ics.oop.core.Rect;
 
 public interface IDrawableMap extends IWorldMap {
 

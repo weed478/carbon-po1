@@ -1,8 +1,8 @@
 package agh.ics.oop.gui;
 
-import agh.ics.oop.IDrawableMap;
-import agh.ics.oop.Rect;
-import agh.ics.oop.Vector2d;
+import agh.ics.oop.core.Rect;
+import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.map.IDrawableMap;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;

@@ -1,4 +1,8 @@
-package agh.ics.oop;
+package agh.ics.oop.map;
+
+import agh.ics.oop.core.IPositionChangeObserver;
+import agh.ics.oop.core.Rect;
+import agh.ics.oop.core.Vector2d;
 
 import java.util.SortedSet;
 import java.util.TreeSet;

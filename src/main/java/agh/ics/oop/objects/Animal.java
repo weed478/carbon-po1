@@ -1,4 +1,10 @@
-package agh.ics.oop;
+package agh.ics.oop.objects;
+
+import agh.ics.oop.core.IPositionChangeObserver;
+import agh.ics.oop.core.MoveDirection;
+import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.map.IWorldMap;
+import agh.ics.oop.map.MapDirection;
 
 import java.util.HashSet;
 import java.util.Set;

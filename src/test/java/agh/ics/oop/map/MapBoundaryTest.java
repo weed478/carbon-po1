@@ -1,5 +1,7 @@
-package agh.ics.oop;
+package agh.ics.oop.map;
 
+import agh.ics.oop.core.Rect;
+import agh.ics.oop.core.Vector2d;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
