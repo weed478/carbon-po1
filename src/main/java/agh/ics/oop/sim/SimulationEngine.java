@@ -1,6 +1,5 @@
 package agh.ics.oop.sim;
 
-import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.IAnimalAndGrassMap;
 import agh.ics.oop.objects.Animal;
@@ -54,8 +53,8 @@ public class SimulationEngine implements Runnable {
 
     private void moveAnimals() {
         for (Animal animal : animals) {
-            MoveDirection move = animal.decideMovement();
-            animal.move(move);
+            int turn = animal.decideMovement();
+            animal.move(turn);
         }
     }
 
