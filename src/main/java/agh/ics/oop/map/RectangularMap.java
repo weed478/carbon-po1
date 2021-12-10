@@ -9,7 +9,7 @@ import agh.ics.oop.objects.IMapElement;
 
 import java.util.*;
 
-public class RectangularMap implements IAnimalAndGrassWorldMap, IMapElementObserver {
+public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver {
     private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private final Rect mapArea;

@@ -2,7 +2,7 @@ package agh.ics.oop.sim;
 
 import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
-import agh.ics.oop.map.IAnimalAndGrassWorldMap;
+import agh.ics.oop.map.IAnimalAndGrassMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 
@@ -11,10 +11,10 @@ import java.util.Set;
 
 public class SimulationEngine {
 
-    private final IAnimalAndGrassWorldMap map;
+    private final IAnimalAndGrassMap map;
     private final List<Animal> animals;
 
-    public SimulationEngine(IAnimalAndGrassWorldMap map, List<Animal> animals) {
+    public SimulationEngine(IAnimalAndGrassMap map, List<Animal> animals) {
         this.map = map;
         this.animals = animals;
     }
