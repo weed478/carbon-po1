@@ -6,6 +6,7 @@ import agh.ics.oop.map.IAnimalAndGrassMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,13 @@ public class SimulationEngine {
     }
 
     private void removeDeadAnimals() {
-        animals.removeIf(a -> !a.isAlive());
+        Iterator<Animal> i = animals.iterator();
+        while (i.hasNext()) {
+            Animal animal = i.next();
+            if (animal.isAlive()) continue;
+            animal.elementRemoved();
+            i.remove();
+        }
     }
 
     private void moveAnimals() {
