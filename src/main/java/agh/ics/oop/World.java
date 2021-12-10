@@ -11,7 +11,6 @@ public class World {
         }
         catch (Exception e) {
             System.err.println("Kółko graniaste, czworokanciaste, " + e.getMessage() + ", a my wszyscy bęc.");
-            System.exit(0);
         }
     }
 }
