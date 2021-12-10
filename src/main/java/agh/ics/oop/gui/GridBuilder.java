@@ -25,7 +25,6 @@ public class GridBuilder {
         Rect bounds = map.getDrawingBounds();
 
         GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true);
 
         for (int i = 0; i < bounds.width() + 1; i++) {
             gridPane.getColumnConstraints().add(new ColumnConstraints(GRID_SIZE));
