@@ -49,7 +49,9 @@ public class App extends Application implements ISimulationStateObserver {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        new Thread(simulationEngine).start();
+        Thread simulationThread = new Thread(simulationEngine);
+        primaryStage.setOnCloseRequest(e -> simulationThread.interrupt());
+        simulationThread.start();
     }
 
     private void updateGrid() {
