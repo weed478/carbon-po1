@@ -57,6 +57,22 @@ public class Rect {
         return width() * height();
     }
 
+    public int bottom() {
+        return bl.y;
+    }
+
+    public int top() {
+        return tr.y;
+    }
+
+    public int left() {
+        return bl.x;
+    }
+
+    public int right() {
+        return tr.x;
+    }
+
     public boolean contains(Vector2d p) {
         return p.precedes(tr.subtract(new Vector2d(1, 1))) &&
                p.follows(bl);
