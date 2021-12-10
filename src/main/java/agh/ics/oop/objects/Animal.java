@@ -8,10 +8,12 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.transform.Rotate;
 
 import java.util.Random;
 
 public class Animal extends AbstractObservableMapElement implements IDrawableElement {
+    private static final int MAX_HEALTH_BAR = 20;
     private final IAnimalMap map;
     private int food;
 
@@ -94,18 +96,43 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
     @Override
     public Node getDrawableNode(int size) {
         Circle circle = new Circle();
+        circle.setCenterX(0);
+        circle.setCenterY(0);
         circle.setRadius(0.4 * size);
-        circle.setFill(new Color(1, 0, 0, 1));
+        circle.setFill(Color.DARKRED);
+
+        Shape healthBar;
+
+        if (getFood() < MAX_HEALTH_BAR) {
+            double healthBarHeight = Math.min(1, (double) getFood() / MAX_HEALTH_BAR) * 0.8 * size;
+            double healthBarY = 0.4 * size - healthBarHeight;
+            double healthBarX = Math.sqrt(0.4 * size * 0.4 * size - healthBarY * healthBarY);
+            Path healthBarArc = new Path();
+            healthBarArc.getElements().addAll(
+                    new MoveTo(-healthBarX, healthBarY),
+                    new ArcTo(
+                            0.4 * size,
+                            0.4 * size,
+                            0,
+                            healthBarX,
+                            healthBarY,
+                            healthBarY < 0,
+                            false)
+            );
+            healthBarArc.setFill(new Color(1, 0, 0, 1));
+            healthBar = healthBarArc;
+        }
+        else {
+            healthBar = new Circle(0, 0, 0.4 * size, Color.RED);
+        }
 
         Path arrow = new Path();
         MoveTo moveTo = new MoveTo(-0.2 * size, 0);
         LineTo line1 = new LineTo(0, -0.3 * size);
         LineTo line2 = new LineTo(0.2 * size,0);
         arrow.getElements().addAll(moveTo, line1, line2);
+        arrow.getTransforms().add(new Rotate(getDirection().angle(), 0, 0));
 
-        Group group = new Group(circle, arrow);
-        group.setRotate(getDirection().angle());
-
-        return group;
+        return new Group(circle, healthBar, arrow);
     }
 }
