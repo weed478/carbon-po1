@@ -2,10 +2,11 @@ package agh.ics.oop.objects;
 
 import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.gui.IDrawableElement;
 import agh.ics.oop.map.IAnimalMap;
 import agh.ics.oop.map.MapDirection;
 
-public class Animal extends AbstractObservableMapElement {
+public class Animal extends AbstractObservableMapElement implements IDrawableElement {
     private final IAnimalMap map;
     private int food;
 
