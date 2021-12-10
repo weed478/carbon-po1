@@ -22,7 +22,7 @@ public class SimulationEngine {
         this.animals = animals;
     }
 
-    private void simulateDay() {
+    public void simulateDay() {
         removeDeadAnimals();
         moveAnimals();
         processEating();
