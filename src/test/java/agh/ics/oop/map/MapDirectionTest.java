@@ -8,34 +8,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class MapDirectionTest {
 
     @Test
-    void testToString() {
-        assertEquals("Północ", MapDirection.NORTH.toString());
-        assertEquals("Wschód", MapDirection.EAST.toString());
-        assertEquals("Południe", MapDirection.SOUTH.toString());
-        assertEquals("Zachód", MapDirection.WEST.toString());
-    }
-
-    @Test
     void next() {
-        assertEquals(MapDirection.EAST, MapDirection.NORTH.next());
-        assertEquals(MapDirection.SOUTH, MapDirection.EAST.next());
-        assertEquals(MapDirection.WEST, MapDirection.SOUTH.next());
-        assertEquals(MapDirection.NORTH, MapDirection.WEST.next());
+        assertEquals(MapDirection.NE, MapDirection.N.next());
+        assertEquals(MapDirection.SE, MapDirection.E.next());
+        assertEquals(MapDirection.SW, MapDirection.S.next());
+        assertEquals(MapDirection.NW, MapDirection.W.next());
     }
 
     @Test
     void previous() {
-        assertEquals(MapDirection.WEST, MapDirection.NORTH.previous());
-        assertEquals(MapDirection.SOUTH, MapDirection.WEST.previous());
-        assertEquals(MapDirection.EAST, MapDirection.SOUTH.previous());
-        assertEquals(MapDirection.NORTH, MapDirection.EAST.previous());
+        assertEquals(MapDirection.NW, MapDirection.N.previous());
+        assertEquals(MapDirection.SW, MapDirection.W.previous());
+        assertEquals(MapDirection.SE, MapDirection.S.previous());
+        assertEquals(MapDirection.NE, MapDirection.E.previous());
     }
 
     @Test
     void toUnitVector() {
-        assertEquals(new Vector2d(0, 1), MapDirection.NORTH.toUnitVector());
-        assertEquals(new Vector2d(1, 0), MapDirection.EAST.toUnitVector());
-        assertEquals(new Vector2d(0, -1), MapDirection.SOUTH.toUnitVector());
-        assertEquals(new Vector2d(-1, 0), MapDirection.WEST.toUnitVector());
+        assertEquals(new Vector2d(0, 1), MapDirection.N.toUnitVector());
+        assertEquals(new Vector2d(1, 0), MapDirection.E.toUnitVector());
+        assertEquals(new Vector2d(0, -1), MapDirection.S.toUnitVector());
+        assertEquals(new Vector2d(-1, 0), MapDirection.W.toUnitVector());
     }
 }
