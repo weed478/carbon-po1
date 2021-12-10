@@ -3,9 +3,11 @@ package agh.ics.oop.gui;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 
+import java.util.List;
+
 public interface IDrawableMap {
 
     Rect getDrawingBounds();
 
-    IDrawableElement getDrawableElementAt(Vector2d pos);
+    List<IDrawableElement> getDrawablesAt(Vector2d pos);
 }
