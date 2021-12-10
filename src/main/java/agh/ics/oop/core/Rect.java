@@ -62,6 +62,10 @@ public class Rect {
                p.follows(bl);
     }
 
+    public boolean contains(Rect r) {
+        return r.getBL().follows(getBL()) && r.getTR().precedes(getTR());
+    }
+
     public Rect extendedTo(Vector2d p) {
         return new Rect(
                 bl.lowerLeft(p),
