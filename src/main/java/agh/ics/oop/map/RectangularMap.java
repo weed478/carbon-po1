@@ -5,6 +5,8 @@ import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawableElement;
 import agh.ics.oop.gui.IDrawableMap;
+import agh.ics.oop.gui.DesertField;
+import agh.ics.oop.gui.JungleField;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 import agh.ics.oop.objects.IMapElement;
@@ -143,13 +145,29 @@ public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver, 
     }
 
     @Override
-    public IDrawableElement getDrawableElementAt(Vector2d pos) {
-        Set<Animal> animalSet = animals.get(pos);
-        if (animalSet == null || animalSet.isEmpty()) {
-            return grasses.get(pos);
+    public List<IDrawableElement> getDrawablesAt(Vector2d pos) {
+        List<IDrawableElement> drawables = new ArrayList<>();
+
+        if (jungleArea.contains(pos)) {
+            drawables.add(new JungleField());
+        }
+        else if (mapArea.contains(pos)) {
+            drawables.add(new DesertField());
         }
         else {
-            return animalSet.stream().findAny().get();
+            throw new IllegalArgumentException("Position is outside of map: " + pos);
         }
+
+        Grass grass = grasses.get(pos);
+        if (grass != null) {
+            drawables.add(grass);
+        }
+
+        Set<Animal> animalSet = animals.get(pos);
+        if (animalSet != null && !animalSet.isEmpty()) {
+            drawables.add(animalSet.stream().findAny().get());
+        }
+
+        return drawables;
     }
 }
