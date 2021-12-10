@@ -1,6 +1,5 @@
 package agh.ics.oop.objects;
 
-import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawableElement;
 import agh.ics.oop.map.IAnimalMap;
@@ -9,6 +8,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+
+import java.util.Random;
 
 public class Animal extends AbstractObservableMapElement implements IDrawableElement {
     private final IAnimalMap map;
@@ -65,32 +66,24 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
         return new Animal(map, getPosition(), getDirection(), childFood);
     }
 
-    public MoveDirection decideMovement() {
+    public int decideMovement() {
         // TODO genome based movement
-        return MoveDirection.FORWARD;
+        return new Random().nextInt(8);
     }
 
-    public void move(MoveDirection move) {
-        switch (move) {
-            case LEFT:
-                setDirection(getDirection().previous());
-                return;
-            case RIGHT:
-                setDirection(getDirection().next());
-                return;
-        }
-
+    public void move(int turn) {
         Vector2d newPos;
 
-        switch (move) {
-            case BACKWARD:
-                newPos = getPosition().subtract(getDirection().toUnitVector());
-                break;
-            case FORWARD:
+        switch (turn % 8) {
+            case 0:
                 newPos = getPosition().add(getDirection().toUnitVector());
                 break;
+            case 4:
+                newPos = getPosition().subtract(getDirection().toUnitVector());
+                break;
             default:
-                throw new IllegalArgumentException("Invalid move direction: " + move);
+                setDirection(getDirection().turn(turn));
+                return;
         }
 
         if (map.canMoveTo(newPos)) {
@@ -105,36 +98,14 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
         circle.setFill(new Color(1, 0, 0, 1));
 
         Path arrow = new Path();
-        MoveTo moveTo;
-        LineTo line1, line2;
-
-        switch (getDirection()) {
-            case NORTH:
-                moveTo = new MoveTo(-0.2 * size, 0);
-                line1 = new LineTo(0, -0.3 * size);
-                line2 = new LineTo(0.2 * size,0);
-                break;
-            case EAST:
-                moveTo = new MoveTo(0, 0.2 * size);
-                line1 = new LineTo(0.3 * size, 0);
-                line2 = new LineTo(0, -0.2 * size);
-                break;
-            case SOUTH:
-                moveTo = new MoveTo(-0.2 * size, 0);
-                line1 = new LineTo(0, 0.3 * size);
-                line2 = new LineTo(0.2 * size,0);
-                break;
-            case WEST:
-                moveTo = new MoveTo(0, 0.2 * size);
-                line1 = new LineTo(-0.3 * size, 0);
-                line2 = new LineTo(0, -0.2 * size);
-                break;
-            default:
-                throw new IllegalStateException("Invalid animal direction: " + getDirection());
-        }
-
+        MoveTo moveTo = new MoveTo(-0.2 * size, 0);
+        LineTo line1 = new LineTo(0, -0.3 * size);
+        LineTo line2 = new LineTo(0.2 * size,0);
         arrow.getElements().addAll(moveTo, line1, line2);
 
-        return new Group(circle, arrow);
+        Group group = new Group(circle, arrow);
+        group.setRotate(getDirection().angle());
+
+        return group;
     }
 }
