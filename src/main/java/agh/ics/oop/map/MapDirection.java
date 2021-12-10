@@ -3,38 +3,72 @@ package agh.ics.oop.map;
 import agh.ics.oop.core.Vector2d;
 
 public enum MapDirection {
-    NORTH,
-    SOUTH,
-    WEST,
-    EAST,
+    N,
+    NE,
+    E,
+    SE,
+    S,
+    SW,
+    W,
+    NW
     ;
 
-    @Override
-    public String toString() {
+    public double angle() {
         switch (this) {
-            case NORTH:
-                return "Północ";
-            case SOUTH:
-                return "Południe";
-            case WEST:
-                return "Zachód";
-            case EAST:
-                return "Wschód";
+            case N:
+                return 0 * 45;
+            case NE:
+                return 1 * 45;
+            case E:
+                return 2 * 45;
+            case SE:
+                return 3 * 45;
+            case S:
+                return 4 * 45;
+            case SW:
+                return 5 * 45;
+            case W:
+                return 6 * 45;
+            case NW:
+                return 7 * 45;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid direction: " + this);
         }
+    }
+
+    public MapDirection turn(int turn) {
+        MapDirection dir = this;
+        if (turn >= 0) {
+            for (int i = 0; i < turn; i++) {
+                dir = dir.next();
+            }
+        }
+        else {
+            for (int i = 0; i < -turn; i++) {
+                dir = dir.previous();
+            }
+        }
+        return dir;
     }
 
     public MapDirection next() {
         switch (this) {
-            case NORTH:
-                return EAST;
-            case EAST:
-                return SOUTH;
-            case SOUTH:
-                return WEST;
-            case WEST:
-                return NORTH;
+            case N:
+                return NE;
+            case NE:
+                return E;
+            case E:
+                return SE;
+            case SE:
+                return S;
+            case S:
+                return SW;
+            case SW:
+                return W;
+            case W:
+                return NW;
+            case NW:
+                return N;
             default:
                 throw new IllegalArgumentException();
         }
@@ -42,14 +76,22 @@ public enum MapDirection {
 
     public MapDirection previous() {
         switch (this) {
-            case NORTH:
-                return WEST;
-            case WEST:
-                return SOUTH;
-            case SOUTH:
-                return EAST;
-            case EAST:
-                return NORTH;
+            case N:
+                return NW;
+            case NE:
+                return N;
+            case E:
+                return NE;
+            case SE:
+                return E;
+            case S:
+                return SE;
+            case SW:
+                return S;
+            case W:
+                return SW;
+            case NW:
+                return W;
             default:
                 throw new IllegalArgumentException();
         }
@@ -57,14 +99,22 @@ public enum MapDirection {
 
     public Vector2d toUnitVector() {
         switch (this) {
-            case NORTH:
+            case N:
                 return new Vector2d(0, 1);
-            case EAST:
+            case NE:
+                return new Vector2d(1, 1);
+            case E:
                 return new Vector2d(1, 0);
-            case SOUTH:
+            case SE:
+                return new Vector2d(1, -1);
+            case S:
                 return new Vector2d(0, -1);
-            case WEST:
+            case SW:
+                return new Vector2d(-1, -1);
+            case W:
                 return new Vector2d(-1, 0);
+            case NW:
+                return new Vector2d(-1, 1);
             default:
                 throw new IllegalArgumentException();
         }
