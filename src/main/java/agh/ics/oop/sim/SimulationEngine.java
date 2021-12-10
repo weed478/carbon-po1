@@ -7,6 +7,7 @@ import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 
 import java.util.List;
+import java.util.Set;
 
 public class SimulationEngine {
 
@@ -52,7 +53,7 @@ public class SimulationEngine {
     private void processReproduction() {
         for (Animal animal : animals) {
             Vector2d pos = animal.getPosition();
-            List<Animal> candidates = map.getAnimalsAt(pos);
+            Set<Animal> candidates = map.getAnimalsAt(pos);
         }
     }
 
