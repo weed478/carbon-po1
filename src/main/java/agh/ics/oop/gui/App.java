@@ -3,7 +3,7 @@ package agh.ics.oop.gui;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.MapDirection;
-import agh.ics.oop.map.RectangularMap;
+import agh.ics.oop.map.CylindricalMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
@@ -25,7 +25,7 @@ public class App extends Application implements ISimulationStateObserver {
 
     @Override
     public void init() {
-        RectangularMap map = new RectangularMap(
+        CylindricalMap map = new CylindricalMap(
                 new Rect(-5, -5, 6, 6),
                 new Rect(-2, -2, 3, 3)
         );
