@@ -3,7 +3,11 @@ package agh.ics.oop.core;
 import java.util.Objects;
 
 public class Rect {
-    private final Vector2d bl, tr;
+    // inclusive
+    private final Vector2d bl;
+
+    // exclusive
+    private final Vector2d tr;
 
     public Rect(int x0, int y0, int x1, int y1) {
         bl = new Vector2d(x0, y0);
@@ -42,22 +46,26 @@ public class Rect {
     }
 
     public int width() {
-        return tr.x - bl.x + 1;
+        return tr.x - bl.x;
     }
 
     public int height() {
-        return tr.y - bl.y + 1;
+        return tr.y - bl.y;
+    }
+
+    public int area() {
+        return width() * height();
     }
 
     public boolean contains(Vector2d p) {
-        return p.precedes(tr) &&
+        return p.precedes(tr.subtract(new Vector2d(1, 1))) &&
                p.follows(bl);
     }
 
     public Rect extendedTo(Vector2d p) {
         return new Rect(
                 bl.lowerLeft(p),
-                tr.upperRight(p)
+                tr.upperRight(p.add(new Vector2d(1, 1)))
         );
     }
 }

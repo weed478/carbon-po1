@@ -30,11 +30,14 @@ class RectTest {
     void testContains() {
         assertTrue(new Rect(-10, -10, 10, 10).contains(new Vector2d(2, -10)));
         assertFalse(new Rect(-10, -10, 10, 10).contains(new Vector2d(2, -11)));
+
+        assertTrue(new Rect(-10, -10, 10, 10).contains(new Vector2d(9, 9)));
+        assertFalse(new Rect(-10, -10, 10, 10).contains(new Vector2d(9, 10)));
     }
 
     @Test
     void testExtended() {
-        assertEquals(new Rect(-10, -10, 10, 10),
+        assertEquals(new Rect(-10, -10, 11, 11),
                 new Rect(-5, -5, 5, 5)
                         .extendedTo(new Vector2d(10, 10))
                         .extendedTo(new Vector2d(-10, -10)));
