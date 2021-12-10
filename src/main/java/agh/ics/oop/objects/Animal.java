@@ -1,86 +1,79 @@
 package agh.ics.oop.objects;
 
-import agh.ics.oop.core.IPositionChangeObserver;
 import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.IWorldMap;
 import agh.ics.oop.map.MapDirection;
 
-import java.util.HashSet;
-import java.util.Set;
+public class Animal extends AbstractObservableMapElement {
+    private final IWorldMap map;
+    private int food;
 
-public class Animal {
-    private MapDirection direction = MapDirection.NORTH;
-    private Vector2d pos = new Vector2d(2, 2);
-    protected final IWorldMap map;
-    private final Set<IPositionChangeObserver> observers = new HashSet<>();
-
-    public Animal(IWorldMap map) {
+    public Animal(IWorldMap map, Vector2d position, MapDirection direction, int food) {
+        super(position, direction);
         this.map = map;
+        this.food = food;
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition) {
-        this.map = map;
-        this.pos = initialPosition;
+    public boolean isAlive() {
+        return getFood() > 0;
     }
 
-    public void addObserver(IPositionChangeObserver observer) {
-        observers.add(observer);
+    public int getFood() {
+        return food;
     }
 
-    public void removeObserver(IPositionChangeObserver observer) {
-        observers.remove(observer);
-    }
-
-    public void positionChanged(Vector2d oldPos, Vector2d newPos) {
-        for (IPositionChangeObserver observer : observers) {
-            observer.positionChanged(oldPos, newPos);
+    public void decrementFood() {
+        if (food <= 0) {
+            throw new IllegalStateException("Animal does not have enough food");
         }
+        food--;
     }
 
-    public MapDirection getDirection() {
-        return direction;
+    public void eatGrass(Grass grass) {
+        if (!grass.getPosition().equals(getPosition())) {
+            throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
+        }
+        grass.elementRemoved();
+        food++;
     }
 
-    public Vector2d getPos() {
-        return pos;
+    public MoveDirection decideMovement() {
+        // TODO genome based movement
+        return MoveDirection.FORWARD;
     }
 
-    public boolean isAt(Vector2d pos) {
-        return getPos().equals(pos);
-    }
-
-    public void move(MoveDirection dir) {
-        switch (dir) {
-            case RIGHT:
-                this.direction = getDirection().next();
-                return;
+    public void move(MoveDirection move) {
+        switch (move) {
             case LEFT:
-                this.direction = getDirection().previous();
+                setDirection(getDirection().previous());
+                return;
+            case RIGHT:
+                setDirection(getDirection().next());
                 return;
         }
 
-        Vector2d newPos = getPos();
+        Vector2d newPos;
 
-        switch (dir) {
-            case FORWARD:
-                newPos = newPos.add(getDirection().toUnitVector());
-                break;
+        switch (move) {
             case BACKWARD:
-                newPos = newPos.subtract(getDirection().toUnitVector());
+                newPos = getPosition().subtract(getDirection().toUnitVector());
                 break;
+            case FORWARD:
+                newPos = getPosition().add(getDirection().toUnitVector());
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid move direction: " + move);
         }
 
         if (map.canMoveTo(newPos)) {
-            Vector2d oldPos = this.pos;
-            this.pos = newPos;
-            positionChanged(oldPos, newPos);
+            setPosition(newPos);
         }
     }
 
     @Override
     public String toString() {
-        switch (direction) {
+        switch (getDirection()) {
             case NORTH:
                 return "^";
             case SOUTH:
@@ -90,7 +83,7 @@ public class Animal {
             case EAST:
                 return ">";
             default:
-                throw new IllegalArgumentException("Invalid animal direction");
+                throw new IllegalStateException("Invalid animal direction");
         }
     }
 }

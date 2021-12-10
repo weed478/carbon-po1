@@ -1,16 +1,11 @@
 package agh.ics.oop.objects;
 
 import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.map.MapDirection;
 
-public class Grass {
-    private final Vector2d pos;
-
-    public Grass(Vector2d where) {
-        pos = where;
-    }
-
-    public Vector2d getPosition() {
-        return pos;
+public class Grass extends AbstractObservableMapElement {
+    public Grass(Vector2d position) {
+        super(position, MapDirection.NORTH);
     }
 
     @Override
