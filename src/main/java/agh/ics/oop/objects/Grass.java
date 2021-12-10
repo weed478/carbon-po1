@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Grass extends AbstractObservableMapElement implements IDrawableElement {
     public Grass(IGrassMap map, Vector2d position) {
-        super(position, MapDirection.NORTH);
+        super(position, MapDirection.N);
         map.registerGrass(this);
     }
 

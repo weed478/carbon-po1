@@ -31,7 +31,7 @@ public class App extends Application implements ISimulationStateObserver {
         );
 
         List<Animal> animals = new ArrayList<>();
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.NORTH, 100));
+        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
 
         simulationEngine = new SimulationEngine(500, map, animals);
         simulationEngine.addSimulationStateObserver(this);
