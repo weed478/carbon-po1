@@ -4,7 +4,6 @@ import agh.ics.oop.core.IMapElementObserver;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawableElement;
-import agh.ics.oop.gui.IDrawableMap;
 import agh.ics.oop.gui.DesertField;
 import agh.ics.oop.gui.JungleField;
 import agh.ics.oop.objects.Animal;
@@ -13,7 +12,7 @@ import agh.ics.oop.objects.IMapElement;
 
 import java.util.*;
 
-public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver, IDrawableMap {
+public class RectangularMap implements IAnimalAndGrassDrawableMap, IMapElementObserver {
     private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private final Rect mapArea;

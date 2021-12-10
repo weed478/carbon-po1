@@ -1,5 +1,5 @@
 package agh.ics.oop.map;
 
-public interface IAnimalAndGrassMap extends IWorldMap, IAnimalMap, IGrassMap {
+public interface IAnimalAndGrassMap extends IAnimalMap, IGrassMap {
 
 }
