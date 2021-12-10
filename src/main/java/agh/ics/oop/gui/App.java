@@ -5,6 +5,7 @@ import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.MapDirection;
 import agh.ics.oop.map.RectangularMap;
 import agh.ics.oop.objects.Animal;
+import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class App extends Application implements Runnable {
+public class App extends Application implements ISimulationStateObserver {
 
     private GridBuilder gridBuilder;
     private VBox root;
@@ -32,7 +33,9 @@ public class App extends Application implements Runnable {
         List<Animal> animals = new ArrayList<>();
         animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.NORTH, 100));
 
-        simulationEngine = new SimulationEngine(map, animals);
+        simulationEngine = new SimulationEngine(500, map, animals);
+        simulationEngine.addSimulationStateObserver(this);
+
         gridBuilder = new GridBuilder(map);
     }
 
@@ -46,24 +49,21 @@ public class App extends Application implements Runnable {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        new Thread(this).start();
-    }
-
-    @Override
-    public void run() {
-        for (;;) {
-            try {
-                Thread.sleep(500);
-                simulationEngine.simulateDay();
-                Platform.runLater(this::updateGrid);
-            } catch (InterruptedException e) {
-                break;
-            }
-        }
+        new Thread(simulationEngine).start();
     }
 
     private void updateGrid() {
         root.getChildren().remove(root.getChildren().size() - 1);
         root.getChildren().add(gridBuilder.buildGrid());
+    }
+
+    @Override
+    public void simulationStateChanged() {
+        Platform.runLater(this::updateGrid);
+    }
+
+    @Override
+    public void simulationEnded() {
+        System.out.println("Simulation ended");
     }
 }

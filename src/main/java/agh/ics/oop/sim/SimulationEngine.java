@@ -12,17 +12,28 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SimulationEngine {
+public class SimulationEngine implements Runnable {
 
     private final IAnimalAndGrassMap map;
     private final List<Animal> animals;
+    private final int simulationDelay;
+    private final Set<ISimulationStateObserver> observers = new HashSet<>();
 
-    public SimulationEngine(IAnimalAndGrassMap map, List<Animal> animals) {
+    public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
+        this.simulationDelay = simulationDelay;
         this.map = map;
         this.animals = animals;
     }
 
-    public void simulateDay() {
+    public void addSimulationStateObserver(ISimulationStateObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeSimulationStateObserver(ISimulationStateObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void simulateDay() {
         removeDeadAnimals();
         moveAnimals();
         processEating();
@@ -81,6 +92,32 @@ public class SimulationEngine {
     private void decrementAnimalEnergy() {
         for (Animal animal : animals) {
             animal.decrementFood();
+        }
+    }
+
+    @Override
+    public void run() {
+        for (;;) {
+            try {
+                Thread.sleep(simulationDelay);
+                simulateDay();
+                simulationStateChanged();
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+        simulationEnded();
+    }
+
+    private void simulationStateChanged() {
+        for (ISimulationStateObserver observer : observers) {
+            observer.simulationStateChanged();
+        }
+    }
+
+    private void simulationEnded() {
+        for (ISimulationStateObserver observer : observers) {
+            observer.simulationEnded();
         }
     }
 }
