@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+
+import java.util.List;
 
 public class GridBuilder {
 
@@ -34,10 +37,10 @@ public class GridBuilder {
 
         gridPane.add(new Label("y\\x"), 0, 0);
         for (int x = bounds.getBL().x, xGrid = 1; x < bounds.getTR().x; x++, xGrid++) {
-            gridPane.add(makeField(String.valueOf(x)), xGrid, 0);
+            gridPane.add(makeLabel(String.valueOf(x)), xGrid, 0);
         }
         for (int y = bounds.getTR().y - 1, yGrid = 1; y >= bounds.getBL().y; y--, yGrid++) {
-            gridPane.add(makeField(String.valueOf(y)), 0, yGrid);
+            gridPane.add(makeLabel(String.valueOf(y)), 0, yGrid);
         }
 
         for (int x = bounds.getBL().x; x < bounds.getTR().x; x++) {
@@ -45,13 +48,16 @@ public class GridBuilder {
                 Vector2d mapPos = new Vector2d(x, y);
                 Vector2d gridPos = mapToGrid(mapPos).add(new Vector2d(1, 1));
 
-                IDrawableElement mapElement = map.getDrawableElementAt(mapPos);
+                List<IDrawableElement> drawables = map.getDrawablesAt(mapPos);
 
-                if (mapElement != null) {
-                    Node field = mapElement.getDrawableNode(GRID_SIZE);
-                    GridPane.setHalignment(field, HPos.CENTER);
-                    gridPane.add(field, gridPos.x, gridPos.y);
+                StackPane field = new StackPane();
+                for (IDrawableElement drawable : drawables) {
+                    Node node = drawable.getDrawableNode(GRID_SIZE);
+                    field.getChildren().add(node);
                 }
+
+                GridPane.setHalignment(field, HPos.CENTER);
+                gridPane.add(field, gridPos.x, gridPos.y);
             }
         }
 
@@ -68,7 +74,7 @@ public class GridBuilder {
         return v;
     }
 
-    private static Label makeField(String text) {
+    private static Label makeLabel(String text) {
         Label field = new Label(text);
         GridPane.setHalignment(field, HPos.CENTER);
         return field;
