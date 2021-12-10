@@ -26,6 +26,19 @@ public class RectangularMap implements IAnimalAndGrassWorldMap, IMapElementObser
     }
 
     @Override
+    public void registerAnimal(Animal animal) {
+        animals.putIfAbsent(animal.getPosition(), new HashSet<>());
+        animals.get(animal.getPosition()).add(animal);
+        animal.addMapElementObserver(this);
+    }
+
+    @Override
+    public void registerGrass(Grass grass) {
+        grasses.put(grass.getPosition(), grass);
+        grass.addMapElementObserver(this);
+    }
+
+    @Override
     public Set<Animal> getAnimalsAt(Vector2d pos) {
         Set<Animal> set = animals.get(pos);
         return set != null ? set : new HashSet<>();
@@ -50,7 +63,7 @@ public class RectangularMap implements IAnimalAndGrassWorldMap, IMapElementObser
                         )
                 );
             } while (jungleArea.contains(p) || getGrassAt(p) != null);
-            grasses.put(p, new Grass(p));
+            new Grass(this, p);
             desertGrassCount++;
         }
 
@@ -63,7 +76,7 @@ public class RectangularMap implements IAnimalAndGrassWorldMap, IMapElementObser
                         )
                 );
             } while (getGrassAt(p) != null);
-            grasses.put(p, new Grass(p));
+            new Grass(this, p);
             jungleGrassCount++;
         }
     }
@@ -98,13 +111,16 @@ public class RectangularMap implements IAnimalAndGrassWorldMap, IMapElementObser
             if (!animals.get(animal.getPosition()).remove(animal)) {
                 throw new IllegalArgumentException("Animal was not found at old position");
             }
+            animal.removeMapElementObserver(this);
         }
         else if (object instanceof Grass) {
-            grasses.remove(object.getPosition());
-            if (jungleArea.contains(object.getPosition())) {
+            Grass grass = (Grass) object;
+            grasses.remove(grass.getPosition());
+            grass.removeMapElementObserver(this);
+            if (jungleArea.contains(grass.getPosition())) {
                 jungleGrassCount--;
             }
-            else if (mapArea.contains(object.getPosition())) {
+            else if (mapArea.contains(grass.getPosition())) {
                 desertGrassCount--;
             }
             else {

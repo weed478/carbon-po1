@@ -2,17 +2,18 @@ package agh.ics.oop.objects;
 
 import agh.ics.oop.core.MoveDirection;
 import agh.ics.oop.core.Vector2d;
-import agh.ics.oop.map.IWorldMap;
+import agh.ics.oop.map.IAnimalMap;
 import agh.ics.oop.map.MapDirection;
 
 public class Animal extends AbstractObservableMapElement {
-    private final IWorldMap map;
+    private final IAnimalMap map;
     private int food;
 
-    public Animal(IWorldMap map, Vector2d position, MapDirection direction, int food) {
+    public Animal(IAnimalMap map, Vector2d position, MapDirection direction, int food) {
         super(position, direction);
         this.map = map;
         this.food = food;
+        map.registerAnimal(this);
     }
 
     public boolean isAlive() {
