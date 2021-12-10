@@ -99,22 +99,6 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
     }
 
     @Override
-    public String toString() {
-        switch (getDirection()) {
-            case NORTH:
-                return "^";
-            case SOUTH:
-                return "v";
-            case WEST:
-                return "<";
-            case EAST:
-                return ">";
-            default:
-                throw new IllegalStateException("Invalid animal direction");
-        }
-    }
-
-    @Override
     public Node getDrawableNode(int size) {
         Circle circle = new Circle();
         circle.setRadius(0.4 * size);
