@@ -3,13 +3,15 @@ package agh.ics.oop.map;
 import agh.ics.oop.core.IMapElementObserver;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.gui.IDrawableElement;
+import agh.ics.oop.gui.IDrawableMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 import agh.ics.oop.objects.IMapElement;
 
 import java.util.*;
 
-public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver {
+public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver, IDrawableMap {
     private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     private final Rect mapArea;
@@ -134,4 +136,20 @@ public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver {
 
     @Override
     public void mapElementRotated(IMapElement object, MapDirection oldDirection) {}
+
+    @Override
+    public Rect getDrawingBounds() {
+        return mapArea;
+    }
+
+    @Override
+    public IDrawableElement getDrawableElementAt(Vector2d pos) {
+        Set<Animal> animalSet = animals.get(pos);
+        if (animalSet == null || animalSet.isEmpty()) {
+            return grasses.get(pos);
+        }
+        else {
+            return animalSet.stream().findAny().get();
+        }
+    }
 }
