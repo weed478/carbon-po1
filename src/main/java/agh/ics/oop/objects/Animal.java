@@ -39,6 +39,27 @@ public class Animal extends AbstractObservableMapElement {
         food++;
     }
 
+    public boolean canBreed() {
+        return getFood() > 1;
+    }
+
+    public Animal breed(Animal other) {
+        if (!canBreed() || !other.canBreed()) {
+            throw new IllegalStateException("Animals cannot breed");
+        }
+
+        int childFood = food / 2 + other.food / 2;
+
+        if (childFood < 1) {
+            throw new IllegalStateException("Child cannot be given 0 food");
+        }
+
+        food -= food / 2;
+        other.food -= other.food / 2;
+
+        return new Animal(map, getPosition(), getDirection(), childFood);
+    }
+
     public MoveDirection decideMovement() {
         // TODO genome based movement
         return MoveDirection.FORWARD;
