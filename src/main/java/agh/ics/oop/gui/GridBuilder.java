@@ -34,7 +34,6 @@ public class GridBuilder {
             gridPane.getRowConstraints().add(new RowConstraints(GRID_SIZE));
         }
 
-        gridPane.add(new Label("y\\x"), 0, 0);
         for (int x = bounds.getBL().x, xGrid = 1; x < bounds.getTR().x; x++, xGrid++) {
             gridPane.add(makeLabel(String.valueOf(x)), xGrid, 0);
         }
