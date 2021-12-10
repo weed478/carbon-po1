@@ -74,23 +74,13 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
     }
 
     public void move(int turn) {
-        Vector2d newPos;
-
-        switch (turn % 8) {
-            case 0:
-                newPos = getPosition().add(getDirection().toUnitVector());
-                break;
-            case 4:
-                newPos = getPosition().subtract(getDirection().toUnitVector());
-                break;
-            default:
-                setDirection(getDirection().turn(turn));
-                return;
+        if (turn % 4 != 0) {
+            setDirection(getDirection().turn(turn));
+            return;
         }
 
-        if (map.canMoveTo(newPos)) {
-            setPosition(newPos);
-        }
+        Vector2d newPos = map.moveFrom(getPosition(), getDirection().turn(turn));
+        setPosition(newPos);
     }
 
     @Override

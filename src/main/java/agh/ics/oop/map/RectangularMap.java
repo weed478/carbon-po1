@@ -86,8 +86,16 @@ public class RectangularMap implements IAnimalAndGrassMap, IMapElementObserver, 
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return mapArea.contains(position);
+    public Vector2d moveFrom(Vector2d position, MapDirection direction) {
+        if (!mapArea.contains(position)) {
+            throw new IllegalArgumentException("Position not on map: " + position);
+        }
+        Vector2d moveVector = direction.toUnitVector();
+        Vector2d newPos = position.add(moveVector);
+        return new Vector2d(
+                Math.max(mapArea.left(), Math.min(newPos.x, mapArea.right() - 1)),
+                Math.max(mapArea.bottom(), Math.min(newPos.y, mapArea.top() - 1))
+        );
     }
 
     @Override
