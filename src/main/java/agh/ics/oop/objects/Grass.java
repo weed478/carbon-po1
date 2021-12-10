@@ -18,9 +18,9 @@ public class Grass extends AbstractObservableMapElement implements IDrawableElem
     @Override
     public Node getDrawableNode(int size) {
         Rectangle r = new Rectangle();
-        r.setWidth(0.8 * size);
-        r.setHeight(0.8 * size);
-        r.setFill(new Color(0, 1, 0, 1));
+        r.setWidth(0.7 * size);
+        r.setHeight(0.7 * size);
+        r.setFill(Color.GREENYELLOW);
         return new Group(r);
     }
 }
