@@ -2,10 +2,12 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
-import javafx.geometry.Pos;
+import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.layout.RowConstraints;
 
 public class GridBuilder {
 
@@ -22,6 +24,14 @@ public class GridBuilder {
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
 
+        for (int i = 0; i < bounds.width() + 1; i++) {
+            gridPane.getColumnConstraints().add(new ColumnConstraints(GRID_SIZE));
+        }
+
+        for (int i = 0; i < bounds.height() + 1; i++) {
+            gridPane.getRowConstraints().add(new RowConstraints(GRID_SIZE));
+        }
+
         gridPane.add(new Label("y\\x"), 0, 0);
         for (int x = bounds.getBL().x, xGrid = 1; x < bounds.getTR().x; x++, xGrid++) {
             gridPane.add(makeField(String.valueOf(x)), xGrid, 0);
@@ -35,17 +45,13 @@ public class GridBuilder {
                 Vector2d mapPos = new Vector2d(x, y);
                 Vector2d gridPos = mapToGrid(mapPos).add(new Vector2d(1, 1));
 
-                IDrawableElement o = map.getDrawableElementAt(mapPos);
+                IDrawableElement mapElement = map.getDrawableElementAt(mapPos);
 
-                Label field;
-                if (o != null) {
-                    field = makeField(o.toString());
+                if (mapElement != null) {
+                    Node field = mapElement.getDrawableNode(GRID_SIZE);
+                    GridPane.setHalignment(field, HPos.CENTER);
+                    gridPane.add(field, gridPos.x, gridPos.y);
                 }
-                else {
-                    field = makeField("");
-                }
-
-                gridPane.add(field, gridPos.x, gridPos.y);
             }
         }
 
@@ -64,11 +70,7 @@ public class GridBuilder {
 
     private static Label makeField(String text) {
         Label field = new Label(text);
-        field.setPrefSize(GRID_SIZE, GRID_SIZE);
-        field.setMinSize(GRID_SIZE, GRID_SIZE);
-        field.setMaxSize(GRID_SIZE, GRID_SIZE);
-        field.setTextAlignment(TextAlignment.CENTER);
-        field.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(field, HPos.CENTER);
         return field;
     }
 }
