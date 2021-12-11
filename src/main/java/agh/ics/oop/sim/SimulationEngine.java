@@ -72,6 +72,8 @@ public class SimulationEngine implements Runnable {
         for (Animal animal : animals) {
             Vector2d pos = animal.getPosition();
             if (processedPositions.contains(pos)) continue;
+            processedPositions.add(pos);
+
             Set<Animal> candidates = map.getAnimalsAt(pos);
             List<Animal> parents = candidates.stream()
                     .sorted(Comparator.comparingInt(Animal::getFood).reversed())
@@ -81,7 +83,6 @@ public class SimulationEngine implements Runnable {
                 continue;
             Animal child = parents.get(0).breed(parents.get(1));
             newAnimals.add(child);
-            processedPositions.add(pos);
         }
         animals.addAll(newAnimals);
     }
