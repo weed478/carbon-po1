@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GridBuilder {
 
-    private static final int GRID_SIZE = 20;
+    private static final int GRID_SIZE = 10;
     private final IDrawableMap map;
 
     public GridBuilder(IDrawableMap map) {

@@ -27,16 +27,16 @@ public class App extends Application implements ISimulationStateObserver {
     @Override
     public void init() {
         IAnimalAndGrassDrawableMap map = new CylindricalMap(
-                new Rect(-5, -5, 6, 6),
-                new Rect(-2, -2, 3, 3)
+                new Rect(0, 0, 100, 30),
+                new Rect(45, 10, 55, 20)
         );
 
         List<Animal> animals = new ArrayList<>();
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
-        animals.add(new Animal(map, new Vector2d(0, 0), MapDirection.N, 100));
+        animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
+        animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
+        animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
+        animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
+        animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
 
         simulationEngine = new SimulationEngine(500, map, animals);
         simulationEngine.addSimulationStateObserver(this);
@@ -50,7 +50,7 @@ public class App extends Application implements ISimulationStateObserver {
 
         root.getChildren().add(gridBuilder.buildGrid());
 
-        Scene scene = new Scene(root, 400, 400);
+        Scene scene = new Scene(root, 1000, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
 
