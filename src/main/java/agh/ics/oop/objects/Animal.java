@@ -14,13 +14,83 @@ import java.util.Random;
 
 public class Animal extends AbstractObservableMapElement implements IDrawableElement {
     private static final int MAX_HEALTH_BAR = 20;
+    private static final int GENOME_SIZE = 32;
+    private static final int GENOME_RANGE = 8;
+
+    private final int[] genome;
+    private final Random rand = new Random();
     private final IAnimalMap map;
     private int food;
 
+    /**
+     * Generates random genome.
+     * @return genome array
+     */
+    private static int[] makeRandomGenome() {
+        return new Random().ints(GENOME_SIZE, 0, GENOME_RANGE).toArray();
+    }
+
+    /**
+     * Creates new genome based on parents' genomes.
+     * @param p1 first parent
+     * @param p2 second parent
+     * @return child genome
+     */
+    private static int[] crossGenome(Animal p1, Animal p2) {
+        // TODO implement crossGenome
+        return makeRandomGenome();
+    }
+
+    /**
+     * Adam/Eve constructor.
+     * Will register the animal on the map.
+     * @param map animal's map
+     * @param position initial position
+     * @param direction initial direction
+     * @param food initial food
+     */
     public Animal(IAnimalMap map, Vector2d position, MapDirection direction, int food) {
         super(position, direction);
         this.map = map;
         this.food = food;
+        this.genome = makeRandomGenome();
+        map.registerAnimal(this);
+    }
+
+    /**
+     * Breeding constructor.
+     * Child inherits parents' map and position.
+     * @throws IllegalStateException if breeding was not possible
+     * @param p1 first parent
+     * @param p2 second parent
+     */
+    public Animal(Animal p1, Animal p2) {
+        super(p1.getPosition(), p1.getDirection());
+        this.map = p1.map;
+
+        if (!p1.getPosition().equals(p2.getPosition())) {
+            throw new IllegalStateException("Parents are not on the same field");
+        }
+
+        if (p1.map != p2.map) {
+            throw new IllegalStateException("Parents are not on the same map");
+        }
+
+        if (!p1.canBreed() || !p2.canBreed()) {
+            throw new IllegalStateException("Parents cannot breed");
+        }
+
+        food = p1.food / 4 + p2.food / 4;
+
+        if (food < 1) {
+            throw new IllegalStateException("Child cannot be given 0 food");
+        }
+
+        p1.food -= p1.food / 4;
+        p2.food -= p2.food / 4;
+
+        genome = crossGenome(p1, p2);
+
         map.registerAnimal(this);
     }
 
@@ -48,29 +118,15 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
     }
 
     public boolean canBreed() {
-        return getFood() > 1;
+        return getFood() >= 4;
     }
 
     public Animal breed(Animal other) {
-        if (!canBreed() || !other.canBreed()) {
-            throw new IllegalStateException("Animals cannot breed");
-        }
-
-        int childFood = food / 2 + other.food / 2;
-
-        if (childFood < 1) {
-            throw new IllegalStateException("Child cannot be given 0 food");
-        }
-
-        food -= food / 2;
-        other.food -= other.food / 2;
-
-        return new Animal(map, getPosition(), getDirection(), childFood);
+        return new Animal(this, other);
     }
 
     public int decideMovement() {
-        // TODO genome based movement
-        return new Random().nextInt(8);
+        return genome[rand.nextInt(genome.length)];
     }
 
     public void move(int turn) {
