@@ -37,8 +37,21 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
      * @return child genome
      */
     private static int[] crossGenome(Animal p1, Animal p2) {
-        // TODO implement crossGenome
-        return makeRandomGenome();
+        int splitIndex = p1.getFood() / (p1.getFood() + p2.getFood());
+
+        int[] g = new int[GENOME_SIZE];
+
+        // left/right
+        if (new Random().nextBoolean()) {
+            System.arraycopy(p1.genome, 0, g, 0, splitIndex);
+            System.arraycopy(p2.genome, splitIndex, g, splitIndex, GENOME_SIZE - splitIndex);
+        }
+        else {
+            System.arraycopy(p1.genome, 0, g, GENOME_SIZE - splitIndex, splitIndex);
+            System.arraycopy(p2.genome, splitIndex, g, 0, GENOME_SIZE - splitIndex);
+        }
+
+        return g;
     }
 
     /**
