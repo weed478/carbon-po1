@@ -4,7 +4,7 @@ import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.IAnimalAndGrassDrawableMap;
 import agh.ics.oop.map.MapDirection;
-import agh.ics.oop.map.CylindricalMap;
+import agh.ics.oop.map.ToroidalMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
@@ -26,7 +26,7 @@ public class App extends Application implements ISimulationStateObserver {
 
     @Override
     public void init() {
-        IAnimalAndGrassDrawableMap map = new CylindricalMap(
+        IAnimalAndGrassDrawableMap map = new ToroidalMap(
                 new Rect(0, 0, 100, 30),
                 new Rect(45, 10, 55, 20)
         );
