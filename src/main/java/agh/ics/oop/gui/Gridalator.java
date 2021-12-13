@@ -1,16 +1,20 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.IDrawableMap;
+import agh.ics.oop.IMapElement;
 import agh.ics.oop.Rect;
 import agh.ics.oop.Vector2d;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.TextAlignment;
 
 public class Gridalator {
 
-    private static final int GRID_SIZE = 20;
+    private static final int GRID_SIZE = 50;
 
     private final IDrawableMap map;
 
@@ -23,6 +27,14 @@ public class Gridalator {
 
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
+
+        for (int i = 0; i <= bounds.width(); i++) {
+            gridPane.getColumnConstraints().add(new ColumnConstraints(GRID_SIZE));
+        }
+
+        for (int i = 0; i <= bounds.height(); i++) {
+            gridPane.getRowConstraints().add(new RowConstraints(GRID_SIZE));
+        }
 
         gridPane.add(new Label("y\\x"), 0, 0);
         for (int x = bounds.getBL().x; x <= bounds.getTR().x; x++) {
@@ -37,17 +49,12 @@ public class Gridalator {
                 Vector2d mapPos = new Vector2d(x, y);
                 Vector2d gridPos = mapToGrid(mapPos, bounds).add(new Vector2d(1, 1));
 
-                Object o = map.objectAt(mapPos);
+                IMapElement o = map.objectAt(mapPos);
 
-                Label field;
                 if (o != null) {
-                    field = makeField(o.toString());
+                    Node field = GuiElementBox.create(o);
+                    gridPane.add(field, gridPos.x, gridPos.y);
                 }
-                else {
-                    field = makeField("");
-                }
-
-                gridPane.add(field, gridPos.x, gridPos.y);
             }
         }
 

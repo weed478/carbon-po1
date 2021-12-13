@@ -1,6 +1,6 @@
 package agh.ics.oop;
 
-public class Grass {
+public class Grass implements IMapElement {
     private final Vector2d pos;
 
     public Grass(Vector2d where) {
@@ -14,5 +14,15 @@ public class Grass {
     @Override
     public String toString() {
         return "*";
+    }
+
+    @Override
+    public String assetName() {
+        return "src/main/resources/plant.png";
+    }
+
+    @Override
+    public String mapLabel() {
+        return "Grass";
     }
 }

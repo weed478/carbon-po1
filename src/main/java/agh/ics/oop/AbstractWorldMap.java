@@ -54,7 +54,7 @@ public abstract class AbstractWorldMap implements IDrawableMap, IPositionChangeO
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
+    public IMapElement objectAt(Vector2d position) {
         return animals.get(position);
     }
 

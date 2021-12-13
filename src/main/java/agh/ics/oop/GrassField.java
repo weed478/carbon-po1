@@ -23,8 +23,8 @@ public class GrassField extends AbstractWorldMap {
     }
 
     @Override
-    public Object objectAt(Vector2d position) {
-        Object o = super.objectAt(position);
+    public IMapElement objectAt(Vector2d position) {
+        IMapElement o = super.objectAt(position);
         if (o == null) {
             o = grassFields.getOrDefault(position, null);
         }

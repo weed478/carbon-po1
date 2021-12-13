@@ -3,7 +3,7 @@ package agh.ics.oop;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Animal {
+public class Animal implements IMapElement {
     private MapDirection direction = MapDirection.NORTH;
     private Vector2d pos = new Vector2d(2, 2);
     protected final IWorldMap map;
@@ -96,5 +96,25 @@ public class Animal {
             GrassField grassField = (GrassField) map;
             grassField.eatGrass(pos);
         }
+    }
+
+    @Override
+    public String assetName() {
+        switch (getDirection()) {
+            case NORTH:
+                return "src/main/resources/bug_u.png";
+            case SOUTH:
+                return "src/main/resources/bug_d.png";
+            case WEST:
+                return "src/main/resources/bug_l.png";
+            case EAST:
+            default:
+                return "src/main/resources/bug_r.png";
+        }
+    }
+
+    @Override
+    public String mapLabel() {
+        return getPos().toString();
     }
 }
