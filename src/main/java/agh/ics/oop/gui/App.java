@@ -2,8 +2,8 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -12,10 +12,10 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
-public class App extends Application {
+public class App extends Application implements ISimulationObserver {
 
     private final IDrawableMap map = new GrassField(10);
-    private IEngine engine;
+    private IRunnableEngine engine;
     private final Gridalator gridalator = new Gridalator(map);
 
     private GridPane gridPane;
@@ -30,15 +30,17 @@ public class App extends Application {
 
         AppLaunchIntent intent = AppLaunchIntent.parse(getParameters().getRaw());
         if (intent instanceof SkynetLaunchIntent) {
-            engine = new SkynetEngine(map, initialPositions);
+            engine = new SkynetEngine(map, initialPositions, 500);
         }
         else if (intent instanceof ManualLaunchIntent) {
             ManualLaunchIntent manualIntent = (ManualLaunchIntent) intent;
-            engine = new SimulationEngine(manualIntent.directions, map, initialPositions);
+            engine = new SimulationEngine(manualIntent.directions, map, initialPositions, 500);
         }
         else {
             throw new IllegalArgumentException("Unknown intent: " + intent.getClass());
         }
+
+        engine.addObserver(this);
     }
 
     @Override
@@ -46,28 +48,33 @@ public class App extends Application {
         VBox root = new VBox();
         rootPane = root;
 
-        Button stepButton = new Button("Move");
-        stepButton.setOnAction(e -> simulateStep());
-        root.getChildren().add(stepButton);
-
         drawGrid();
 
         Scene scene = new Scene(root, 400, 400);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        Thread simulationThread = new Thread(engine);
+        primaryStage.setOnCloseRequest(e -> simulationThread.interrupt());
+        simulationThread.start();
     }
 
-    private void simulateStep() {
-        engine.simulateStep();
-        drawGrid();
-    }
-
-    private void drawGrid() {
+    private synchronized void drawGrid() {
         if (gridPane != null) {
             rootPane.getChildren().remove(gridPane);
         }
         gridPane = gridalator.makeGrid();
         rootPane.getChildren().add(gridPane);
+    }
+
+    @Override
+    public void simulationStateChanged() {
+        Platform.runLater(this::drawGrid);
+    }
+
+    @Override
+    public void simulationEnded() {
+        System.out.println("Simulation ended");
     }
 }

@@ -3,12 +3,15 @@ package agh.ics.oop;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkynetEngine implements IEngine {
+public class SkynetEngine extends AbstractSimEngine {
 
     private final List<HungryBot> terminators = new ArrayList<>();
 
     public SkynetEngine(IWorldMap map,
-                        List<Vector2d> initialPositions) {
+                        List<Vector2d> initialPositions,
+                        int moveDelay) {
+        super(moveDelay);
+
         for (Vector2d pos : initialPositions) {
             HungryBot terminator = new HungryBot(map, pos);
             terminators.add(terminator);

@@ -5,15 +5,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SimulationEngine implements IEngine {
+public class SimulationEngine extends AbstractSimEngine {
 
     private final List<Animal> animals = new ArrayList<>();
-    private Iterator<MoveDirection> moves;
+    private final Iterator<MoveDirection> moves;
     private int currentAnimal = 0;
 
     public SimulationEngine(Stream<MoveDirection> moves,
                             IWorldMap map,
-                            List<Vector2d> initialPositions) {
+                            List<Vector2d> initialPositions,
+                            int moveDelay) {
+        super(moveDelay);
         this.moves = moves.iterator();
 
         for (Vector2d pos : initialPositions) {
