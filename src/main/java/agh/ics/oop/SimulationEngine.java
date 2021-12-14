@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -10,22 +9,16 @@ import java.util.stream.Stream;
  */
 public class SimulationEngine extends AbstractSimEngine {
 
-    private final List<Animal> animals = new ArrayList<>();
+    private final List<Animal> animals;
     private final Iterator<MoveDirection> moves;
     private int currentAnimal = 0;
 
     public SimulationEngine(Stream<MoveDirection> moves,
-                            IWorldMap map,
-                            List<Vector2d> initialPositions,
+                            List<Animal> animals,
                             int moveDelay) {
         super(moveDelay);
         this.moves = moves.iterator();
-
-        for (Vector2d pos : initialPositions) {
-            Animal animal = new Animal(map, pos);
-            animals.add(animal);
-            map.place(animal);
-        }
+        this.animals = animals;
     }
 
     @Override

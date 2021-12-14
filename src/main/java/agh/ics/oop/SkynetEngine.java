@@ -1,6 +1,5 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,18 +7,12 @@ import java.util.List;
  */
 public class SkynetEngine extends AbstractSimEngine {
 
-    private final List<HungryBot> terminators = new ArrayList<>();
+    private final List<HungryBot> terminators;
 
-    public SkynetEngine(IWorldMap map,
-                        List<Vector2d> initialPositions,
+    public SkynetEngine(List<HungryBot> animals,
                         int moveDelay) {
         super(moveDelay);
-
-        for (Vector2d pos : initialPositions) {
-            HungryBot terminator = new HungryBot(map, pos);
-            terminators.add(terminator);
-            map.place(terminator);
-        }
+        terminators = animals;
     }
 
     @Override
