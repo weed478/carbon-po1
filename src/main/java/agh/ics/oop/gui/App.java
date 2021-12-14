@@ -116,6 +116,10 @@ public class App extends Application implements ISimulationObserver {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        if (getParameters().getRaw().size() > 0) {
+            runWithArgs(getParameters().getRaw());
+        }
     }
 
     private void onStopButtonPress(ActionEvent e) {
