@@ -11,6 +11,10 @@ import javafx.scene.layout.VBox;
 public class GuiElementBox {
 
     public static Node create(IMapElement element) {
+        // Próbowałem zrobić cache ImageView, ale wtedy pokazuje
+        // się tylko jeden obrazek danego typu.
+        // Więc chyba w javafx nie można wykorzystywać
+        // wielokrotnie tego samego obiektu (Node)
         Image image = ImageProvider.getForAsset(element.assetName());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(30);
