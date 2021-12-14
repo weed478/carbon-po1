@@ -3,66 +3,132 @@ package agh.ics.oop.gui;
 import agh.ics.oop.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main application class
  */
 public class App extends Application implements ISimulationObserver {
 
-    private final IDrawableMap map = new GrassField(10);
+    private final List<HungryBot> animals = new ArrayList<>();
+    private final Gridalator gridalator;
     private IRunnableEngine engine;
-    private final Gridalator gridalator = new Gridalator(map);
+    private Thread simulationThread;
 
+    Stage primaryStage;
     private GridPane gridPane;
-    private Pane rootPane;
+    private Pane gridContainer;
+    TextField directionsTF;
 
-    @Override
-    public void init() {
-        List<Vector2d> initialPositions = Arrays.asList(
-                new Vector2d(2,2),
-                new Vector2d(3,4)
-        );
+    /**
+     * Initialize world with GrassField and 2 animals
+     */
+    public App() {
+        IDrawableMap map = new GrassField(10);
+        gridalator = new Gridalator(map);
+        animals.add(new HungryBot(map, new Vector2d(2, 2)));
+        animals.add(new HungryBot(map, new Vector2d(3, 4)));
+        map.place(animals.get(0));
+        map.place(animals.get(1));
+    }
+
+    /**
+     * Create new simulation thread running simulation
+     * specified by args.
+     * @param args Program arguments
+     */
+    private void runWithArgs(List<String> args) {
+        stopSim();
 
         // create an engine based on supplied launch intent
-        AppLaunchIntent intent = AppLaunchIntent.parse(getParameters().getRaw());
+        AppLaunchIntent intent = AppLaunchIntent.parse(args);
         if (intent instanceof SkynetLaunchIntent) {
-            engine = new SkynetEngine(map, initialPositions, 500);
+            engine = new SkynetEngine(animals, 500);
         }
         else if (intent instanceof ManualLaunchIntent) {
             ManualLaunchIntent manualIntent = (ManualLaunchIntent) intent;
-            engine = new SimulationEngine(manualIntent.directions, map, initialPositions, 500);
+            engine = new SimulationEngine(
+                    manualIntent.directions,
+                    animals.stream()
+                            .map(a -> (Animal) a)
+                            .collect(Collectors.toList()),
+                    500);
         }
         else {
             throw new IllegalArgumentException("Unknown intent: " + intent.getClass());
         }
 
         engine.addObserver(this);
+
+        simulationThread = new Thread(engine);
+        // stop simulation thread when user closes app
+        primaryStage.setOnCloseRequest(e -> simulationThread.interrupt());
+        simulationThread.start();
+    }
+
+    private void stopSim() {
+        if (engine != null) {
+            engine.removeObserver(this);
+        }
+
+        if (simulationThread != null) {
+            simulationThread.interrupt();
+            try {
+                simulationThread.join();
+            } catch (InterruptedException e) {
+                System.err.println("Interrupted");
+            }
+        }
     }
 
     @Override
     public void start(Stage primaryStage) {
-        VBox root = new VBox();
-        rootPane = root;
+        this.primaryStage = primaryStage;
 
+        gridContainer = new VBox();
         drawGrid();
+
+        directionsTF = new TextField();
+        Button goButton = new Button("GO!");
+        goButton.setOnAction(this::onGoButtonPress);
+        Button autoButton = new Button("Auto");
+        autoButton.setOnAction(this::onAutoButtonPress);
+        Button stopButton = new Button("Stop");
+        stopButton.setOnAction(this::onStopButtonPress);
+        HBox controls = new HBox(directionsTF, goButton, autoButton, stopButton);
+        VBox root = new VBox(controls, gridContainer);
 
         Scene scene = new Scene(root, 400, 400);
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
 
-        Thread simulationThread = new Thread(engine);
-        // stop simulation thread when user closes app
-        primaryStage.setOnCloseRequest(e -> simulationThread.interrupt());
-        simulationThread.start();
+    private void onStopButtonPress(ActionEvent e) {
+        stopSim();
+    }
+
+    private void onAutoButtonPress(ActionEvent e) {
+        runWithArgs(Collections.singletonList("skynet"));
+    }
+
+    private void onGoButtonPress(ActionEvent e) {
+        String directionsText = directionsTF.getText();
+        runWithArgs(Arrays.asList(directionsText.split(" ")));
     }
 
     /**
@@ -71,11 +137,11 @@ public class App extends Application implements ISimulationObserver {
     private synchronized void drawGrid() {
         if (gridPane != null) {
             // remove old grid from scene
-            rootPane.getChildren().remove(gridPane);
+            gridContainer.getChildren().remove(gridPane);
         }
         // create new grid
         gridPane = gridalator.makeGrid();
-        rootPane.getChildren().add(gridPane);
+        gridContainer.getChildren().add(gridPane);
     }
 
     @Override
