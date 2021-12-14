@@ -3,6 +3,9 @@ package agh.ics.oop;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Basic Animal map implementation.
+ */
 public abstract class AbstractWorldMap implements IDrawableMap, IPositionChangeObserver {
     private static final Vector2d MARGIN = new Vector2d(3, 3);
     private final MapVisualizer visualizer = new MapVisualizer(this);

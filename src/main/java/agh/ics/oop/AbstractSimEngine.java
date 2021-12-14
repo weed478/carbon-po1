@@ -3,6 +3,10 @@ package agh.ics.oop;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Sleeping loop implementation of IRunnableEngine.
+ * Runs IEngine::simulateStep() every moveDelay ms.
+ */
 public abstract class AbstractSimEngine implements IRunnableEngine {
 
     private final int moveDelay;
@@ -37,12 +41,18 @@ public abstract class AbstractSimEngine implements IRunnableEngine {
         simulationEnded();
     }
 
+    /**
+     * Notify observers that state changed.
+     */
     private void simulationStateChanged() {
         for (ISimulationObserver o : observers) {
             o.simulationStateChanged();
         }
     }
 
+    /**
+     * Notify observers that simulation ended.
+     */
     private void simulationEnded() {
         for (ISimulationObserver o : observers) {
             o.simulationEnded();

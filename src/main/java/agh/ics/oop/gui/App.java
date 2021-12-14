@@ -12,6 +12,9 @@ import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Main application class
+ */
 public class App extends Application implements ISimulationObserver {
 
     private final IDrawableMap map = new GrassField(10);
@@ -28,6 +31,7 @@ public class App extends Application implements ISimulationObserver {
                 new Vector2d(3,4)
         );
 
+        // create an engine based on supplied launch intent
         AppLaunchIntent intent = AppLaunchIntent.parse(getParameters().getRaw());
         if (intent instanceof SkynetLaunchIntent) {
             engine = new SkynetEngine(map, initialPositions, 500);
@@ -56,14 +60,20 @@ public class App extends Application implements ISimulationObserver {
         primaryStage.show();
 
         Thread simulationThread = new Thread(engine);
+        // stop simulation thread when user closes app
         primaryStage.setOnCloseRequest(e -> simulationThread.interrupt());
         simulationThread.start();
     }
 
+    /**
+     * Rebuild GridPane based on current map state.
+     */
     private synchronized void drawGrid() {
         if (gridPane != null) {
+            // remove old grid from scene
             rootPane.getChildren().remove(gridPane);
         }
+        // create new grid
         gridPane = gridalator.makeGrid();
         rootPane.getChildren().add(gridPane);
     }

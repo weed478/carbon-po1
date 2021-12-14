@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Can simulate a given Stream of moves.
+ */
 public class SimulationEngine extends AbstractSimEngine {
 
     private final List<Animal> animals = new ArrayList<>();

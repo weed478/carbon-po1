@@ -10,6 +10,9 @@ import javafx.scene.layout.VBox;
 
 public class GuiElementBox {
 
+    /**
+     * Create a JavaFX Node representing an IMapElement
+     */
     public static Node create(IMapElement element) {
         // Próbowałem zrobić cache ImageView, ale wtedy pokazuje
         // się tylko jeden obrazek danego typu.

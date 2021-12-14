@@ -1,5 +1,8 @@
 package agh.ics.oop;
 
+/**
+ * Animal with AI.
+ */
 public class HungryBot extends Animal {
 
     private static final int SEARCH_RADIUS = 5;

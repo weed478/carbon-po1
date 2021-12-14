@@ -3,6 +3,9 @@ package agh.ics.oop;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Infinite simulation with animal AIs.
+ */
 public class SkynetEngine extends AbstractSimEngine {
 
     private final List<HungryBot> terminators = new ArrayList<>();

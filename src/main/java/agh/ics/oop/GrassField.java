@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Adds support for Grass fields to Animal map
+ */
 public class GrassField extends AbstractWorldMap {
 
     private final Map<Vector2d, Grass> grassFields = new HashMap<>();
@@ -31,6 +34,9 @@ public class GrassField extends AbstractWorldMap {
         return o;
     }
 
+    /**
+     * Remove grass and grow new.
+     */
     public void eatGrass(Vector2d pos) {
         grassFields.remove(pos);
         growGrass();

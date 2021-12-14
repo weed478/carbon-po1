@@ -3,6 +3,9 @@ package agh.ics.oop;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * Keeps track of the area occupied by map elements.
+ */
 public class MapBoundary implements IPositionChangeObserver {
 
     private final SortedSet<Vector2d> xElements = new TreeSet<>(MapBoundary::compareVectorsX);
