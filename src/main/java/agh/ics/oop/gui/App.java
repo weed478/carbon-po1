@@ -86,6 +86,9 @@ public class App extends Application implements ISimulationStateObserver {
                 }, scene.widthProperty(), scene.heightProperty())
         );
 
+        mapCanvas.widthProperty().addListener((observable, oldValue, newValue) -> scheduleDrawMap());
+        mapCanvas.heightProperty().addListener((observable, oldValue, newValue) -> scheduleDrawMap());
+
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -94,23 +97,28 @@ public class App extends Application implements ISimulationStateObserver {
         simulationThread.start();
     }
 
-    private void drawMap() {
-        GraphicsContext gc = mapCanvas.getGraphicsContext2D();
-        gc.save();
-        gc.scale(mapCanvas.getWidth(), mapCanvas.getHeight());
-        gc.setFill(Color.rgb(0, 0, 0));
-        gc.fillRect(0, 0, 1, 1);
-        drawableMap.draw(gc);
-        gc.restore();
-
-        drawingDone.release();
+    private void scheduleDrawMap() {
+        if (drawingDone.tryAcquire()) {
+            Platform.runLater(() -> {
+                try {
+                    GraphicsContext gc = mapCanvas.getGraphicsContext2D();
+                    gc.save();
+                    gc.scale(mapCanvas.getWidth(), mapCanvas.getHeight());
+                    gc.setFill(Color.rgb(0, 0, 0));
+                    gc.fillRect(0, 0, 1, 1);
+                    drawableMap.draw(gc);
+                    gc.restore();
+                }
+                finally {
+                    drawingDone.release();
+                }
+            });
+        }
     }
 
     @Override
     public void simulationStateChanged() {
-        if (drawingDone.tryAcquire()) {
-            Platform.runLater(this::drawMap);
-        }
+        scheduleDrawMap();
     }
 
     @Override
