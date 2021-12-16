@@ -170,6 +170,10 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         gc.fillRect(-0.5, -0.5, 1, healthBar);
         gc.restore();
 
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(0.1);
+        gc.stroke();
+
         gc.rotate(getDirection().angle());
         gc.setLineWidth(0.1);
         gc.setStroke(Color.BLACK);
