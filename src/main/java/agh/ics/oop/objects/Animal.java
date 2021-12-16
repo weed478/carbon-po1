@@ -151,50 +151,26 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-//        gc.setFill(Color.DARKRED);
-//        gc.fillRoundRect(x0, y0, w, h, w, h);
+        gc.save();
+        gc.translate(0.5, 0.5);
+        gc.scale(0.8, 0.8);
 
-//        Shape healthBar;
-//
-//        if (getFood() < MAX_HEALTH_BAR) {
-//            double healthBarHeight = Math.min(1, (double) getFood() / MAX_HEALTH_BAR) * 0.8 * size;
-//            double healthBarY = 0.4 * size - healthBarHeight;
-//            double healthBarX = Math.sqrt(0.4 * size * 0.4 * size - healthBarY * healthBarY);
-//            Path healthBarArc = new Path();
-//            healthBarArc.getElements().addAll(
-//                    new MoveTo(-healthBarX, healthBarY),
-//                    new ArcTo(
-//                            0.4 * size,
-//                            0.4 * size,
-//                            0,
-//                            healthBarX,
-//                            healthBarY,
-//                            healthBarY < 0,
-//                            false)
-//            );
-//            healthBarArc.setFill(new Color(1, 0, 0, 1));
-//            healthBar = healthBarArc;
-//        }
-//        else {
-//            healthBar = new Circle(0, 0, 0.4 * size, Color.RED);
-//        }
+        gc.beginPath();
+        gc.arc(0, 0, 0.5, 0.5, 0, 360);
+        gc.closePath();
+        gc.clip();
 
-//        Path arrow = new Path();
-//        MoveTo moveTo = new MoveTo(-0.2 * size, 0);
-//        LineTo line1 = new LineTo(0, -0.3 * size);
-//        LineTo line2 = new LineTo(0.2 * size,0);
-//        arrow.getElements().addAll(moveTo, line1, line2);
-//        arrow.getTransforms().add(new Rotate(getDirection().angle(), 0, 0));
-
+        gc.setFill(Color.DARKRED);
+        gc.fill();
 
         gc.save();
-
-        gc.translate(0.5, 0.5);
-        gc.rotate(getDirection().angle());
-
+        gc.rotate(180);
         gc.setFill(Color.RED);
-        gc.fillRoundRect(-0.4, -0.4, 0.8, 0.8, 0.8, 0.8);
+        double healthBar = Math.min((double) getFood() / MAX_HEALTH_BAR, 1);
+        gc.fillRect(-0.5, -0.5, 1, healthBar);
+        gc.restore();
 
+        gc.rotate(getDirection().angle());
         gc.setLineWidth(0.1);
         gc.setStroke(Color.BLACK);
         gc.beginPath();
