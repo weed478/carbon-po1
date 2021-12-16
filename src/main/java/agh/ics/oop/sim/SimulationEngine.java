@@ -102,7 +102,9 @@ public class SimulationEngine implements Runnable {
         for (;;) {
             try {
                 Thread.sleep(simulationDelay);
-                simulateDay();
+                synchronized (map) {
+                    simulateDay();
+                }
                 simulationStateChanged();
             } catch (InterruptedException e) {
                 break;

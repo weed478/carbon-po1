@@ -16,23 +16,27 @@ public class MapPainter implements IDrawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        Rect bounds = map.getDrawingBounds();
+        synchronized (map) {
 
-        double gridW = 1. / bounds.width();
-        double gridH = 1. / bounds.height();
+            Rect bounds = map.getDrawingBounds();
 
-        for (int mx = bounds.getBL().x, cx = 0; mx < bounds.getTR().x; mx++, cx++) {
-            for (int my = bounds.getBL().y, cy = bounds.height() - 1; my < bounds.getTR().y; my++, cy--) {
-                List<IDrawable> drawables = map.getDrawablesAt(new Vector2d(mx, my));
+            double gridW = 1. / bounds.width();
+            double gridH = 1. / bounds.height();
 
-                for (IDrawable drawable : drawables) {
-                    gc.save();
-                    gc.translate(gridW * cx, gridH * cy);
-                    gc.scale(gridW, gridH);
-                    drawable.draw(gc);
-                    gc.restore();
+            for (int mx = bounds.getBL().x, cx = 0; mx < bounds.getTR().x; mx++, cx++) {
+                for (int my = bounds.getBL().y, cy = bounds.height() - 1; my < bounds.getTR().y; my++, cy--) {
+                    List<IDrawable> drawables = map.getDrawablesAt(new Vector2d(mx, my));
+
+                    for (IDrawable drawable : drawables) {
+                        gc.save();
+                        gc.translate(gridW * cx, gridH * cy);
+                        gc.scale(gridW, gridH);
+                        drawable.draw(gc);
+                        gc.restore();
+                    }
                 }
             }
+
         }
     }
 }
