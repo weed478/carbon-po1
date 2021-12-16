@@ -8,6 +8,6 @@ public class JungleField implements IDrawable {
     @Override
     public void draw(GraphicsContext gc) {
         gc.setFill(Color.FORESTGREEN);
-        gc.fillRect(0.01, 0.01, 0.98, 0.98);
+        gc.fillRect(0, 0, 1, 1);
     }
 }

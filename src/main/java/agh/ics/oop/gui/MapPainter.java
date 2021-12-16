@@ -30,7 +30,7 @@ public class MapPainter implements IDrawable {
                     for (IDrawable drawable : drawables) {
                         gc.save();
                         gc.translate(gridW * cx, gridH * cy);
-                        gc.scale(gridW, gridH);
+                        gc.scale(gridW * 0.98, gridH * 0.98);
                         drawable.draw(gc);
                         gc.restore();
                     }
