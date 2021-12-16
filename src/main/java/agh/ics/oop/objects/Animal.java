@@ -1,18 +1,15 @@
 package agh.ics.oop.objects;
 
 import agh.ics.oop.core.Vector2d;
-import agh.ics.oop.gui.IDrawableElement;
+import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.map.IAnimalMap;
 import agh.ics.oop.map.MapDirection;
-import javafx.scene.Group;
-import javafx.scene.Node;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
-import javafx.scene.transform.Rotate;
 
 import java.util.Random;
 
-public class Animal extends AbstractObservableMapElement implements IDrawableElement {
+public class Animal extends AbstractObservableMapElement implements IDrawable {
     private static final int MAX_HEALTH_BAR = 20;
     private static final int GENOME_SIZE = 32;
     private static final int GENOME_RANGE = 8;
@@ -153,45 +150,68 @@ public class Animal extends AbstractObservableMapElement implements IDrawableEle
     }
 
     @Override
-    public Node getDrawableNode(int size) {
-        Circle circle = new Circle();
-        circle.setCenterX(0);
-        circle.setCenterY(0);
-        circle.setRadius(0.4 * size);
-        circle.setFill(Color.DARKRED);
+    public void draw(GraphicsContext gc) {
+//        gc.setFill(Color.DARKRED);
+//        gc.fillRoundRect(x0, y0, w, h, w, h);
 
-        Shape healthBar;
+//        Shape healthBar;
+//
+//        if (getFood() < MAX_HEALTH_BAR) {
+//            double healthBarHeight = Math.min(1, (double) getFood() / MAX_HEALTH_BAR) * 0.8 * size;
+//            double healthBarY = 0.4 * size - healthBarHeight;
+//            double healthBarX = Math.sqrt(0.4 * size * 0.4 * size - healthBarY * healthBarY);
+//            Path healthBarArc = new Path();
+//            healthBarArc.getElements().addAll(
+//                    new MoveTo(-healthBarX, healthBarY),
+//                    new ArcTo(
+//                            0.4 * size,
+//                            0.4 * size,
+//                            0,
+//                            healthBarX,
+//                            healthBarY,
+//                            healthBarY < 0,
+//                            false)
+//            );
+//            healthBarArc.setFill(new Color(1, 0, 0, 1));
+//            healthBar = healthBarArc;
+//        }
+//        else {
+//            healthBar = new Circle(0, 0, 0.4 * size, Color.RED);
+//        }
 
-        if (getFood() < MAX_HEALTH_BAR) {
-            double healthBarHeight = Math.min(1, (double) getFood() / MAX_HEALTH_BAR) * 0.8 * size;
-            double healthBarY = 0.4 * size - healthBarHeight;
-            double healthBarX = Math.sqrt(0.4 * size * 0.4 * size - healthBarY * healthBarY);
-            Path healthBarArc = new Path();
-            healthBarArc.getElements().addAll(
-                    new MoveTo(-healthBarX, healthBarY),
-                    new ArcTo(
-                            0.4 * size,
-                            0.4 * size,
-                            0,
-                            healthBarX,
-                            healthBarY,
-                            healthBarY < 0,
-                            false)
-            );
-            healthBarArc.setFill(new Color(1, 0, 0, 1));
-            healthBar = healthBarArc;
-        }
-        else {
-            healthBar = new Circle(0, 0, 0.4 * size, Color.RED);
-        }
+//        Path arrow = new Path();
+//        MoveTo moveTo = new MoveTo(-0.2 * size, 0);
+//        LineTo line1 = new LineTo(0, -0.3 * size);
+//        LineTo line2 = new LineTo(0.2 * size,0);
+//        arrow.getElements().addAll(moveTo, line1, line2);
+//        arrow.getTransforms().add(new Rotate(getDirection().angle(), 0, 0));
 
-        Path arrow = new Path();
-        MoveTo moveTo = new MoveTo(-0.2 * size, 0);
-        LineTo line1 = new LineTo(0, -0.3 * size);
-        LineTo line2 = new LineTo(0.2 * size,0);
-        arrow.getElements().addAll(moveTo, line1, line2);
-        arrow.getTransforms().add(new Rotate(getDirection().angle(), 0, 0));
 
-        return new Group(circle, healthBar, arrow);
+        gc.save();
+
+        gc.translate(0.5, 0.5);
+        gc.rotate(getDirection().angle());
+
+        gc.setFill(Color.RED);
+        gc.fillRoundRect(-0.4, -0.4, 0.8, 0.8, 0.8, 0.8);
+
+        gc.setLineWidth(0.1);
+        gc.setStroke(Color.BLACK);
+        gc.beginPath();
+        gc.moveTo(
+                -0.2,
+                0
+        );
+        gc.lineTo(
+                0,
+                -0.3
+        );
+        gc.lineTo(
+                0.2,
+                0
+        );
+        gc.stroke();
+
+        gc.restore();
     }
 }

@@ -11,21 +11,25 @@ import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 
 public class App extends Application implements ISimulationStateObserver {
 
-    private GridBuilder gridBuilder;
-    private VBox root;
-    private SimulationEngine simulationEngine;
+    private final SimulationEngine simulationEngine;
+    private final Canvas mapCanvas;
+    private final IDrawable drawableMap;
+    private final Semaphore drawingDone = new Semaphore(1);
 
-    @Override
-    public void init() {
+    public App() {
         IAnimalAndGrassDrawableMap map = new ToroidalMap(
                 new Rect(0, 0, 100, 30),
                 new Rect(45, 10, 55, 20)
@@ -39,14 +43,16 @@ public class App extends Application implements ISimulationStateObserver {
         simulationEngine = new SimulationEngine(500, map, animals);
         simulationEngine.addSimulationStateObserver(this);
 
-        gridBuilder = new GridBuilder(map);
+        drawableMap = new MapPainter(map);
+
+        mapCanvas = new Canvas(1000, 300);
     }
 
     @Override
     public void start(Stage primaryStage) {
-        root = new VBox();
+        VBox root = new VBox();
 
-        root.getChildren().add(gridBuilder.buildGrid());
+        root.getChildren().add(mapCanvas);
 
         Scene scene = new Scene(root, 1000, 300);
         primaryStage.setScene(scene);
@@ -57,14 +63,23 @@ public class App extends Application implements ISimulationStateObserver {
         simulationThread.start();
     }
 
-    private void updateGrid() {
-        root.getChildren().remove(root.getChildren().size() - 1);
-        root.getChildren().add(gridBuilder.buildGrid());
+    private void drawMap() {
+        GraphicsContext gc = mapCanvas.getGraphicsContext2D();
+        gc.save();
+        gc.scale(mapCanvas.getWidth(), mapCanvas.getHeight());
+        gc.setFill(Color.rgb(0, 0, 0));
+        gc.fillRect(0, 0, 1, 1);
+        drawableMap.draw(gc);
+        gc.restore();
+
+        drawingDone.release();
     }
 
     @Override
     public void simulationStateChanged() {
-        Platform.runLater(this::updateGrid);
+        if (drawingDone.tryAcquire()) {
+            Platform.runLater(this::drawMap);
+        }
     }
 
     @Override

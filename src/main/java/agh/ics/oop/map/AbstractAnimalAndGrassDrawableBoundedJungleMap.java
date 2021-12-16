@@ -4,7 +4,7 @@ import agh.ics.oop.core.IMapElementObserver;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.DesertField;
-import agh.ics.oop.gui.IDrawableElement;
+import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.gui.JungleField;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
@@ -139,8 +139,8 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public List<IDrawableElement> getDrawablesAt(Vector2d pos) {
-        List<IDrawableElement> drawables = new ArrayList<>();
+    public List<IDrawable> getDrawablesAt(Vector2d pos) {
+        List<IDrawable> drawables = new ArrayList<>();
 
         if (jungleArea.contains(pos)) {
             drawables.add(new JungleField());

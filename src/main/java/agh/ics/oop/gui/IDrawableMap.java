@@ -9,5 +9,5 @@ public interface IDrawableMap {
 
     Rect getDrawingBounds();
 
-    List<IDrawableElement> getDrawablesAt(Vector2d pos);
+    List<IDrawable> getDrawablesAt(Vector2d pos);
 }
