@@ -10,6 +10,7 @@ import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,6 +28,7 @@ public class App extends Application implements ISimulationStateObserver {
     private final SimulationEngine simulationEngine;
     private final Canvas mapCanvas;
     private final IDrawable drawableMap;
+    private final IDrawableMap map;
     private final Semaphore drawingDone = new Semaphore(1);
 
     public App() {
@@ -34,6 +36,8 @@ public class App extends Application implements ISimulationStateObserver {
                 new Rect(0, 0, 100, 30),
                 new Rect(45, 10, 55, 20)
         );
+
+        this.map = map;
 
         List<Animal> animals = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
@@ -45,7 +49,7 @@ public class App extends Application implements ISimulationStateObserver {
 
         drawableMap = new MapPainter(map);
 
-        mapCanvas = new Canvas(1000, 300);
+        mapCanvas = new Canvas();
     }
 
     @Override
@@ -54,7 +58,34 @@ public class App extends Application implements ISimulationStateObserver {
 
         root.getChildren().add(mapCanvas);
 
-        Scene scene = new Scene(root, 1000, 300);
+        Scene scene = new Scene(root, 720, 480);
+
+        mapCanvas.widthProperty().bind(
+            Bindings.createDoubleBinding(() -> {
+                double mapAspect = (double) map.getDrawingBounds().width() / map.getDrawingBounds().height();
+                double sceneAspect = scene.getWidth() / scene.getHeight();
+                if (mapAspect > sceneAspect) {
+                    return scene.getWidth();
+                }
+                else {
+                    return scene.getHeight() * mapAspect;
+                }
+            }, scene.widthProperty(), scene.heightProperty())
+        );
+
+        mapCanvas.heightProperty().bind(
+                Bindings.createDoubleBinding(() -> {
+                    double mapAspect = (double) map.getDrawingBounds().width() / map.getDrawingBounds().height();
+                    double sceneAspect = scene.getWidth() / scene.getHeight();
+                    if (mapAspect > sceneAspect) {
+                        return scene.getWidth() / mapAspect;
+                    }
+                    else {
+                        return scene.getHeight();
+                    }
+                }, scene.widthProperty(), scene.heightProperty())
+        );
+
         primaryStage.setScene(scene);
         primaryStage.show();
 
