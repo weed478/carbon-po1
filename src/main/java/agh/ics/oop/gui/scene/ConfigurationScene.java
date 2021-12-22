@@ -3,10 +3,7 @@ package agh.ics.oop.gui.scene;
 import agh.ics.oop.core.SimulationConfig;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -70,17 +67,30 @@ public class ConfigurationScene implements IScene {
     }
 
     private void onPressStart(ActionEvent e) {
-        SimulationConfig config = SimulationConfig.parse(
-            mapWidthTF.getText(),
-            mapHeightTF.getText(),
-            jungleRatioTF.getText(),
-            initialAnimalsTF.getText(),
-            startEnergyTF.getText(),
-            moveEnergyTF.getText(),
-            plantEnergyTF.getText(),
-            isMagicCB.isSelected()
-        );
-        new SimulationScene(config)
-                .showOnStage(stage);
+        try {
+            SimulationConfig config = SimulationConfig.parse(
+                    mapWidthTF.getText(),
+                    mapHeightTF.getText(),
+                    jungleRatioTF.getText(),
+                    initialAnimalsTF.getText(),
+                    startEnergyTF.getText(),
+                    moveEnergyTF.getText(),
+                    plantEnergyTF.getText(),
+                    isMagicCB.isSelected()
+            );
+            new SimulationScene(config)
+                    .showOnStage(stage);
+        }
+        catch (Exception ex) {
+            alertException(ex);
+        }
+    }
+
+    private void alertException(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error starting simulation");
+        alert.setHeaderText("Invalid configuration");
+        alert.setContentText(e.getMessage());
+        alert.show();
     }
 }
