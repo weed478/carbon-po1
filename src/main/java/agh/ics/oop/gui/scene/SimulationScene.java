@@ -44,10 +44,10 @@ public class SimulationScene implements IScene, ISimulationStateObserver {
         for (int i = 0; i < config.initialAnimals; i++) {
             animals.add(
                     new Animal(
+                            config,
                             map,
                             new Vector2d(config.mapArea.width() / 2, config.mapArea.height() / 2),
-                            MapDirection.N,
-                            config.startEnergy
+                            MapDirection.N
                     )
             );
         }

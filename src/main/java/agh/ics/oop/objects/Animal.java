@@ -1,5 +1,6 @@
 package agh.ics.oop.objects;
 
+import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.map.IAnimalMap;
@@ -10,10 +11,10 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 
 public class Animal extends AbstractObservableMapElement implements IDrawable {
-    private static final int MAX_HEALTH_BAR = 20;
     private static final int GENOME_SIZE = 32;
     private static final int GENOME_RANGE = 8;
 
+    private final SimulationConfig config;
     private final int[] genome;
     private final Random rand = new Random();
     private final IAnimalMap map;
@@ -54,15 +55,16 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     /**
      * Adam/Eve constructor.
      * Will register the animal on the map.
+     * @param config simulation configuration
      * @param map animal's map
      * @param position initial position
      * @param direction initial direction
-     * @param food initial food
      */
-    public Animal(IAnimalMap map, Vector2d position, MapDirection direction, int food) {
+    public Animal(SimulationConfig config, IAnimalMap map, Vector2d position, MapDirection direction) {
         super(position, direction);
+        this.config = config;
         this.map = map;
-        this.food = food;
+        this.food = config.startEnergy;
         this.genome = makeRandomGenome();
         map.registerAnimal(this);
     }
@@ -76,7 +78,12 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
      */
     public Animal(Animal p1, Animal p2) {
         super(p1.getPosition(), p1.getDirection());
+        this.config = p1.config;
         this.map = p1.map;
+
+        if (p1.config != p2.config) {
+            throw new IllegalStateException("Parents have different configs");
+        }
 
         if (!p1.getPosition().equals(p2.getPosition())) {
             throw new IllegalStateException("Parents are not on the same field");
@@ -116,7 +123,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         if (food <= 0) {
             throw new IllegalStateException("Animal does not have enough food");
         }
-        food--;
+        food -= config.moveEnergy;
     }
 
     public void eatGrass(Grass grass) {
@@ -124,11 +131,11 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
             throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
         }
         grass.elementRemoved();
-        food++;
+        food += config.plantEnergy;
     }
 
     public boolean canBreed() {
-        return getFood() >= 4;
+        return getFood() >= config.minBreedingEnergy;
     }
 
     public Animal breed(Animal other) {
@@ -166,7 +173,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         gc.save();
         gc.rotate(180);
         gc.setFill(Color.RED);
-        double healthBar = Math.min((double) getFood() / MAX_HEALTH_BAR, 1);
+        double healthBar = Math.min((double) getFood() / config.startEnergy, 1);
         gc.fillRect(-0.5, -0.5, 1, healthBar);
         gc.restore();
 
