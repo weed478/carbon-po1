@@ -1,6 +1,8 @@
 package agh.ics.oop.gui.scene;
 
+import javafx.stage.Stage;
+
 public interface IScene {
 
-    void show();
+    void showOnStage(Stage stage);
 }

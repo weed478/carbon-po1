@@ -26,16 +26,13 @@ import java.util.concurrent.Semaphore;
 
 public class SimulationScene implements IScene, ISimulationStateObserver {
 
-    private final Stage stage;
     private final SimulationEngine simulationEngine;
     private final Canvas mapCanvas;
     private final IDrawable drawableMap;
     private final IDrawableMap map;
     private final Semaphore drawingDone = new Semaphore(1);
 
-    public SimulationScene(Stage stage, SimulationConfig config) {
-        this.stage = stage;
-
+    public SimulationScene(SimulationConfig config) {
         IAnimalAndGrassDrawableMap map = new ToroidalMap(
                 config.mapArea,
                 config.jungleArea
@@ -64,7 +61,7 @@ public class SimulationScene implements IScene, ISimulationStateObserver {
     }
 
     @Override
-    public void show() {
+    public void showOnStage(Stage stage) {
         VBox root = new VBox();
 
         root.getChildren().add(mapCanvas);
@@ -100,12 +97,12 @@ public class SimulationScene implements IScene, ISimulationStateObserver {
         mapCanvas.widthProperty().addListener((observable, oldValue, newValue) -> scheduleDrawMap());
         mapCanvas.heightProperty().addListener((observable, oldValue, newValue) -> scheduleDrawMap());
 
-        stage.setScene(scene);
-        stage.show();
-
         Thread simulationThread = new Thread(simulationEngine);
         stage.setOnCloseRequest(e -> simulationThread.interrupt());
         simulationThread.start();
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void scheduleDrawMap() {

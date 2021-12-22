@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class ConfigurationScene implements IScene {
 
-    private final Stage stage;
+    private Stage stage;
     private final TextField mapWidthTF = new TextField("30");
     private final TextField mapHeightTF = new TextField("30");
     private final TextField jungleRatioTF = new TextField("30");
@@ -23,12 +23,10 @@ public class ConfigurationScene implements IScene {
     private final TextField plantEnergyTF = new TextField("10");
     private final CheckBox isMagicCB = new CheckBox("Use magic");
 
-    public ConfigurationScene(Stage stage) {
-        this.stage = stage;
-    }
-
     @Override
-    public void show() {
+    public void showOnStage(Stage stage) {
+        this.stage = stage;
+
         Button startBtn = new Button("Start");
         startBtn.setOnAction(this::onPressStart);
 
@@ -82,9 +80,7 @@ public class ConfigurationScene implements IScene {
             plantEnergyTF.getText(),
             isMagicCB.isSelected()
         );
-        new SimulationScene(
-                stage,
-                config
-        ).show();
+        new SimulationScene(config)
+                .showOnStage(stage);
     }
 }
