@@ -1,6 +1,6 @@
 package agh.ics.oop.gui.scene;
 
-import agh.ics.oop.core.Rect;
+import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.gui.IDrawableMap;
@@ -33,18 +33,26 @@ public class SimulationScene implements IScene, ISimulationStateObserver {
     private final IDrawableMap map;
     private final Semaphore drawingDone = new Semaphore(1);
 
-    public SimulationScene(Stage stage) {
+    public SimulationScene(Stage stage, SimulationConfig config) {
         this.stage = stage;
+
         IAnimalAndGrassDrawableMap map = new ToroidalMap(
-                new Rect(0, 0, 100, 30),
-                new Rect(45, 10, 55, 20)
+                config.mapArea,
+                config.jungleArea
         );
 
         this.map = map;
 
         List<Animal> animals = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            animals.add(new Animal(map, new Vector2d(50, 15), MapDirection.N, 100));
+        for (int i = 0; i < config.initialAnimals; i++) {
+            animals.add(
+                    new Animal(
+                            map,
+                            new Vector2d(config.mapArea.width() / 2, config.mapArea.height() / 2),
+                            MapDirection.N,
+                            config.startEnergy
+                    )
+            );
         }
 
         simulationEngine = new SimulationEngine(500, map, animals);
