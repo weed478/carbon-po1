@@ -2,6 +2,8 @@ package agh.ics.oop.gui.scene;
 
 import agh.ics.oop.core.SimulationConfig;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -18,7 +20,7 @@ public class ConfigurationScene implements IScene {
     private final TextField startEnergyTF = new TextField("50");
     private final TextField moveEnergyTF = new TextField("1");
     private final TextField plantEnergyTF = new TextField("10");
-    private final CheckBox isMagicCB = new CheckBox("Use magic");
+    private final CheckBox isMagicCB = new CheckBox();
 
     @Override
     public void showOnStage(Stage stage) {
@@ -27,39 +29,19 @@ public class ConfigurationScene implements IScene {
         Button startBtn = new Button("Start");
         startBtn.setOnAction(this::onPressStart);
 
-        VBox root = new VBox();
-        root.getChildren().addAll(
-                new HBox(
-                        new Label("Map width"),
-                        mapWidthTF
-                ),
-                new HBox(
-                        new Label("Map height"),
-                        mapHeightTF
-                ),
-                new HBox(
-                        new Label("Jungle ratio [%]"),
-                        jungleRatioTF
-                ),
-                new HBox(
-                        new Label("Initial animals"),
-                        initialAnimalsTF
-                ),
-                new HBox(
-                        new Label("Start energy"),
-                        startEnergyTF
-                ),
-                new HBox(
-                        new Label("Move energy"),
-                        moveEnergyTF
-                ),
-                new HBox(
-                        new Label("Plant energy"),
-                        plantEnergyTF
-                ),
-                isMagicCB,
+        VBox root = new VBox(
+                10,
+                labeledConfig(mapWidthTF, "Map width"),
+                labeledConfig(mapHeightTF, "Map height"),
+                labeledConfig(jungleRatioTF, "Jungle ratio [%]"),
+                labeledConfig(initialAnimalsTF, "Initial animals"),
+                labeledConfig(startEnergyTF, "Start energy"),
+                labeledConfig(moveEnergyTF, "Move energy"),
+                labeledConfig(plantEnergyTF, "Plant energy"),
+                labeledConfig(isMagicCB, "Is magic"),
                 startBtn
         );
+        root.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(root, 720, 480);
         stage.setScene(scene);
@@ -92,5 +74,12 @@ public class ConfigurationScene implements IScene {
         alert.setHeaderText("Invalid configuration");
         alert.setContentText(e.getMessage());
         alert.show();
+    }
+
+    private static Node labeledConfig(Node tf, String title) {
+        Label label = new Label(title);
+        HBox box = new HBox(10, label, tf);
+        box.setAlignment(Pos.CENTER);
+        return box;
     }
 }
