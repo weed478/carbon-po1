@@ -23,7 +23,6 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'agh.ics.oop'
     mainClass = 'agh.ics.oop.World'
 }
 
