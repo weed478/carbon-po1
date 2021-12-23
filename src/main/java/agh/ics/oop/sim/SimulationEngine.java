@@ -56,11 +56,14 @@ public class SimulationEngine implements Runnable {
     }
 
     private void processEating() {
-        // TODO fight for food
         for (Animal animal : animals) {
             Vector2d pos = animal.getPosition();
             Grass grass = map.getGrassAt(pos);
             if (grass != null) {
+                animal = map.getAnimalsAt(pos)
+                        .stream()
+                        .max(Comparator.comparingInt(Animal::getFood))
+                        .orElse(animal);
                 animal.eatGrass(grass);
             }
         }
