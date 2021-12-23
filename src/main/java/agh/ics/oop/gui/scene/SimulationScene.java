@@ -1,26 +1,25 @@
 package agh.ics.oop.gui.scene;
 
 import agh.ics.oop.core.SimulationConfig;
-import agh.ics.oop.gui.view.SimulationView;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class SimulationScene implements IScene {
 
-    private final Pane simLeft;
-    private final Pane simRight;
-
     public SimulationScene(SimulationConfig config) {
-        simLeft = new SimulationView(config, true).buildView();
-        simRight = new SimulationView(config, false).buildView();
+
     }
 
     @Override
     public void showOnStage(Stage stage) {
-        HBox root = new HBox(10, simLeft, simRight);
-        Scene scene = new Scene(root, 1280, 720);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("simulation.fxml"));
+        Scene scene;
+        try {
+            scene = new Scene(loader.load(), 1280, 720);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not load simulation layout FXML: " + e.getMessage());
+        }
         stage.setScene(scene);
         stage.show();
     }
