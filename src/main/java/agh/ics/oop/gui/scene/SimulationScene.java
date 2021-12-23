@@ -13,8 +13,8 @@ public class SimulationScene implements IScene {
     private final Pane simRight;
 
     public SimulationScene(SimulationConfig config) {
-        simLeft = new SimulationView(config).buildView();
-        simRight = new SimulationView(config).buildView();
+        simLeft = new SimulationView(config, true).buildView();
+        simRight = new SimulationView(config, false).buildView();
     }
 
     @Override

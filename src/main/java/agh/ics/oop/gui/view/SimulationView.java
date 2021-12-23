@@ -7,6 +7,7 @@ import agh.ics.oop.gui.IDrawableMap;
 import agh.ics.oop.gui.MapPainter;
 import agh.ics.oop.map.IAnimalAndGrassDrawableMap;
 import agh.ics.oop.map.MapDirection;
+import agh.ics.oop.map.RectangularMap;
 import agh.ics.oop.map.ToroidalMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
@@ -29,11 +30,20 @@ public class SimulationView implements IView, ISimulationStateObserver {
     private final IDrawableMap map;
     private final Semaphore drawingDone = new Semaphore(1);
 
-    public SimulationView(SimulationConfig config) {
-        IAnimalAndGrassDrawableMap map = new ToroidalMap(
-                config.mapArea,
-                config.jungleArea
-        );
+    public SimulationView(SimulationConfig config, boolean isLeft) {
+        IAnimalAndGrassDrawableMap map;
+        if (isLeft) {
+            map = new ToroidalMap(
+                    config.mapArea,
+                    config.jungleArea
+            );
+        }
+        else {
+            map = new RectangularMap(
+                    config.mapArea,
+                    config.jungleArea
+            );
+        }
 
         this.map = map;
 
