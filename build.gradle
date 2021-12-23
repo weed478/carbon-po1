@@ -4,25 +4,37 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'carbon'
+version '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
-javafx {
-    version = "17"
-    modules = [ 'javafx.base', 'javafx.controls', 'javafx.graphics' ]
+ext {
+    junitVersion = '5.8.2'
+}
+
+sourceCompatibility = '8'
+targetCompatibility = '8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 application {
+    mainModule = 'agh.ics.oop'
     mainClass = 'agh.ics.oop.World'
 }
 
+javafx {
+    version = '17'
+    modules = [ 'javafx.base', 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
+}
+
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 }
 
 test {
