@@ -10,4 +10,6 @@ public interface IAnimalMap extends IWorldMap {
     List<Animal> getAnimalsAt(Vector2d pos);
 
     void registerAnimal(Animal animal);
+
+    int getAnimalCount();
 }

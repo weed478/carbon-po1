@@ -10,4 +10,6 @@ public interface IGrassMap extends IWorldMap {
     void growGrass();
 
     void registerGrass(Grass grass);
+
+    int getGrassCount();
 }

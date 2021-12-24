@@ -52,8 +52,22 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
+    public int getAnimalCount() {
+        int count = 0;
+        for (List<Animal> set : animals.values()) {
+            count += set.size();
+        }
+        return count;
+    }
+
+    @Override
     public Grass getGrassAt(Vector2d pos) {
         return grasses.get(pos);
+    }
+
+    @Override
+    public int getGrassCount() {
+        return grasses.size();
     }
 
     @Override

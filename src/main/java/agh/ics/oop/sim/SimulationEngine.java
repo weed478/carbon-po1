@@ -132,6 +132,13 @@ public class SimulationEngine implements Runnable {
         simulationEnded();
     }
 
+    public SimulationStatistics getStatistics() {
+        return new SimulationStatistics(
+                map.getAnimalCount(),
+                map.getGrassCount()
+        );
+    }
+
     private void simulationStateChanged() {
         for (ISimulationStateObserver observer : observers) {
             observer.simulationStateChanged();

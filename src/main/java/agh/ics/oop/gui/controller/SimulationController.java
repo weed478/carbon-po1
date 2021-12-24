@@ -11,6 +11,7 @@ import agh.ics.oop.map.ToroidalMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
+import agh.ics.oop.sim.SimulationStatistics;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -133,9 +134,14 @@ public class SimulationController implements ISimulationStateObserver {
         }
     }
 
+    private void collectStatistics() {
+        SimulationStatistics stats = simulationEngine.getStatistics();
+    }
+
     @Override
     public void simulationStateChanged() {
         scheduleDrawMap();
+        collectStatistics();
     }
 
     @Override
