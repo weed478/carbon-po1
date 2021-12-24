@@ -78,10 +78,7 @@ public class SimulationEngine implements Runnable {
             Vector2d pos = animal.getPosition();
             Grass grass = map.getGrassAt(pos);
             if (grass != null) {
-                animal = map.getAnimalsAt(pos)
-                        .stream()
-                        .max(Comparator.comparingInt(Animal::getFood))
-                        .orElse(animal);
+                animal = map.getAnimalsAt(pos).get(0);
                 animal.eatGrass(grass);
             }
         }
@@ -95,12 +92,8 @@ public class SimulationEngine implements Runnable {
             if (processedPositions.contains(pos)) continue;
             processedPositions.add(pos);
 
-            List<Animal> candidates = map.getAnimalsAt(pos);
-            List<Animal> parents = candidates.stream()
-                    .sorted(Comparator.comparingInt(Animal::getFood).reversed())
-                    .limit(2)
-                    .collect(Collectors.toList());
-            if (parents.size() != 2 || !parents.get(0).canBreed() || !parents.get(1).canBreed())
+            List<Animal> parents = map.getAnimalsAt(pos);
+            if (parents.size() < 2 || !parents.get(0).canBreed() || !parents.get(1).canBreed())
                 continue;
             Animal child = parents.get(0).breed(parents.get(1));
             newAnimals.add(child);

@@ -44,7 +44,11 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     @Override
     public List<Animal> getAnimalsAt(Vector2d pos) {
         List<Animal> set = animals.get(pos);
-        return set != null ? set : new ArrayList<>();
+        if (set == null) {
+            return new ArrayList<>();
+        }
+        set.sort(Comparator.comparingInt(Animal::getFood).reversed());
+        return set;
     }
 
     @Override
@@ -159,7 +163,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
 
         List<Animal> animalSet = animals.get(pos);
         if (animalSet != null && !animalSet.isEmpty()) {
-            drawables.add(animalSet.stream().findAny().get());
+            drawables.add(animalSet.get(0));
         }
 
         return drawables;
