@@ -20,6 +20,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     private final IAnimalMap map;
     private int food;
     private int age = 0;
+    private int numChildren = 0;
 
     /**
      * Generates random genome.
@@ -110,6 +111,13 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         genome = crossGenome(p1, p2);
 
         map.registerAnimal(this);
+
+        p1.numChildren++;
+        p2.numChildren++;
+    }
+
+    public int getNumChildren() {
+        return numChildren;
     }
 
     public boolean isAlive() {

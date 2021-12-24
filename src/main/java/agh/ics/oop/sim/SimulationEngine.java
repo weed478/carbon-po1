@@ -139,17 +139,23 @@ public class SimulationEngine implements Runnable {
 
     public SimulationStatistics getStatistics() {
         double averageFood = 0;
+        double averageChildren = 0;
+
         for (Animal a : animals) {
             averageFood += a.getFood();
+            averageChildren += a.getNumChildren();
         }
+
         averageFood /= animals.size();
+        averageChildren /= animals.size();
 
         return new SimulationStatistics(
                 day,
                 map.getAnimalCount(),
                 map.getGrassCount(),
                 averageFood,
-                allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount)
+                allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount),
+                averageChildren
         );
     }
 

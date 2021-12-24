@@ -73,6 +73,10 @@ public class SimulationController implements ISimulationStateObserver {
     public LineChart<Number, Number> averageLifetimeChart;
     private final XYChart.Series<Number, Number> averageLifetimeSeries = new XYChart.Series<>();
 
+    @FXML
+    public LineChart<Number, Number> averageChildrenChart;
+    private final XYChart.Series<Number, Number> averageChildrenSeries = new XYChart.Series<>();
+
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
                 config.mapArea,
@@ -114,23 +118,27 @@ public class SimulationController implements ISimulationStateObserver {
             simulationEngine.setSimulationDelay((int) delay);
         });
 
-        numAnimalsSeries.setName("Animals");
         animalsChart.getData().add(numAnimalsSeries);
         animalsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Animals"));
 
-        numPlantsSeries.setName("Grass");
         plantsChart.getData().add(numPlantsSeries);
         plantsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Plants"));
 
-        averageFoodSeries.setName("Average energy");
         averageFoodChart.getData().add(averageFoodSeries);
         averageFoodChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average energy"));
 
-        averageLifetimeSeries.setName("Average lifetime");
         averageLifetimeChart.getData().add(averageLifetimeSeries);
         averageLifetimeChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average lifetime"));
 
-        selectChartDropdown.getItems().addAll("Animals", "Plants", "Average energy", "Average lifetime");
+        averageChildrenChart.getData().add(averageChildrenSeries);
+        averageChildrenChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average children"));
+
+        selectChartDropdown.getItems().addAll(
+                "Animals",
+                "Plants",
+                "Average energy",
+                "Average lifetime",
+                "Average children");
         selectChartDropdown.setValue("Animals");
     }
 
@@ -185,6 +193,7 @@ public class SimulationController implements ISimulationStateObserver {
                     numPlantsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numGrass));
                     averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
                     averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
+                    averageChildrenSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageChildren));
                 }
                 finally {
                     updatingChartsDone.release();

@@ -73,6 +73,14 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
+                        <LineChart fx:id="averageChildrenChart" createSymbols="false" legendVisible="false" visible="false">
+                           <xAxis>
+                              <NumberAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
+                        </LineChart>
                      </children>
                   </StackPane>
                </children>
