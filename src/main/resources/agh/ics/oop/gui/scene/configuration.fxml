@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="agh.ics.oop.gui.controller.ConfigurationController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.gui.controller.ConfigurationController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -28,25 +28,25 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0">
          <children>
             <Label text="Map width" />
-            <TextField fx:id="mapWidthTF" text="20" />
+            <TextField fx:id="mapWidthTF" text="15" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1">
          <children>
             <Label text="Map height" />
-            <TextField fx:id="mapHeightTF" text="20" />
+            <TextField fx:id="mapHeightTF" text="15" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.rowIndex="1">
          <children>
             <Label text="Jungle ratio [%]" />
-            <TextField fx:id="jungleRatioTF" text="30" />
+            <TextField fx:id="jungleRatioTF" text="25" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <Label text="Initial energy" />
-            <TextField fx:id="initialEnergyTF" text="30" />
+            <TextField fx:id="initialEnergyTF" text="100" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.rowIndex="2">
@@ -58,13 +58,13 @@
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <Label text="Move energy" />
-            <TextField fx:id="moveEnergyTF" text="1" />
+            <TextField fx:id="moveEnergyTF" text="3" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
             <Label text="Plant energy" />
-            <TextField fx:id="plantEnergyTF" text="30" />
+            <TextField fx:id="plantEnergyTF" text="100" />
          </children>
       </HBox>
       <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.rowIndex="3">
