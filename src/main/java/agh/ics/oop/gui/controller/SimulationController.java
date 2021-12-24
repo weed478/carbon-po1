@@ -7,6 +7,7 @@ import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.gui.MapPainter;
 import agh.ics.oop.map.IAnimalAndGrassDrawableMap;
 import agh.ics.oop.map.MapDirection;
+import agh.ics.oop.map.RectangularMap;
 import agh.ics.oop.map.ToroidalMap;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
@@ -80,11 +81,19 @@ public class SimulationController implements ISimulationStateObserver {
     @FXML
     public Label dominantGenomeLabel;
 
-    public SimulationController(SimulationConfig config) {
-        map = new ToroidalMap(
-                config.mapArea,
-                config.jungleArea
-        );
+    public SimulationController(SimulationConfig config, boolean isToroidal, boolean isMagic) {
+        if (isToroidal) {
+            map = new ToroidalMap(
+                    config.mapArea,
+                    config.jungleArea
+            );
+        }
+        else {
+            map = new RectangularMap(
+                    config.mapArea,
+                    config.jungleArea
+            );
+        }
 
         List<Animal> animals = new ArrayList<>();
         for (int i = 0; i < config.initialAnimals; i++) {

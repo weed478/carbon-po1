@@ -15,8 +15,8 @@ public class SimulationScene {
         FXMLLoader loaderLeft = new FXMLLoader(getClass().getResource("simulation.fxml"));
         FXMLLoader loaderRight = new FXMLLoader(getClass().getResource("simulation.fxml"));
 
-        loaderLeft.setControllerFactory(t -> new SimulationController(config));
-        loaderRight.setControllerFactory(t -> new SimulationController(config));
+        loaderLeft.setControllerFactory(t -> new SimulationController(config, true, false));
+        loaderRight.setControllerFactory(t -> new SimulationController(config, false, false));
 
         try {
             root.getChildren().add(loaderLeft.load());
