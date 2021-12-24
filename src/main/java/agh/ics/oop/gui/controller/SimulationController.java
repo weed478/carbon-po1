@@ -27,6 +27,8 @@ import java.util.concurrent.Semaphore;
 
 public class SimulationController implements ISimulationStateObserver {
 
+    private final SimulationEngine simulationEngine;
+
     private final IAnimalAndGrassDrawableMap map;
 
     private final IDrawable drawableMap;
@@ -60,7 +62,7 @@ public class SimulationController implements ISimulationStateObserver {
             );
         }
 
-        SimulationEngine simulationEngine = new SimulationEngine(500, map, animals);
+        simulationEngine = new SimulationEngine(500, map, animals);
         simulationEngine.addSimulationStateObserver(this);
         Thread simulationThread = new Thread(simulationEngine);
 
@@ -71,10 +73,17 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void initialize() {
-        simulationSpeedLabel.textProperty().bind(Bindings.createStringBinding(() -> {
-            int val = Math.round((float) simulationSpeedSlider.getValue());
-            return val + "%";
-        }, simulationSpeedSlider.valueProperty()));
+        simulationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            double val = newValue.doubleValue();
+
+            simulationSpeedLabel.setText(
+                    Math.round(val) + "%"
+            );
+
+            double delay = 1000 - val / 100 * 1000;
+
+            simulationEngine.setSimulationDelay((int) delay);
+        });
     }
 
     private Rect getCanvasArea() {

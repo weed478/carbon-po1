@@ -12,7 +12,7 @@ public class SimulationEngine implements Runnable {
 
     private final IAnimalAndGrassMap map;
     private final List<Animal> animals;
-    private final int simulationDelay;
+    private int simulationDelay;
     private final Set<ISimulationStateObserver> observers = new HashSet<>();
 
     public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
@@ -27,6 +27,10 @@ public class SimulationEngine implements Runnable {
 
     public void removeSimulationStateObserver(ISimulationStateObserver observer) {
         observers.remove(observer);
+    }
+
+    public synchronized void setSimulationDelay(int simulationDelay) {
+        this.simulationDelay = simulationDelay;
     }
 
     private void simulateDay() {
@@ -104,7 +108,11 @@ public class SimulationEngine implements Runnable {
     public void run() {
         for (;;) {
             try {
-                Thread.sleep(simulationDelay);
+                int delay;
+                synchronized (this) {
+                    delay = simulationDelay;
+                }
+                Thread.sleep(delay);
                 synchronized (map) {
                     simulateDay();
                 }
