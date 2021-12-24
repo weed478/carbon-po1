@@ -25,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -80,6 +81,9 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public Label dominantGenomeLabel;
+
+    @FXML
+    public Label trackedAnimalGenomeLabel;
 
     public SimulationController(SimulationConfig config, boolean isToroidal, boolean isMagic) {
         if (isToroidal) {
@@ -152,6 +156,36 @@ public class SimulationController implements ISimulationStateObserver {
                 "Average lifetime",
                 "Average children");
         selectChartDropdown.setValue("Animals");
+    }
+
+    @FXML
+    public void onCanvasClicked(MouseEvent e) {
+        Vector2d pos = canvasToPos(e.getX(), e.getY());
+        List<Animal> animals = map.getAnimalsAt(pos);
+        if (!animals.isEmpty()) {
+            Animal a = animals.get(0);
+            trackedAnimalGenomeLabel.setText(genomeToString(a.getGenome()));
+        }
+        else {
+            trackedAnimalGenomeLabel.setText("?");
+        }
+    }
+
+    private static String genomeToString(int[] genome) {
+        String str = "";
+        for (int gene : genome) {
+            str += gene;
+        }
+        return str;
+    }
+
+    private Vector2d canvasToPos(double x, double y) {
+        Rect area = getCanvasArea();
+        x -= area.left();
+        y -= area.bottom();
+        x /= (double) area.width() / map.getDrawingBounds().width();
+        y /= (double) area.height() / map.getDrawingBounds().height();
+        return new Vector2d((int) x, map.getDrawingBounds().height() - 1 - (int) y);
     }
 
     private Rect getCanvasArea() {

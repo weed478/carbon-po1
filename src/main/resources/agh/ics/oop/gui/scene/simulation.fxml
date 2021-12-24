@@ -25,7 +25,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <Canvas fx:id="mapCanvas" height="400.0" width="640.0" />
+      <Canvas fx:id="mapCanvas" height="400.0" onMouseClicked="#onCanvasClicked" width="640.0" />
       <HBox VBox.vgrow="ALWAYS">
          <children>
             <VBox>
@@ -88,7 +88,25 @@
             <VBox HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Dominant genome:" />
-                  <Label fx:id="dominantGenomeLabel" text="Label" />
+                  <Label fx:id="dominantGenomeLabel" text="?">
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin></Label>
+                  <Label text="Tracked animal:">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label text="Genome:">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="trackedAnimalGenomeLabel" text="?">
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
