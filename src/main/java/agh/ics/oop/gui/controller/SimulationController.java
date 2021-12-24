@@ -12,6 +12,7 @@ import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -76,15 +77,14 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void initialize() {
+        simulationSpeedLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            int val = Math.round((float) simulationSpeedSlider.getValue());
+            return val + "%";
+        }, simulationSpeedSlider.valueProperty()));
+
         simulationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double val = newValue.doubleValue();
-
-            simulationSpeedLabel.setText(
-                    Math.round(val) + "%"
-            );
-
             double delay = 1000 - val / 100 * 1000;
-
             simulationEngine.setSimulationDelay((int) delay);
         });
     }
