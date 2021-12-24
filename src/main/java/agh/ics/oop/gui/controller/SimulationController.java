@@ -160,14 +160,14 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void onCanvasClicked(MouseEvent e) {
+        trackedAnimalGenomeLabel.setText("?");
+
         Vector2d pos = canvasToPos(e.getX(), e.getY());
         List<Animal> animals = map.getAnimalsAt(pos);
         if (!animals.isEmpty()) {
             Animal a = animals.get(0);
+            a.select();
             trackedAnimalGenomeLabel.setText(genomeToString(a.getGenome()));
-        }
-        else {
-            trackedAnimalGenomeLabel.setText("?");
         }
     }
 

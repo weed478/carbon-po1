@@ -22,6 +22,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     private int food;
     private int age = 0;
     private int numChildren = 0;
+    private boolean isSelected = false;
 
     /**
      * Generates random genome.
@@ -115,6 +116,20 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
 
         p1.numChildren++;
         p2.numChildren++;
+
+        isSelected = p1.isSelected | p2.isSelected;
+    }
+
+    public void select() {
+        isSelected = true;
+    }
+
+    public void deselect() {
+        isSelected = false;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 
     public int[] getGenome() {
@@ -187,12 +202,12 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         gc.closePath();
         gc.clip();
 
-        gc.setFill(Color.DARKRED);
+        gc.setFill(isSelected ? Color.DARKGOLDENROD : Color.DARKRED);
         gc.fill();
 
         gc.save();
         gc.rotate(180);
-        gc.setFill(Color.RED);
+        gc.setFill(isSelected ? Color.GOLDENROD : Color.RED);
         double healthBar = Math.min((double) getFood() / config.startEnergy, 1);
         gc.fillRect(-0.5, -0.5, 1, healthBar);
         gc.restore();
