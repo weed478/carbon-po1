@@ -10,9 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ConfigurationScene implements IScene {
+public class ConfigurationScene {
 
-    private Stage stage;
+    private final Stage stage;
     private final TextField mapWidthTF = new TextField("30");
     private final TextField mapHeightTF = new TextField("30");
     private final TextField jungleRatioTF = new TextField("30");
@@ -22,8 +22,7 @@ public class ConfigurationScene implements IScene {
     private final TextField plantEnergyTF = new TextField("10");
     private final CheckBox isMagicCB = new CheckBox();
 
-    @Override
-    public void showOnStage(Stage stage) {
+    public ConfigurationScene(Stage stage) {
         this.stage = stage;
 
         Button startBtn = new Button("Start");
@@ -60,8 +59,7 @@ public class ConfigurationScene implements IScene {
                     plantEnergyTF.getText(),
                     isMagicCB.isSelected()
             );
-            new SimulationScene(config)
-                    .showOnStage(stage);
+            new SimulationScene(stage, config);
         }
         catch (Exception ex) {
             alertException(ex);
