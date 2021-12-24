@@ -6,7 +6,6 @@ import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class SimulationEngine implements Runnable {
 
@@ -133,9 +132,16 @@ public class SimulationEngine implements Runnable {
     }
 
     public SimulationStatistics getStatistics() {
+        double averageFood = 0;
+        for (Animal a : animals) {
+            averageFood += a.getFood();
+        }
+        averageFood /= animals.size();
+
         return new SimulationStatistics(
                 map.getAnimalCount(),
-                map.getGrassCount()
+                map.getGrassCount(),
+                averageFood
         );
     }
 

@@ -67,6 +67,11 @@ public class SimulationController implements ISimulationStateObserver {
 
     private XYChart.Series<Number, Number> numPlantsSeries;
 
+    @FXML
+    public LineChart<Number, Number> averageFoodChart;
+
+    private XYChart.Series<Number, Number> averageFoodSeries;
+
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
                 config.mapArea,
@@ -111,15 +116,19 @@ public class SimulationController implements ISimulationStateObserver {
         numAnimalsSeries = new XYChart.Series<>();
         numAnimalsSeries.setName("Animals");
         animalsChart.getData().add(numAnimalsSeries);
+        animalsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Animals"));
 
         numPlantsSeries = new XYChart.Series<>();
         numPlantsSeries.setName("Grass");
         plantsChart.getData().add(numPlantsSeries);
-
-        animalsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Animals"));
         plantsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Plants"));
 
-        selectChartDropdown.getItems().addAll("Animals", "Plants");
+        averageFoodSeries = new XYChart.Series<>();
+        averageFoodSeries.setName("Average energy");
+        averageFoodChart.getData().add(averageFoodSeries);
+        averageFoodChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average energy"));
+
+        selectChartDropdown.getItems().addAll("Animals", "Plants", "Average energy");
         selectChartDropdown.setValue("Animals");
     }
 
@@ -172,6 +181,7 @@ public class SimulationController implements ISimulationStateObserver {
                 try {
                     numAnimalsSeries.getData().add(new XYChart.Data<>(numAnimalsSeries.getData().size(), stats.numAnimals));
                     numPlantsSeries.getData().add(new XYChart.Data<>(numPlantsSeries.getData().size(), stats.numGrass));
+                    averageFoodSeries.getData().add(new XYChart.Data<>(averageFoodSeries.getData().size(), stats.averageFood));
                 }
                 finally {
                     updatingChartsDone.release();
