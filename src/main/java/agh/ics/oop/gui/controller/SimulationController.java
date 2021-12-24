@@ -21,6 +21,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
@@ -54,11 +55,17 @@ public class SimulationController implements ISimulationStateObserver {
     public Label simulationSpeedLabel;
 
     @FXML
-    public LineChart<Number, Number> chart;
+    public ChoiceBox<String> selectChartDropdown;
+
+    @FXML
+    public LineChart<Number, Number> animalsChart;
 
     private XYChart.Series<Number, Number> numAnimalsSeries;
 
-    private XYChart.Series<Number, Number> numGrassSeries;
+    @FXML
+    public LineChart<Number, Number> plantsChart;
+
+    private XYChart.Series<Number, Number> numPlantsSeries;
 
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
@@ -103,11 +110,17 @@ public class SimulationController implements ISimulationStateObserver {
 
         numAnimalsSeries = new XYChart.Series<>();
         numAnimalsSeries.setName("Animals");
-        chart.getData().add(numAnimalsSeries);
+        animalsChart.getData().add(numAnimalsSeries);
 
-        numGrassSeries = new XYChart.Series<>();
-        numGrassSeries.setName("Grass");
-        chart.getData().add(numGrassSeries);
+        numPlantsSeries = new XYChart.Series<>();
+        numPlantsSeries.setName("Grass");
+        plantsChart.getData().add(numPlantsSeries);
+
+        animalsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Animals"));
+        plantsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Plants"));
+
+        selectChartDropdown.getItems().addAll("Animals", "Plants");
+        selectChartDropdown.setValue("Animals");
     }
 
     private Rect getCanvasArea() {
@@ -158,7 +171,7 @@ public class SimulationController implements ISimulationStateObserver {
             Platform.runLater(() -> {
                 try {
                     numAnimalsSeries.getData().add(new XYChart.Data<>(numAnimalsSeries.getData().size(), stats.numAnimals));
-                    numGrassSeries.getData().add(new XYChart.Data<>(numGrassSeries.getData().size(), stats.numGrass));
+                    numPlantsSeries.getData().add(new XYChart.Data<>(numPlantsSeries.getData().size(), stats.numGrass));
                 }
                 finally {
                     updatingChartsDone.release();
