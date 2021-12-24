@@ -12,11 +12,13 @@ import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public Canvas mapCanvas;
+
+    @FXML
+    public Slider simulationSpeedSlider;
 
     @FXML
     public Label simulationSpeedLabel;
@@ -62,6 +67,14 @@ public class SimulationController implements ISimulationStateObserver {
         drawableMap = new MapPainter(map);
 
         simulationThread.start();
+    }
+
+    @FXML
+    public void initialize() {
+        simulationSpeedLabel.textProperty().bind(Bindings.createStringBinding(() -> {
+            int val = Math.round((float) simulationSpeedSlider.getValue());
+            return val + "%";
+        }, simulationSpeedSlider.valueProperty()));
     }
 
     private Rect getCanvasArea() {
@@ -119,11 +132,11 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void onResumeButtonClick(ActionEvent e) {
-        simulationSpeedLabel.setText("XD");
+
     }
 
     @FXML
     public void onPauseButtonClick(ActionEvent e) {
-        simulationSpeedLabel.setText("DX");
+
     }
 }
