@@ -65,6 +65,14 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
+                        <LineChart fx:id="averageLifetimeChart" visible="false">
+                           <xAxis>
+                              <NumberAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
+                        </LineChart>
                      </children>
                   </StackPane>
                </children>

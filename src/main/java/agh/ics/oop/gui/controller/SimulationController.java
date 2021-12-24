@@ -59,18 +59,19 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public LineChart<Number, Number> animalsChart;
-
-    private XYChart.Series<Number, Number> numAnimalsSeries;
+    private final XYChart.Series<Number, Number> numAnimalsSeries = new XYChart.Series<>();
 
     @FXML
     public LineChart<Number, Number> plantsChart;
-
-    private XYChart.Series<Number, Number> numPlantsSeries;
+    private final XYChart.Series<Number, Number> numPlantsSeries = new XYChart.Series<>();
 
     @FXML
     public LineChart<Number, Number> averageFoodChart;
+    private final XYChart.Series<Number, Number> averageFoodSeries = new XYChart.Series<>();
 
-    private XYChart.Series<Number, Number> averageFoodSeries;
+    @FXML
+    public LineChart<Number, Number> averageLifetimeChart;
+    private final XYChart.Series<Number, Number> averageLifetimeSeries = new XYChart.Series<>();
 
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
@@ -113,22 +114,23 @@ public class SimulationController implements ISimulationStateObserver {
             simulationEngine.setSimulationDelay((int) delay);
         });
 
-        numAnimalsSeries = new XYChart.Series<>();
         numAnimalsSeries.setName("Animals");
         animalsChart.getData().add(numAnimalsSeries);
         animalsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Animals"));
 
-        numPlantsSeries = new XYChart.Series<>();
         numPlantsSeries.setName("Grass");
         plantsChart.getData().add(numPlantsSeries);
         plantsChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Plants"));
 
-        averageFoodSeries = new XYChart.Series<>();
         averageFoodSeries.setName("Average energy");
         averageFoodChart.getData().add(averageFoodSeries);
         averageFoodChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average energy"));
 
-        selectChartDropdown.getItems().addAll("Animals", "Plants", "Average energy");
+        averageLifetimeSeries.setName("Average lifetime");
+        averageLifetimeChart.getData().add(averageLifetimeSeries);
+        averageLifetimeChart.visibleProperty().bind(selectChartDropdown.valueProperty().isEqualTo("Average lifetime"));
+
+        selectChartDropdown.getItems().addAll("Animals", "Plants", "Average energy", "Average lifetime");
         selectChartDropdown.setValue("Animals");
     }
 
@@ -182,6 +184,7 @@ public class SimulationController implements ISimulationStateObserver {
                     numAnimalsSeries.getData().add(new XYChart.Data<>(numAnimalsSeries.getData().size(), stats.numAnimals));
                     numPlantsSeries.getData().add(new XYChart.Data<>(numPlantsSeries.getData().size(), stats.numGrass));
                     averageFoodSeries.getData().add(new XYChart.Data<>(averageFoodSeries.getData().size(), stats.averageFood));
+                    averageLifetimeSeries.getData().add(new XYChart.Data<>(averageLifetimeSeries.getData().size(), stats.averageLifetime));
                 }
                 finally {
                     updatingChartsDone.release();

@@ -19,6 +19,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     private final Random rand = new Random();
     private final IAnimalMap map;
     private int food;
+    private int age = 0;
 
     /**
      * Generates random genome.
@@ -119,11 +120,16 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         return food;
     }
 
-    public void decrementFood() {
+    public void passDay() {
         if (food <= 0) {
             throw new IllegalStateException("Animal does not have enough food");
         }
         food -= config.moveEnergy;
+        age += 1;
+    }
+
+    public int getAge() {
+        return age;
     }
 
     public void eatGrass(Grass grass) {

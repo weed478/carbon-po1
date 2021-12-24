@@ -14,6 +14,8 @@ public class SimulationEngine implements Runnable {
     private int simulationDelay;
     private final Set<ISimulationStateObserver> observers = new HashSet<>();
     private boolean isRunning = true;
+    private int averageDeadLifetimeSum = 0;
+    private int allDeadAnimalsCount = 0;
 
     public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
         this.simulationDelay = simulationDelay;
@@ -52,7 +54,7 @@ public class SimulationEngine implements Runnable {
         processEating();
         processReproduction();
         growPlants();
-        decrementAnimalEnergy();
+        passDay();
     }
 
     private void removeDeadAnimals() {
@@ -62,6 +64,8 @@ public class SimulationEngine implements Runnable {
             if (animal.isAlive()) continue;
             animal.elementRemoved();
             i.remove();
+            averageDeadLifetimeSum += animal.getAge();
+            allDeadAnimalsCount++;
         }
     }
 
@@ -104,9 +108,9 @@ public class SimulationEngine implements Runnable {
         map.growGrass();
     }
 
-    private void decrementAnimalEnergy() {
+    private void passDay() {
         for (Animal animal : animals) {
-            animal.decrementFood();
+            animal.passDay();
         }
     }
 
@@ -141,7 +145,8 @@ public class SimulationEngine implements Runnable {
         return new SimulationStatistics(
                 map.getAnimalCount(),
                 map.getGrassCount(),
-                averageFood
+                averageFood,
+                allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount)
         );
     }
 
