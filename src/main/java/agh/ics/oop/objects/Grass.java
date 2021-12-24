@@ -5,9 +5,14 @@ import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.map.IGrassMap;
 import agh.ics.oop.map.MapDirection;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+
+import java.util.Objects;
 
 public class Grass extends AbstractObservableMapElement implements IDrawable {
+
+    private static final Image image = new Image(Objects.requireNonNull(Grass.class.getResourceAsStream("plant.png")));
+
     public Grass(IGrassMap map, Vector2d position) {
         super(position, MapDirection.N);
         map.registerGrass(this);
@@ -15,7 +20,6 @@ public class Grass extends AbstractObservableMapElement implements IDrawable {
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.setFill(Color.GREENYELLOW);
-        gc.fillRect(0.3, 0.3, 0.4, 0.4);
+        gc.drawImage(image, 0, 0, 1, 1);
     }
 }
