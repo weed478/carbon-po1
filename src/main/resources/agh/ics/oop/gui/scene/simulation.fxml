@@ -41,7 +41,7 @@
                   </HBox>
                   <StackPane prefWidth="314.0">
                      <children>
-                        <LineChart fx:id="animalsChart" visible="false">
+                        <LineChart fx:id="animalsChart" createSymbols="false" legendVisible="false" visible="false">
                           <xAxis>
                             <NumberAxis side="BOTTOM" />
                           </xAxis>
@@ -49,7 +49,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </LineChart>
-                        <LineChart fx:id="plantsChart" visible="false">
+                        <LineChart fx:id="plantsChart" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
@@ -57,7 +57,7 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <LineChart fx:id="averageFoodChart" visible="false">
+                        <LineChart fx:id="averageFoodChart" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
@@ -65,7 +65,7 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <LineChart fx:id="averageLifetimeChart" visible="false">
+                        <LineChart fx:id="averageLifetimeChart" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
