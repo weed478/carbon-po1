@@ -15,8 +15,7 @@
    <children>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onResumeButtonClick" text="Resume" />
-            <Button mnemonicParsing="false" onAction="#onPauseButtonClick" text="Pause" />
+            <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#onResumeButtonClick" text="Pause" />
             <Label text="Simulation speed" />
             <Slider fx:id="simulationSpeedSlider" value="50.0" />
             <Label fx:id="simulationSpeedLabel" text="Label" />

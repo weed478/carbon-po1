@@ -12,11 +12,11 @@ import agh.ics.oop.objects.Animal;
 import agh.ics.oop.sim.ISimulationStateObserver;
 import agh.ics.oop.sim.SimulationEngine;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
@@ -37,6 +37,9 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public Canvas mapCanvas;
+
+    @FXML
+    public Button resumeButton;
 
     @FXML
     public Slider simulationSpeedSlider;
@@ -141,11 +144,13 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void onResumeButtonClick(ActionEvent e) {
-
-    }
-
-    @FXML
-    public void onPauseButtonClick(ActionEvent e) {
-
+        if (simulationEngine.isRunning()) {
+            simulationEngine.pause();
+            resumeButton.setText("Resume");
+        }
+        else {
+            simulationEngine.resume();
+            resumeButton.setText("Pause");
+        }
     }
 }

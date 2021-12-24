@@ -14,6 +14,7 @@ public class SimulationEngine implements Runnable {
     private final List<Animal> animals;
     private int simulationDelay;
     private final Set<ISimulationStateObserver> observers = new HashSet<>();
+    private boolean isRunning = true;
 
     public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
         this.simulationDelay = simulationDelay;
@@ -31,6 +32,19 @@ public class SimulationEngine implements Runnable {
 
     public synchronized void setSimulationDelay(int simulationDelay) {
         this.simulationDelay = simulationDelay;
+    }
+
+    public synchronized void pause() {
+        isRunning = false;
+    }
+
+    public synchronized void resume() {
+        isRunning = true;
+        notifyAll();
+    }
+
+    public synchronized boolean isRunning() {
+        return isRunning;
     }
 
     private void simulateDay() {
@@ -110,6 +124,7 @@ public class SimulationEngine implements Runnable {
             try {
                 int delay;
                 synchronized (this) {
+                    while (!isRunning) wait();
                     delay = simulationDelay;
                 }
                 Thread.sleep(delay);
