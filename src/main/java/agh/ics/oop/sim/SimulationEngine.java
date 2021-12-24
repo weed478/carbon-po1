@@ -140,14 +140,27 @@ public class SimulationEngine implements Runnable {
     public SimulationStatistics getStatistics() {
         double averageFood = 0;
         double averageChildren = 0;
+        Map<int[], Integer> genomeCounts = new HashMap<>();
 
         for (Animal a : animals) {
             averageFood += a.getFood();
             averageChildren += a.getNumChildren();
+            int[] genome = a.getGenome();
+            genomeCounts.putIfAbsent(genome, 0);
+            genomeCounts.replace(genome, genomeCounts.get(genome) + 1);
         }
 
         averageFood /= animals.size();
         averageChildren /= animals.size();
+
+        int[] dominantGenome = null;
+        int dominantGenomeCount = 0;
+        for (Map.Entry<int[], Integer> e : genomeCounts.entrySet()) {
+            if (e.getValue() > dominantGenomeCount) {
+                dominantGenome = e.getKey();
+                dominantGenomeCount = e.getValue();
+            }
+        }
 
         return new SimulationStatistics(
                 day,
@@ -155,7 +168,8 @@ public class SimulationEngine implements Runnable {
                 map.getGrassCount(),
                 averageFood,
                 allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount),
-                averageChildren
+                averageChildren,
+                dominantGenome
         );
     }
 

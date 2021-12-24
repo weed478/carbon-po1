@@ -77,6 +77,9 @@ public class SimulationController implements ISimulationStateObserver {
     public LineChart<Number, Number> averageChildrenChart;
     private final XYChart.Series<Number, Number> averageChildrenSeries = new XYChart.Series<>();
 
+    @FXML
+    public Label dominantGenomeLabel;
+
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
                 config.mapArea,
@@ -194,6 +197,11 @@ public class SimulationController implements ISimulationStateObserver {
                     averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
                     averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
                     averageChildrenSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageChildren));
+                    String dominantGenome = "";
+                    for (int gene : stats.dominantGenome) {
+                        dominantGenome += gene;
+                    }
+                    dominantGenomeLabel.setText(dominantGenome);
                 }
                 finally {
                     updatingChartsDone.release();

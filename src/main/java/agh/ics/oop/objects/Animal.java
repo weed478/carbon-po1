@@ -8,6 +8,7 @@ import agh.ics.oop.map.MapDirection;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Animal extends AbstractObservableMapElement implements IDrawable {
@@ -114,6 +115,11 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
 
         p1.numChildren++;
         p2.numChildren++;
+    }
+
+    public int[] getGenome() {
+        Arrays.sort(genome);
+        return genome;
     }
 
     public int getNumChildren() {
