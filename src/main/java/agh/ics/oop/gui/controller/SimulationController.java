@@ -18,6 +18,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -37,6 +39,8 @@ public class SimulationController implements ISimulationStateObserver {
 
     private final Semaphore drawingDone = new Semaphore(1);
 
+    private final Semaphore updatingChartsDone = new Semaphore(1);
+
     @FXML
     public Canvas mapCanvas;
 
@@ -48,6 +52,13 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public Label simulationSpeedLabel;
+
+    @FXML
+    public LineChart<Number, Number> chart;
+
+    private XYChart.Series<Number, Number> numAnimalsSeries;
+
+    private XYChart.Series<Number, Number> numGrassSeries;
 
     public SimulationController(SimulationConfig config) {
         map = new ToroidalMap(
@@ -89,6 +100,14 @@ public class SimulationController implements ISimulationStateObserver {
             double delay = 1000 - val / 100 * 1000;
             simulationEngine.setSimulationDelay((int) delay);
         });
+
+        numAnimalsSeries = new XYChart.Series<>();
+        numAnimalsSeries.setName("Animals");
+        chart.getData().add(numAnimalsSeries);
+
+        numGrassSeries = new XYChart.Series<>();
+        numGrassSeries.setName("Grass");
+        chart.getData().add(numGrassSeries);
     }
 
     private Rect getCanvasArea() {
@@ -134,14 +153,24 @@ public class SimulationController implements ISimulationStateObserver {
         }
     }
 
-    private void collectStatistics() {
-        SimulationStatistics stats = simulationEngine.getStatistics();
+    private void scheduleUpdateCharts(SimulationStatistics stats) {
+        if (updatingChartsDone.tryAcquire()) {
+            Platform.runLater(() -> {
+                try {
+                    numAnimalsSeries.getData().add(new XYChart.Data<>(numAnimalsSeries.getData().size(), stats.numAnimals));
+                    numGrassSeries.getData().add(new XYChart.Data<>(numGrassSeries.getData().size(), stats.numGrass));
+                }
+                finally {
+                    updatingChartsDone.release();
+                }
+            });
+        }
     }
 
     @Override
     public void simulationStateChanged() {
         scheduleDrawMap();
-        collectStatistics();
+        scheduleUpdateCharts(simulationEngine.getStatistics());
     }
 
     @Override

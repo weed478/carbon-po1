@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -27,9 +26,9 @@
       <Canvas fx:id="mapCanvas" height="400.0" width="640.0" />
       <HBox VBox.vgrow="ALWAYS">
          <children>
-            <LineChart prefHeight="276.0" prefWidth="389.0">
+            <LineChart fx:id="chart" prefHeight="276.0" prefWidth="389.0">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <NumberAxis side="BOTTOM" />
               </xAxis>
               <yAxis>
                 <NumberAxis side="LEFT" />
