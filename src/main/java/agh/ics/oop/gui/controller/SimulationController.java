@@ -69,6 +69,7 @@ public class SimulationController implements ISimulationStateObserver {
         simulationEngine = new SimulationEngine(500, map, animals);
         simulationEngine.addSimulationStateObserver(this);
         Thread simulationThread = new Thread(simulationEngine);
+        simulationThread.setDaemon(true);
 
         drawableMap = new MapPainter(map);
 
