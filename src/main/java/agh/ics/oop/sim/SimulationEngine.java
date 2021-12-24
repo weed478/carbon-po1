@@ -95,7 +95,7 @@ public class SimulationEngine implements Runnable {
             if (processedPositions.contains(pos)) continue;
             processedPositions.add(pos);
 
-            Set<Animal> candidates = map.getAnimalsAt(pos);
+            List<Animal> candidates = map.getAnimalsAt(pos);
             List<Animal> parents = candidates.stream()
                     .sorted(Comparator.comparingInt(Animal::getFood).reversed())
                     .limit(2)

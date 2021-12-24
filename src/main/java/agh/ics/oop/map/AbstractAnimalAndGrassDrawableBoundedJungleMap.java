@@ -13,7 +13,7 @@ import agh.ics.oop.objects.IMapElement;
 import java.util.*;
 
 public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements IAnimalAndGrassDrawableMap, IMapElementObserver {
-    private final Map<Vector2d, Set<Animal>> animals = new HashMap<>();
+    private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     protected final Rect mapArea;
     protected final Rect jungleArea;
@@ -30,7 +30,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
 
     @Override
     public void registerAnimal(Animal animal) {
-        animals.putIfAbsent(animal.getPosition(), new HashSet<>());
+        animals.putIfAbsent(animal.getPosition(), new ArrayList<>());
         animals.get(animal.getPosition()).add(animal);
         animal.addMapElementObserver(this);
     }
@@ -42,9 +42,9 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public Set<Animal> getAnimalsAt(Vector2d pos) {
-        Set<Animal> set = animals.get(pos);
-        return set != null ? set : new HashSet<>();
+    public List<Animal> getAnimalsAt(Vector2d pos) {
+        List<Animal> set = animals.get(pos);
+        return set != null ? set : new ArrayList<>();
     }
 
     @Override
@@ -91,7 +91,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
             if (!animals.get(oldPosition).remove(animal)) {
                 throw new IllegalArgumentException("Animal was not found at old position");
             }
-            animals.putIfAbsent(animal.getPosition(), new HashSet<>());
+            animals.putIfAbsent(animal.getPosition(), new ArrayList<>());
             animals.get(animal.getPosition()).add(animal);
         }
         else if (object instanceof Grass) {
@@ -157,7 +157,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
             drawables.add(grass);
         }
 
-        Set<Animal> animalSet = animals.get(pos);
+        List<Animal> animalSet = animals.get(pos);
         if (animalSet != null && !animalSet.isEmpty()) {
             drawables.add(animalSet.stream().findAny().get());
         }
