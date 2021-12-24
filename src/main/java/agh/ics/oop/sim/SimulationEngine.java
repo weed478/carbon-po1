@@ -16,6 +16,7 @@ public class SimulationEngine implements Runnable {
     private boolean isRunning = true;
     private int averageDeadLifetimeSum = 0;
     private int allDeadAnimalsCount = 0;
+    private int day = 0;
 
     public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
         this.simulationDelay = simulationDelay;
@@ -112,6 +113,7 @@ public class SimulationEngine implements Runnable {
         for (Animal animal : animals) {
             animal.passDay();
         }
+        day++;
     }
 
     @Override
@@ -143,6 +145,7 @@ public class SimulationEngine implements Runnable {
         averageFood /= animals.size();
 
         return new SimulationStatistics(
+                day,
                 map.getAnimalCount(),
                 map.getGrassCount(),
                 averageFood,

@@ -181,10 +181,10 @@ public class SimulationController implements ISimulationStateObserver {
         if (updatingChartsDone.tryAcquire()) {
             Platform.runLater(() -> {
                 try {
-                    numAnimalsSeries.getData().add(new XYChart.Data<>(numAnimalsSeries.getData().size(), stats.numAnimals));
-                    numPlantsSeries.getData().add(new XYChart.Data<>(numPlantsSeries.getData().size(), stats.numGrass));
-                    averageFoodSeries.getData().add(new XYChart.Data<>(averageFoodSeries.getData().size(), stats.averageFood));
-                    averageLifetimeSeries.getData().add(new XYChart.Data<>(averageLifetimeSeries.getData().size(), stats.averageLifetime));
+                    numAnimalsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numAnimals));
+                    numPlantsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numGrass));
+                    averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
+                    averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
                 }
                 finally {
                     updatingChartsDone.release();
