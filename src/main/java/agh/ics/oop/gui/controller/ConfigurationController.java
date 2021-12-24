@@ -1,10 +1,13 @@
 package agh.ics.oop.gui.controller;
 
+import agh.ics.oop.core.SimulationConfig;
+import agh.ics.oop.gui.scene.SimulationScene;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class ConfigurationController {
 
@@ -29,7 +32,29 @@ public class ConfigurationController {
 
     @FXML
     public void onPressStart(ActionEvent e) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Yes");
+        try {
+            SimulationConfig config = SimulationConfig.parse(
+                    mapWidthTF.getText(),
+                    mapHeightTF.getText(),
+                    jungleRatioTF.getText(),
+                    initialAnimalsTF.getText(),
+                    initialEnergyTF.getText(),
+                    moveEnergyTF.getText(),
+                    plantEnergyTF.getText(),
+                    false
+            );
+            new SimulationScene((Stage) mapWidthTF.getScene().getWindow(), config);
+        }
+        catch (Exception ex) {
+            alertException(ex);
+        }
+    }
+
+    private void alertException(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error starting simulation");
+        alert.setHeaderText("Invalid configuration");
+        alert.setContentText(e.getMessage());
+        alert.show();
     }
 }
