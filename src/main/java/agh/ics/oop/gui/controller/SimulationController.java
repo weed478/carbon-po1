@@ -1,5 +1,6 @@
 package agh.ics.oop.gui.controller;
 
+import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
@@ -24,6 +25,8 @@ import java.util.concurrent.Semaphore;
 
 public class SimulationController implements ISimulationStateObserver {
 
+    private final IAnimalAndGrassDrawableMap map;
+
     private final IDrawable drawableMap;
 
     private final Semaphore drawingDone = new Semaphore(1);
@@ -35,7 +38,7 @@ public class SimulationController implements ISimulationStateObserver {
     public Label simulationSpeedLabel;
 
     public SimulationController(SimulationConfig config) {
-        IAnimalAndGrassDrawableMap map = new ToroidalMap(
+        map = new ToroidalMap(
                 config.mapArea,
                 config.jungleArea
         );
@@ -61,13 +64,37 @@ public class SimulationController implements ISimulationStateObserver {
         simulationThread.start();
     }
 
+    private Rect getCanvasArea() {
+        double cW = mapCanvas.getWidth();
+        double cH = mapCanvas.getHeight();
+        double mW = map.getDrawingBounds().width();
+        double mH = map.getDrawingBounds().height();
+        double cA = cW / cH;
+        double mA = mW / mH;
+        if (mA > cA) {
+            double w = cW;
+            double h = cW / mA;
+            return new Rect(0, 0, (int) w, (int) h);
+        }
+        else {
+            double h = cH;
+            double w = cH * mA;
+            Vector2d tl = new Vector2d(0, 0);
+            Vector2d br = new Vector2d((int) w, (int) h);
+            Vector2d shift = new Vector2d((int) ((cW - w) / 2), 0);
+            return new Rect(tl.add(shift), br.add(shift));
+        }
+    }
+
     private void scheduleDrawMap() {
         if (drawingDone.tryAcquire()) {
             Platform.runLater(() -> {
                 try {
                     GraphicsContext gc = mapCanvas.getGraphicsContext2D();
                     gc.save();
-                    gc.scale(mapCanvas.getWidth(), mapCanvas.getHeight());
+                    Rect area = getCanvasArea();
+                    gc.translate(area.left(), area.bottom());
+                    gc.scale(area.width(), area.height());
                     gc.setFill(Color.rgb(0, 0, 0));
                     gc.fillRect(0, 0, 1, 1);
                     drawableMap.draw(gc);
