@@ -240,11 +240,7 @@ public class SimulationController implements ISimulationStateObserver {
                     averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
                     averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
                     averageChildrenSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageChildren));
-                    String dominantGenome = "";
-                    for (int gene : stats.dominantGenome) {
-                        dominantGenome += gene;
-                    }
-                    dominantGenomeLabel.setText(dominantGenome);
+                    dominantGenomeLabel.setText(genomeToString(stats.dominantGenome));
                 }
                 finally {
                     updatingChartsDone.release();
