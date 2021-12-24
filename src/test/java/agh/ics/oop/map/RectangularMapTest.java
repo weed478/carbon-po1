@@ -1,6 +1,7 @@
 package agh.ics.oop.map;
 
 import agh.ics.oop.core.Rect;
+import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.objects.Animal;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ class RectangularMapTest {
         RectangularMap map = new RectangularMap(new Rect(-10, -10, 11, 11), new Rect(-2, -2, 3, 3));
         assertEquals(0, map.getAnimalsAt(new Vector2d(0, 0)).size());
 
-        Animal animal = new Animal(null, map, new Vector2d(0, 0), MapDirection.N);
+        Animal animal = new Animal(new SimulationConfig(1, 1, 0, 1, 1, 1, 1, false), map, new Vector2d(0, 0), MapDirection.N);
         assertEquals(1, map.getAnimalsAt(new Vector2d(0, 0)).size());
         assertEquals(0, map.getAnimalsAt(new Vector2d(0, 1)).size());
 
