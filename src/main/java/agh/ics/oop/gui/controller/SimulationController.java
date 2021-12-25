@@ -286,8 +286,10 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @Override
     public void simulationStateChanged() {
-        scheduleDrawMap();
-        scheduleUpdateCharts(simulationEngine.getStatistics());
+        synchronized (map) {
+            scheduleDrawMap();
+            scheduleUpdateCharts(simulationEngine.getStatistics());
+        }
     }
 
     @Override
@@ -309,51 +311,54 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @Override
     public void onAnimalEnergyChanged(Animal animal) {
-        if (animal == trackedAnimal) {
-            Platform.runLater(() -> {
-                trackedAnimalEnergyLabel.setText(String.valueOf(animal.getFood()));
-            });
-        }
-        else {
-            throw new IllegalStateException("Passed animal was not tracked animal");
+        synchronized (map) {
+            if (animal == trackedAnimal) {
+                String value = String.valueOf(animal.getFood());
+                Platform.runLater(() -> trackedAnimalEnergyLabel.setText(value));
+            }
+            else {
+                throw new IllegalStateException("Passed animal was not tracked animal");
+            }
         }
     }
 
     @Override
     public void onAnimalAgeChanged(Animal animal) {
-        if (animal == trackedAnimal) {
-            Platform.runLater(() -> {
-                trackedAnimalAgeLabel.setText(String.valueOf(animal.getAge()));
-            });
-        }
-        else {
-            throw new IllegalStateException("Passed animal was not tracked animal");
+        synchronized (map) {
+            if (animal == trackedAnimal) {
+                String value = String.valueOf(animal.getAge());
+                Platform.runLater(() -> trackedAnimalAgeLabel.setText(value));
+            } else {
+                throw new IllegalStateException("Passed animal was not tracked animal");
+            }
         }
     }
 
     @Override
     public void onAnimalHadChild(Animal animal) {
-        if (animal == trackedAnimal) {
-            Platform.runLater(() -> {
-                trackedAnimalChildrenLabel.setText(String.valueOf(animal.getNumChildren()));
-            });
-        }
-        else {
-            throw new IllegalStateException("Passed animal was not tracked animal");
+        synchronized (map) {
+            if (animal == trackedAnimal) {
+                String value = String.valueOf(animal.getNumChildren());
+                Platform.runLater(() -> trackedAnimalChildrenLabel.setText(value));
+            } else {
+                throw new IllegalStateException("Passed animal was not tracked animal");
+            }
         }
     }
 
     @Override
     public void onAnimalDied(Animal animal) {
-        if (animal == trackedAnimal) {
-            Platform.runLater(() -> {
-                trackedAnimalEnergyLabel.setText("0");
-                trackedAnimalDeathLabel.setText(String.valueOf(simulationEngine.getDay()));
-                trackedAnimal = null;
-            });
-        }
-        else {
-            throw new IllegalStateException("Passed animal was not tracked animal");
+        synchronized (map) {
+            if (animal == trackedAnimal) {
+                String value = String.valueOf(simulationEngine.getDay());
+                Platform.runLater(() -> {
+                    trackedAnimalEnergyLabel.setText("0");
+                    trackedAnimalDeathLabel.setText(value);
+                    trackedAnimal = null;
+                });
+            } else {
+                throw new IllegalStateException("Passed animal was not tracked animal");
+            }
         }
     }
 }
