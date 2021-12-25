@@ -80,6 +80,9 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     private final XYChart.Series<Number, Number> averageChildrenSeries = new XYChart.Series<>();
 
     @FXML
+    public Label worldAgeLabel;
+
+    @FXML
     public Label dominantGenomeLabel;
 
     private Animal trackedAnimal = null;
@@ -185,6 +188,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 "Average lifetime",
                 "Average children");
         selectChartDropdown.setValue("Animals");
+
+        worldAgeLabel.setText(String.valueOf(simulationEngine.getDay()));
     }
 
     @FXML
@@ -326,6 +331,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         synchronized (map) {
             scheduleDrawMap();
             scheduleUpdateCharts(simulationEngine.getStatistics());
+            int day = simulationEngine.getDay();
+            Platform.runLater(() -> worldAgeLabel.setText(String.valueOf(day)));
         }
     }
 

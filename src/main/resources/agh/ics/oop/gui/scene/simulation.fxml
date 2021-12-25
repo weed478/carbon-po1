@@ -91,16 +91,18 @@
             </VBox>
             <VBox HBox.hgrow="ALWAYS">
                <children>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label text="World age:" />
+                        <Label fx:id="worldAgeLabel" text="?" />
+                     </children>
+                  </HBox>
                   <Label text="Dominant genome:" />
                   <Label fx:id="dominantGenomeLabel" text="?">
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin></Label>
-                  <Label text="Tracked animal:">
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </Label>
+                  <Label text="Tracked animal:" />
                   <Label text="Genome:">
                      <VBox.margin>
                         <Insets left="10.0" />
