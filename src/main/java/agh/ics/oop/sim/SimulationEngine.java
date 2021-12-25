@@ -49,6 +49,10 @@ public class SimulationEngine implements Runnable {
         return isRunning;
     }
 
+    public synchronized int getDay() {
+        return day;
+    }
+
     private void simulateDay() {
         removeDeadAnimals();
         moveAnimals();

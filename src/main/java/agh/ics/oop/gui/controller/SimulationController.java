@@ -1,5 +1,6 @@
 package agh.ics.oop.gui.controller;
 
+import agh.ics.oop.core.IAnimalObserver;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class SimulationController implements ISimulationStateObserver {
+public class SimulationController implements ISimulationStateObserver, IAnimalObserver {
 
     private final SimulationEngine simulationEngine;
 
@@ -82,8 +83,22 @@ public class SimulationController implements ISimulationStateObserver {
     @FXML
     public Label dominantGenomeLabel;
 
+    private Animal trackedAnimal = null;
+
     @FXML
     public Label trackedAnimalGenomeLabel;
+
+    @FXML
+    public Label trackedAnimalEnergyLabel;
+
+    @FXML
+    public Label trackedAnimalAgeLabel;
+
+    @FXML
+    public Label trackedAnimalDeathLabel;
+
+    @FXML
+    public Label trackedAnimalDescendantsLabel;
 
     public SimulationController(SimulationConfig config, boolean isToroidal, boolean isMagic) {
         if (isToroidal) {
@@ -160,16 +175,28 @@ public class SimulationController implements ISimulationStateObserver {
 
     @FXML
     public void onCanvasClicked(MouseEvent e) {
-        trackedAnimalGenomeLabel.setText("?");
-
-        Vector2d pos = canvasToPos(e.getX(), e.getY());
-
         synchronized (map) {
+            if (trackedAnimal != null) {
+                trackedAnimal.removeAnimalObserver(this);
+                trackedAnimal = null;
+            }
+
+            trackedAnimalGenomeLabel.setText("?");
+            trackedAnimalEnergyLabel.setText("?");
+            trackedAnimalAgeLabel.setText("?");
+            trackedAnimalDeathLabel.setText("?");
+            trackedAnimalDescendantsLabel.setText("?");
+
+            Vector2d pos = canvasToPos(e.getX(), e.getY());
+
             List<Animal> animals = map.getAnimalsAt(pos);
             if (!animals.isEmpty()) {
-                Animal a = animals.get(0);
-                a.select();
-                trackedAnimalGenomeLabel.setText(genomeToString(a.getGenome()));
+                trackedAnimal = animals.get(0);
+                trackedAnimal.select();
+                trackedAnimalGenomeLabel.setText(genomeToString(trackedAnimal.getGenome()));
+                trackedAnimalEnergyLabel.setText(String.valueOf(trackedAnimal.getFood()));
+                trackedAnimalAgeLabel.setText(String.valueOf(trackedAnimal.getAge()));
+                trackedAnimal.addAnimalObserver(this);
             }
         }
     }
@@ -272,6 +299,44 @@ public class SimulationController implements ISimulationStateObserver {
         else {
             simulationEngine.resume();
             resumeButton.setText("Pause");
+        }
+    }
+
+    @Override
+    public void onAnimalEnergyChanged(Animal animal) {
+        if (animal == trackedAnimal) {
+            Platform.runLater(() -> {
+                trackedAnimalEnergyLabel.setText(String.valueOf(animal.getFood()));
+            });
+        }
+        else {
+            throw new IllegalStateException("Passed animal was not tracked animal");
+        }
+    }
+
+    @Override
+    public void onAnimalAgeChanged(Animal animal) {
+        if (animal == trackedAnimal) {
+            Platform.runLater(() -> {
+                trackedAnimalAgeLabel.setText(String.valueOf(animal.getAge()));
+            });
+        }
+        else {
+            throw new IllegalStateException("Passed animal was not tracked animal");
+        }
+    }
+
+    @Override
+    public void onAnimalDied(Animal animal) {
+        if (animal == trackedAnimal) {
+            Platform.runLater(() -> {
+                trackedAnimalEnergyLabel.setText("0");
+                trackedAnimalDeathLabel.setText(String.valueOf(simulationEngine.getDay()));
+                trackedAnimal = null;
+            });
+        }
+        else {
+            throw new IllegalStateException("Passed animal was not tracked animal");
         }
     }
 }

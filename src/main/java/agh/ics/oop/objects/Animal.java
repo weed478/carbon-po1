@@ -1,5 +1,6 @@
 package agh.ics.oop.objects;
 
+import agh.ics.oop.core.IAnimalObserver;
 import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
@@ -9,7 +10,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Animal extends AbstractObservableMapElement implements IDrawable {
     private static final int GENOME_SIZE = 32;
@@ -23,6 +26,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     private int age = 0;
     private int numChildren = 0;
     private boolean isSelected = false;
+    private final Set<IAnimalObserver> animalObservers = new HashSet<>();
 
     /**
      * Generates random genome.
@@ -107,8 +111,10 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
             throw new IllegalStateException("Child cannot be given 0 food");
         }
 
-        p1.food -= p1.food / 4;
-        p2.food -= p2.food / 4;
+//        p1.food -= p1.food / 4;
+        p1.setFood(p1.getFood() - p1.food / 4);
+//        p2.food -= p2.food / 4;
+        p2.setFood(p2.getFood() - p2.food / 4);
 
         genome = crossGenome(p1, p2);
 
@@ -118,6 +124,18 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         p2.numChildren++;
 
         isSelected = p1.isSelected | p2.isSelected;
+    }
+
+    public void addAnimalObserver(IAnimalObserver observer) {
+        synchronized (world) {
+            animalObservers.add(observer);
+        }
+    }
+
+    public void removeAnimalObserver(IAnimalObserver observer) {
+        synchronized (world) {
+            animalObservers.remove(observer);
+        }
     }
 
     public void select() {
@@ -163,13 +181,29 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         }
     }
 
+    private void setFood(int newFood) {
+        food = newFood;
+        for (IAnimalObserver o : animalObservers) {
+            o.onAnimalEnergyChanged(this);
+        }
+    }
+
+    private void setAge(int newAge) {
+        age = newAge;
+        for (IAnimalObserver o : animalObservers) {
+            o.onAnimalAgeChanged(this);
+        }
+    }
+
     public void passDay() {
         synchronized (world) {
             if (food <= 0) {
                 throw new IllegalStateException("Animal does not have enough food");
             }
-            food -= config.moveEnergy;
-            age += 1;
+//            food -= config.moveEnergy;
+            setFood(getFood() - config.moveEnergy);
+//            age += 1;
+            setAge(getAge() + 1);
         }
     }
 
@@ -185,7 +219,8 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
                 throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
             }
             grass.elementRemoved();
-            food += config.plantEnergy;
+//            food += config.plantEnergy;
+            setFood(getFood() + config.plantEnergy);
         }
     }
 
@@ -217,6 +252,15 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
             Vector2d newPos = map.moveFrom(getPosition(), getDirection().turn(turn));
             setPosition(newPos);
         }
+    }
+
+    @Override
+    public void elementRemoved() {
+        for (IAnimalObserver o : animalObservers) {
+            o.onAnimalDied(this);
+        }
+        animalObservers.clear();
+        super.elementRemoved();
     }
 
     @Override
