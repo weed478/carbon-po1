@@ -130,7 +130,7 @@ public class SimulationController implements ISimulationStateObserver {
 
         simulationSpeedSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double val = newValue.doubleValue();
-            double delay = 1000 - val / 100 * 1000;
+            double delay = 1000 - val / 100 * 990;
             simulationEngine.setSimulationDelay((int) delay);
         });
 
