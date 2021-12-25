@@ -103,66 +103,49 @@
                         <Insets left="10.0" />
                      </VBox.margin></Label>
                   <Label text="Tracked animal:" />
-                  <Label text="Genome:">
+                  <VBox>
+                     <children>
+                        <Label text="Genome:" />
+                        <Label fx:id="trackedAnimalGenomeLabel" text="?">
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Energy:" />
+                              <Label fx:id="trackedAnimalEnergyLabel" text="?" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Age:" />
+                              <Label fx:id="trackedAnimalAgeLabel" text="?" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Children:" />
+                              <Label fx:id="trackedAnimalChildrenLabel" text="?" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Death epoch:" />
+                              <Label fx:id="trackedAnimalDeathLabel" text="?" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Label text="Descendants:" />
+                              <Label fx:id="trackedAnimalDescendantsLabel" text="?" />
+                           </children>
+                        </HBox>
+                     </children>
                      <VBox.margin>
                         <Insets left="10.0" />
                      </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalGenomeLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Energy:">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalEnergyLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Age:">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalAgeLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Children:">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalChildrenLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Death epoch:">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalDeathLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label text="Descendants:">
-                     <VBox.margin>
-                        <Insets left="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <Label fx:id="trackedAnimalDescendantsLabel" text="?">
-                     <VBox.margin>
-                        <Insets left="20.0" />
-                     </VBox.margin>
-                  </Label>
+                  </VBox>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
