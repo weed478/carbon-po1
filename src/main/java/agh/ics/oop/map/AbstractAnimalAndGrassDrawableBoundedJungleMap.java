@@ -175,7 +175,16 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
 
         List<Animal> animalSet = animals.get(pos);
         if (animalSet != null && !animalSet.isEmpty()) {
-            drawables.add(animalSet.get(0));
+            // first animal with most energy
+            Animal animal = animalSet.get(0);
+            for (Animal a : animalSet) {
+                // isSelected has priority
+                if (a.isSelected()) {
+                    animal = a;
+                    break;
+                }
+            }
+            drawables.add(animal);
         }
 
         return drawables;
