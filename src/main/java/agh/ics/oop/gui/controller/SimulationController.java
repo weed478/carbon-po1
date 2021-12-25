@@ -95,6 +95,9 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public Label trackedAnimalAgeLabel;
 
     @FXML
+    public Label trackedAnimalChildrenLabel;
+
+    @FXML
     public Label trackedAnimalDeathLabel;
 
     @FXML
@@ -184,6 +187,7 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             trackedAnimalGenomeLabel.setText("?");
             trackedAnimalEnergyLabel.setText("?");
             trackedAnimalAgeLabel.setText("?");
+            trackedAnimalChildrenLabel.setText("?");
             trackedAnimalDeathLabel.setText("?");
             trackedAnimalDescendantsLabel.setText("?");
 
@@ -196,6 +200,7 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 trackedAnimalGenomeLabel.setText(genomeToString(trackedAnimal.getGenome()));
                 trackedAnimalEnergyLabel.setText(String.valueOf(trackedAnimal.getFood()));
                 trackedAnimalAgeLabel.setText(String.valueOf(trackedAnimal.getAge()));
+                trackedAnimalChildrenLabel.setText("0");
                 trackedAnimal.addAnimalObserver(this);
             }
         }
@@ -319,6 +324,18 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         if (animal == trackedAnimal) {
             Platform.runLater(() -> {
                 trackedAnimalAgeLabel.setText(String.valueOf(animal.getAge()));
+            });
+        }
+        else {
+            throw new IllegalStateException("Passed animal was not tracked animal");
+        }
+    }
+
+    @Override
+    public void onAnimalHadChild(Animal animal) {
+        if (animal == trackedAnimal) {
+            Platform.runLater(() -> {
+                trackedAnimalChildrenLabel.setText(String.valueOf(animal.getNumChildren()));
             });
         }
         else {

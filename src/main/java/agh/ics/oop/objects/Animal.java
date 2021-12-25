@@ -120,8 +120,10 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
 
         map.registerAnimal(this);
 
-        p1.numChildren++;
-        p2.numChildren++;
+//        p1.numChildren++;
+        p1.incrementNumChildren();
+//        p2.numChildren++;
+        p2.incrementNumChildren();
 
         isSelected = p1.isSelected | p2.isSelected;
     }
@@ -192,6 +194,13 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         age = newAge;
         for (IAnimalObserver o : animalObservers) {
             o.onAnimalAgeChanged(this);
+        }
+    }
+
+    private void incrementNumChildren() {
+        numChildren++;
+        for (IAnimalObserver o : animalObservers) {
+            o.onAnimalHadChild(this);
         }
     }
 
