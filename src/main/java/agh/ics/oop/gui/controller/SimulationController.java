@@ -7,7 +7,7 @@ import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.gui.MapPainter;
 import agh.ics.oop.gui.StatsSaver;
-import agh.ics.oop.map.IAnimalAndGrassDrawableMap;
+import agh.ics.oop.map.IWorldMap;
 import agh.ics.oop.map.MapDirection;
 import agh.ics.oop.map.RectangularMap;
 import agh.ics.oop.map.ToroidalMap;
@@ -35,7 +35,7 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     private final SimulationEngine simulationEngine;
 
-    private final IAnimalAndGrassDrawableMap map;
+    private final IWorldMap map;
 
     private final IDrawable drawableMap;
 
@@ -261,16 +261,16 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         Rect area = getCanvasArea();
         x -= area.left();
         y -= area.bottom();
-        x /= (double) area.width() / map.getDrawingBounds().width();
-        y /= (double) area.height() / map.getDrawingBounds().height();
-        return new Vector2d((int) x, map.getDrawingBounds().height() - 1 - (int) y);
+        x /= (double) area.width() / map.getMapArea().width();
+        y /= (double) area.height() / map.getMapArea().height();
+        return new Vector2d((int) x, map.getMapArea().height() - 1 - (int) y);
     }
 
     private Rect getCanvasArea() {
         double cW = mapCanvas.getWidth();
         double cH = mapCanvas.getHeight();
-        double mW = map.getDrawingBounds().width();
-        double mH = map.getDrawingBounds().height();
+        double mW = map.getMapArea().width();
+        double mH = map.getMapArea().height();
         double cA = cW / cH;
         double mA = mW / mH;
         if (mA > cA) {

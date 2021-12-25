@@ -3,7 +3,7 @@ package agh.ics.oop.map;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 
-public class RectangularMap extends AbstractAnimalAndGrassDrawableBoundedJungleMap {
+public class RectangularMap extends AbstractJungleMap {
 
     public RectangularMap(Rect mapArea, Rect jungleArea) {
         super(mapArea, jungleArea);

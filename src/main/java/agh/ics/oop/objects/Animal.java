@@ -4,7 +4,7 @@ import agh.ics.oop.core.IAnimalObserver;
 import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
-import agh.ics.oop.map.IAnimalMap;
+import agh.ics.oop.map.IWorldMap;
 import agh.ics.oop.map.MapDirection;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -21,7 +21,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     private final SimulationConfig config;
     private final int[] genome;
     private final Random rand = new Random();
-    private final IAnimalMap map;
+    private final IWorldMap map;
     private int food;
     private int age = 0;
     private int numChildren = 0;
@@ -68,7 +68,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
      * @param position initial position
      * @param direction initial direction
      */
-    public Animal(SimulationConfig config, IAnimalMap map, Vector2d position, MapDirection direction) {
+    public Animal(SimulationConfig config, IWorldMap map, Vector2d position, MapDirection direction) {
         super(map, position, direction);
         this.config = config;
         this.map = map;

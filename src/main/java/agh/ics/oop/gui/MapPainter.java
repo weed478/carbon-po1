@@ -2,15 +2,16 @@ package agh.ics.oop.gui;
 
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
+import agh.ics.oop.map.IWorldMap;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.List;
 
 public class MapPainter implements IDrawable {
 
-    private final IDrawableMap map;
+    private final IWorldMap map;
 
-    public MapPainter(IDrawableMap map) {
+    public MapPainter(IWorldMap map) {
         this.map = map;
     }
 
@@ -18,7 +19,7 @@ public class MapPainter implements IDrawable {
     public void draw(GraphicsContext gc) {
         synchronized (map) {
 
-            Rect bounds = map.getDrawingBounds();
+            Rect bounds = map.getMapArea();
 
             double gridW = 1. / bounds.width();
             double gridH = 1. / bounds.height();

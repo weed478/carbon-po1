@@ -3,7 +3,7 @@ package agh.ics.oop.map;
 import agh.ics.oop.core.Rect;
 import agh.ics.oop.core.Vector2d;
 
-public class ToroidalMap extends AbstractAnimalAndGrassDrawableBoundedJungleMap {
+public class ToroidalMap extends AbstractJungleMap {
 
     public ToroidalMap(Rect mapArea, Rect jungleArea) {
         super(mapArea, jungleArea);

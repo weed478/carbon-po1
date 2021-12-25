@@ -12,13 +12,13 @@ import agh.ics.oop.objects.IMapElement;
 
 import java.util.*;
 
-public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements IAnimalAndGrassDrawableMap, IMapElementObserver {
+public abstract class AbstractJungleMap implements IWorldMap, IMapElementObserver {
     private final Map<Vector2d, List<Animal>> animals = new HashMap<>();
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     protected final Rect mapArea;
     protected final Rect jungleArea;
 
-    public AbstractAnimalAndGrassDrawableBoundedJungleMap(Rect mapArea, Rect jungleArea) {
+    public AbstractJungleMap(Rect mapArea, Rect jungleArea) {
         if (!mapArea.contains(jungleArea)) {
             throw new IllegalArgumentException("Jungle area must be contained in map area");
         }
@@ -137,11 +137,6 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
 
     @Override
     public void mapElementRotated(IMapElement object, MapDirection oldDirection) {}
-
-    @Override
-    public Rect getDrawingBounds() {
-        return mapArea;
-    }
 
     @Override
     public synchronized List<IDrawable> getDrawablesAt(Vector2d pos) {

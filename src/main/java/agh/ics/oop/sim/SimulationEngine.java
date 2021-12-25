@@ -2,7 +2,7 @@ package agh.ics.oop.sim;
 
 import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
-import agh.ics.oop.map.IAnimalAndGrassMap;
+import agh.ics.oop.map.IWorldMap;
 import agh.ics.oop.map.MapDirection;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
@@ -11,7 +11,7 @@ import java.util.*;
 
 public class SimulationEngine implements Runnable {
 
-    private final IAnimalAndGrassMap map;
+    private final IWorldMap map;
     private final List<Animal> animals;
     private int simulationDelay;
     private final Set<ISimulationStateObserver> observers = new HashSet<>();
@@ -22,7 +22,7 @@ public class SimulationEngine implements Runnable {
     private final SimulationConfig config;
     private int magicLeft = 3;
 
-    public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals, SimulationConfig config) {
+    public SimulationEngine(int simulationDelay, IWorldMap map, List<Animal> animals, SimulationConfig config) {
         this.simulationDelay = simulationDelay;
         this.map = map;
         this.animals = animals;
