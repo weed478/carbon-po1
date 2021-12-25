@@ -17,8 +17,6 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     private final Map<Vector2d, Grass> grasses = new HashMap<>();
     protected final Rect mapArea;
     protected final Rect jungleArea;
-    private int jungleGrassCount = 0;
-    private int desertGrassCount = 0;
 
     public AbstractAnimalAndGrassDrawableBoundedJungleMap(Rect mapArea, Rect jungleArea) {
         if (!mapArea.contains(jungleArea)) {
@@ -72,33 +70,30 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
 
     @Override
     public synchronized void growGrass() {
-        Random r = new Random();
-        Vector2d p;
-
-        if (desertGrassCount < mapArea.area() - jungleArea.area()) {
-            do {
-                p = mapArea.getBL().add(
-                        new Vector2d(
-                                r.nextInt(mapArea.width()),
-                                r.nextInt(mapArea.height())
-                        )
-                );
-            } while (jungleArea.contains(p) || getGrassAt(p) != null);
-            new Grass(this, p);
-            desertGrassCount++;
+        List<Vector2d> availableJungleFields = new ArrayList<>();
+        List<Vector2d> availableDesertFields = new ArrayList<>();
+        for (int x = mapArea.left(); x < mapArea.right(); x++) {
+            for (int y = mapArea.bottom(); y < mapArea.top(); y++) {
+                Vector2d pos = new Vector2d(x, y);
+                if (getGrassAt(pos) == null && getAnimalsAt(pos).isEmpty()) {
+                    if (jungleArea.contains(pos)) {
+                        availableJungleFields.add(pos);
+                    }
+                    else {
+                        availableDesertFields.add(pos);
+                    }
+                }
+            }
         }
 
-        if (jungleGrassCount < jungleArea.area()) {
-            do {
-                p = jungleArea.getBL().add(
-                        new Vector2d(
-                                r.nextInt(jungleArea.width()),
-                                r.nextInt(jungleArea.height())
-                        )
-                );
-            } while (getGrassAt(p) != null);
-            new Grass(this, p);
-            jungleGrassCount++;
+        if (!availableJungleFields.isEmpty()) {
+            Vector2d pos = availableJungleFields.get(new Random().nextInt(availableJungleFields.size()));
+            new Grass(this, pos);
+        }
+
+        if (!availableDesertFields.isEmpty()) {
+            Vector2d pos = availableDesertFields.get(new Random().nextInt(availableDesertFields.size()));
+            new Grass(this, pos);
         }
     }
 
@@ -123,23 +118,12 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     @Override
     public synchronized void mapElementRemoved(IMapElement object) {
         if (object instanceof Animal) {
-            Animal animal = (Animal) object;
-            if (!animals.get(animal.getPosition()).remove(animal)) {
+            if (!animals.get(object.getPosition()).remove(object)) {
                 throw new IllegalArgumentException("Animal was not found at old position");
             }
         }
         else if (object instanceof Grass) {
-            Grass grass = (Grass) object;
-            grasses.remove(grass.getPosition());
-            if (jungleArea.contains(grass.getPosition())) {
-                jungleGrassCount--;
-            }
-            else if (mapArea.contains(grass.getPosition())) {
-                desertGrassCount--;
-            }
-            else {
-                throw new IllegalStateException("Grass is outside of map!");
-            }
+            grasses.remove(object.getPosition());
         }
         else {
             throw new IllegalArgumentException("Invalid map element type: " + object.getClass());
