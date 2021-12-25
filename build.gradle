@@ -27,7 +27,7 @@ application {
 }
 
 javafx {
-    version = '11'
+    version = '17'
     modules = [ 'javafx.base', 'javafx.controls', 'javafx.graphics', 'javafx.fxml' ]
 }
 
