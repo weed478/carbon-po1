@@ -18,7 +18,8 @@
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
             <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#onResumeButtonClick" prefWidth="70.0" text="Pause" />
-            <Label text="Simulation speed" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label text="Speed" />
             <Slider fx:id="simulationSpeedSlider" value="50.0" />
             <Label fx:id="simulationSpeedLabel" text="Label" />
             <Pane HBox.hgrow="ALWAYS" />
