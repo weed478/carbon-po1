@@ -190,33 +190,11 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     @FXML
     public void onCanvasClicked(MouseEvent e) {
         synchronized (map) {
-            if (trackedAnimal != null) {
-                trackedAnimal.removeAnimalObserver(this);
-                trackedAnimal.deselect();
-                trackedAnimal = null;
-            }
-
-            if (!trackedAnimalAliveDescendants.isEmpty()) {
-                for (Animal a : trackedAnimalAliveDescendants) {
-                    a.removeAnimalObserver(this);
-                    a.deselect();
-                }
-                trackedAnimalAliveDescendants.clear();
-            }
-
-            trackedAnimalNumDescendants = 0;
-            trackedAnimalNumChildren = 0;
-
-            trackedAnimalGenomeLabel.setText("?");
-            trackedAnimalEnergyLabel.setText("?");
-            trackedAnimalAgeLabel.setText("?");
-            trackedAnimalChildrenLabel.setText("?");
-            trackedAnimalDeathLabel.setText("?");
-            trackedAnimalDescendantsLabel.setText("?");
+            deselectAnimals();
 
             Vector2d pos = canvasToPos(e.getX(), e.getY());
-
             List<Animal> animals = map.getAnimalsAt(pos);
+
             if (!animals.isEmpty()) {
                 trackedAnimal = animals.get(0);
                 trackedAnimal.select();
@@ -230,6 +208,32 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
             scheduleDrawMap();
         }
+    }
+
+    private void deselectAnimals() {
+        if (trackedAnimal != null) {
+            trackedAnimal.removeAnimalObserver(this);
+            trackedAnimal.deselect();
+            trackedAnimal = null;
+        }
+
+        if (!trackedAnimalAliveDescendants.isEmpty()) {
+            for (Animal a : trackedAnimalAliveDescendants) {
+                a.removeAnimalObserver(this);
+                a.deselect();
+            }
+            trackedAnimalAliveDescendants.clear();
+        }
+
+        trackedAnimalNumDescendants = 0;
+        trackedAnimalNumChildren = 0;
+
+        trackedAnimalGenomeLabel.setText("?");
+        trackedAnimalEnergyLabel.setText("?");
+        trackedAnimalAgeLabel.setText("?");
+        trackedAnimalChildrenLabel.setText("?");
+        trackedAnimalDeathLabel.setText("?");
+        trackedAnimalDescendantsLabel.setText("?");
     }
 
     private static String genomeToString(int[] genome) {
@@ -333,6 +337,17 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             simulationEngine.resume();
             resumeButton.setText("Pause");
         }
+    }
+
+    @FXML
+    public void onDominantGenomeClick(ActionEvent e) {
+
+    }
+
+    @FXML
+    public void onDeselectClick(ActionEvent e) {
+        deselectAnimals();
+        scheduleDrawMap();
     }
 
     @Override
