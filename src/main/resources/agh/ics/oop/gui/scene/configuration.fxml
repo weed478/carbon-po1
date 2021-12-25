@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.gui.controller.ConfigurationController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.gui.controller.ConfigurationController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -67,15 +67,22 @@
             <TextField fx:id="plantEnergyTF" text="100" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.rowIndex="3">
+      <VBox alignment="CENTER" spacing="10.0" GridPane.rowIndex="3">
          <children>
-            <Label text="Magical left map" />
-            <CheckBox fx:id="magicalLeftCB" mnemonicParsing="false" />
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="Magical right map" />
-            <CheckBox fx:id="magicalRightCB" mnemonicParsing="false" />
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Label text="Magical left map" />
+                  <CheckBox fx:id="magicalLeftCB" mnemonicParsing="false" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Label text="Magical right map" />
+                  <CheckBox fx:id="magicalRightCB" mnemonicParsing="false" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <Button mnemonicParsing="false" onAction="#onPressStart" text="Start" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
          <font>
             <Font size="21.0" />
