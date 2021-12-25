@@ -13,11 +13,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.gui.controller.SimulationController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="630.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.gui.controller.SimulationController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#onResumeButtonClick" text="Pause" />
+            <Button fx:id="resumeButton" mnemonicParsing="false" onAction="#onResumeButtonClick" prefWidth="70.0" text="Pause" />
             <Label text="Simulation speed" />
             <Slider fx:id="simulationSpeedSlider" value="50.0" />
             <Label fx:id="simulationSpeedLabel" text="Label" />
@@ -29,12 +29,12 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <Canvas fx:id="mapCanvas" height="400.0" onMouseClicked="#onCanvasClicked" width="640.0" />
+      <Canvas fx:id="mapCanvas" height="400.0" onMouseClicked="#onCanvasClicked" width="630.0" />
       <HBox VBox.vgrow="ALWAYS">
          <children>
             <VBox>
                <children>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                  <HBox alignment="CENTER_RIGHT" spacing="5.0">
                      <children>
                         <Label text="Choose chart" />
                         <ChoiceBox fx:id="selectChartDropdown" prefWidth="150.0" />
@@ -43,7 +43,7 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <StackPane prefWidth="314.0">
+                  <StackPane prefWidth="320.0">
                      <children>
                         <LineChart fx:id="animalsChart" createSymbols="false" legendVisible="false" visible="false">
                           <xAxis>
