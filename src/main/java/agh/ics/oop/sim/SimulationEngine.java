@@ -24,11 +24,11 @@ public class SimulationEngine implements Runnable {
         this.animals = animals;
     }
 
-    public void addSimulationStateObserver(ISimulationStateObserver observer) {
+    public synchronized void addSimulationStateObserver(ISimulationStateObserver observer) {
         observers.add(observer);
     }
 
-    public void removeSimulationStateObserver(ISimulationStateObserver observer) {
+    public synchronized void removeSimulationStateObserver(ISimulationStateObserver observer) {
         observers.remove(observer);
     }
 
@@ -138,39 +138,41 @@ public class SimulationEngine implements Runnable {
     }
 
     public SimulationStatistics getStatistics() {
-        double averageFood = 0;
-        double averageChildren = 0;
-        Map<int[], Integer> genomeCounts = new HashMap<>();
+        synchronized (map) {
+            double averageFood = 0;
+            double averageChildren = 0;
+            Map<int[], Integer> genomeCounts = new HashMap<>();
 
-        for (Animal a : animals) {
-            averageFood += a.getFood();
-            averageChildren += a.getNumChildren();
-            int[] genome = a.getGenome();
-            genomeCounts.putIfAbsent(genome, 0);
-            genomeCounts.replace(genome, genomeCounts.get(genome) + 1);
-        }
-
-        averageFood /= animals.size();
-        averageChildren /= animals.size();
-
-        int[] dominantGenome = null;
-        int dominantGenomeCount = 0;
-        for (Map.Entry<int[], Integer> e : genomeCounts.entrySet()) {
-            if (e.getValue() > dominantGenomeCount) {
-                dominantGenome = e.getKey();
-                dominantGenomeCount = e.getValue();
+            for (Animal a : animals) {
+                averageFood += a.getFood();
+                averageChildren += a.getNumChildren();
+                int[] genome = a.getGenome();
+                genomeCounts.putIfAbsent(genome, 0);
+                genomeCounts.replace(genome, genomeCounts.get(genome) + 1);
             }
-        }
 
-        return new SimulationStatistics(
-                day,
-                map.getAnimalCount(),
-                map.getGrassCount(),
-                averageFood,
-                allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount),
-                averageChildren,
-                dominantGenome
-        );
+            averageFood /= animals.size();
+            averageChildren /= animals.size();
+
+            int[] dominantGenome = null;
+            int dominantGenomeCount = 0;
+            for (Map.Entry<int[], Integer> e : genomeCounts.entrySet()) {
+                if (e.getValue() > dominantGenomeCount) {
+                    dominantGenome = e.getKey();
+                    dominantGenomeCount = e.getValue();
+                }
+            }
+
+            return new SimulationStatistics(
+                    day,
+                    map.getAnimalCount(),
+                    map.getGrassCount(),
+                    averageFood,
+                    allDeadAnimalsCount == 0 ? 0 : ((double) averageDeadLifetimeSum / allDeadAnimalsCount),
+                    averageChildren,
+                    dominantGenome
+            );
+        }
     }
 
     private void simulationStateChanged() {

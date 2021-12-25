@@ -7,27 +7,37 @@ public abstract class AbstractMapElement implements IMapElement {
 
     private Vector2d position;
     private MapDirection direction;
+    protected final Object world;
 
-    public AbstractMapElement(Vector2d position, MapDirection direction) {
+    public AbstractMapElement(Object world, Vector2d position, MapDirection direction) {
+        this.world = world;
         this.position = position;
         this.direction = direction;
     }
 
     @Override
     public Vector2d getPosition() {
-        return position;
+        synchronized (world) {
+            return position;
+        }
     }
 
     protected void setPosition(Vector2d position) {
-        this.position = position;
+        synchronized (world) {
+            this.position = position;
+        }
     }
 
     @Override
     public MapDirection getDirection() {
-        return direction;
+        synchronized (world) {
+            return direction;
+        }
     }
 
     protected void setDirection(MapDirection direction) {
-        this.direction = direction;
+        synchronized (world) {
+            this.direction = direction;
+        }
     }
 }

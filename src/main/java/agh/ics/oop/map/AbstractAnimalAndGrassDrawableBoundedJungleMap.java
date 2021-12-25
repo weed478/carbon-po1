@@ -29,20 +29,20 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public void registerAnimal(Animal animal) {
+    public synchronized void registerAnimal(Animal animal) {
         animals.putIfAbsent(animal.getPosition(), new ArrayList<>());
         animals.get(animal.getPosition()).add(animal);
         animal.addMapElementObserver(this);
     }
 
     @Override
-    public void registerGrass(Grass grass) {
+    public synchronized void registerGrass(Grass grass) {
         grasses.put(grass.getPosition(), grass);
         grass.addMapElementObserver(this);
     }
 
     @Override
-    public List<Animal> getAnimalsAt(Vector2d pos) {
+    public synchronized List<Animal> getAnimalsAt(Vector2d pos) {
         List<Animal> set = animals.get(pos);
         if (set == null) {
             return new ArrayList<>();
@@ -52,7 +52,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public int getAnimalCount() {
+    public synchronized int getAnimalCount() {
         int count = 0;
         for (List<Animal> set : animals.values()) {
             count += set.size();
@@ -61,17 +61,17 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public Grass getGrassAt(Vector2d pos) {
+    public synchronized Grass getGrassAt(Vector2d pos) {
         return grasses.get(pos);
     }
 
     @Override
-    public int getGrassCount() {
+    public synchronized int getGrassCount() {
         return grasses.size();
     }
 
     @Override
-    public void growGrass() {
+    public synchronized void growGrass() {
         Random r = new Random();
         Vector2d p;
 
@@ -103,7 +103,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public void mapElementMoved(IMapElement object, Vector2d oldPosition) {
+    public synchronized void mapElementMoved(IMapElement object, Vector2d oldPosition) {
         if (object instanceof Animal) {
             Animal animal = (Animal) object;
             if (!animals.get(oldPosition).remove(animal)) {
@@ -121,7 +121,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public void mapElementRemoved(IMapElement object) {
+    public synchronized void mapElementRemoved(IMapElement object) {
         if (object instanceof Animal) {
             Animal animal = (Animal) object;
             if (!animals.get(animal.getPosition()).remove(animal)) {
@@ -157,7 +157,7 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
-    public List<IDrawable> getDrawablesAt(Vector2d pos) {
+    public synchronized List<IDrawable> getDrawablesAt(Vector2d pos) {
         List<IDrawable> drawables = new ArrayList<>();
 
         if (jungleArea.contains(pos)) {

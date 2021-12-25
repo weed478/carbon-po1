@@ -65,7 +65,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
      * @param direction initial direction
      */
     public Animal(SimulationConfig config, IAnimalMap map, Vector2d position, MapDirection direction) {
-        super(position, direction);
+        super(map, position, direction);
         this.config = config;
         this.map = map;
         this.food = config.startEnergy;
@@ -81,7 +81,7 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
      * @param p2 second parent
      */
     public Animal(Animal p1, Animal p2) {
-        super(p1.getPosition(), p1.getDirection());
+        super(p1.map, p1.getPosition(), p1.getDirection());
         this.config = p1.config;
         this.map = p1.map;
 
@@ -121,119 +121,149 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     }
 
     public void select() {
-        isSelected = true;
+        synchronized (world) {
+            isSelected = true;
+        }
     }
 
     public void deselect() {
-        isSelected = false;
+        synchronized (world) {
+            isSelected = false;
+        }
     }
 
     public boolean isSelected() {
-        return isSelected;
+        synchronized (world) {
+            return isSelected;
+        }
     }
 
     public int[] getGenome() {
-        Arrays.sort(genome);
-        return genome;
+        synchronized (world) {
+            Arrays.sort(genome);
+            return genome;
+        }
     }
 
     public int getNumChildren() {
-        return numChildren;
+        synchronized (world) {
+            return numChildren;
+        }
     }
 
     public boolean isAlive() {
-        return getFood() > 0;
+        synchronized (world) {
+            return getFood() > 0;
+        }
     }
 
     public int getFood() {
-        return food;
+        synchronized (world) {
+            return food;
+        }
     }
 
     public void passDay() {
-        if (food <= 0) {
-            throw new IllegalStateException("Animal does not have enough food");
+        synchronized (world) {
+            if (food <= 0) {
+                throw new IllegalStateException("Animal does not have enough food");
+            }
+            food -= config.moveEnergy;
+            age += 1;
         }
-        food -= config.moveEnergy;
-        age += 1;
     }
 
     public int getAge() {
-        return age;
+        synchronized (world) {
+            return age;
+        }
     }
 
     public void eatGrass(Grass grass) {
-        if (!grass.getPosition().equals(getPosition())) {
-            throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
+        synchronized (world) {
+            if (!grass.getPosition().equals(getPosition())) {
+                throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
+            }
+            grass.elementRemoved();
+            food += config.plantEnergy;
         }
-        grass.elementRemoved();
-        food += config.plantEnergy;
     }
 
     public boolean canBreed() {
-        return getFood() >= config.minBreedingEnergy;
+        synchronized (world) {
+            return getFood() >= config.minBreedingEnergy;
+        }
     }
 
     public Animal breed(Animal other) {
-        return new Animal(this, other);
+        synchronized (world) {
+            return new Animal(this, other);
+        }
     }
 
     public int decideMovement() {
-        return genome[rand.nextInt(genome.length)];
+        synchronized (world) {
+            return genome[rand.nextInt(genome.length)];
+        }
     }
 
     public void move(int turn) {
-        if (turn % 4 != 0) {
-            setDirection(getDirection().turn(turn));
-            return;
-        }
+        synchronized (world) {
+            if (turn % 4 != 0) {
+                setDirection(getDirection().turn(turn));
+                return;
+            }
 
-        Vector2d newPos = map.moveFrom(getPosition(), getDirection().turn(turn));
-        setPosition(newPos);
+            Vector2d newPos = map.moveFrom(getPosition(), getDirection().turn(turn));
+            setPosition(newPos);
+        }
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.save();
-        gc.translate(0.5, 0.5);
-        gc.scale(0.8, 0.8);
+        synchronized (world) {
+            gc.save();
+            gc.translate(0.5, 0.5);
+            gc.scale(0.8, 0.8);
 
-        gc.beginPath();
-        gc.arc(0, 0, 0.5, 0.5, 0, 360);
-        gc.closePath();
-        gc.clip();
+            gc.beginPath();
+            gc.arc(0, 0, 0.5, 0.5, 0, 360);
+            gc.closePath();
+            gc.clip();
 
-        gc.setFill(isSelected ? Color.DARKGOLDENROD : Color.DARKRED);
-        gc.fill();
+            gc.setFill(isSelected ? Color.DARKGOLDENROD : Color.DARKRED);
+            gc.fill();
 
-        gc.save();
-        gc.rotate(180);
-        gc.setFill(isSelected ? Color.GOLDENROD : Color.RED);
-        double healthBar = Math.min((double) getFood() / config.startEnergy, 1);
-        gc.fillRect(-0.5, -0.5, 1, healthBar);
-        gc.restore();
+            gc.save();
+            gc.rotate(180);
+            gc.setFill(isSelected ? Color.GOLDENROD : Color.RED);
+            double healthBar = Math.min((double) getFood() / config.startEnergy, 1);
+            gc.fillRect(-0.5, -0.5, 1, healthBar);
+            gc.restore();
 
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(0.1);
-        gc.stroke();
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(0.1);
+            gc.stroke();
 
-        gc.rotate(getDirection().angle());
-        gc.setLineWidth(0.1);
-        gc.setStroke(Color.BLACK);
-        gc.beginPath();
-        gc.moveTo(
-                -0.2,
-                0
-        );
-        gc.lineTo(
-                0,
-                -0.3
-        );
-        gc.lineTo(
-                0.2,
-                0
-        );
-        gc.stroke();
+            gc.rotate(getDirection().angle());
+            gc.setLineWidth(0.1);
+            gc.setStroke(Color.BLACK);
+            gc.beginPath();
+            gc.moveTo(
+                    -0.2,
+                    0
+            );
+            gc.lineTo(
+                    0,
+                    -0.3
+            );
+            gc.lineTo(
+                    0.2,
+                    0
+            );
+            gc.stroke();
 
-        gc.restore();
+            gc.restore();
+        }
     }
 }

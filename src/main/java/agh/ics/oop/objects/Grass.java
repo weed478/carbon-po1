@@ -14,12 +14,14 @@ public class Grass extends AbstractObservableMapElement implements IDrawable {
     private static final Image image = new Image(Objects.requireNonNull(Grass.class.getResourceAsStream("plant.png")));
 
     public Grass(IGrassMap map, Vector2d position) {
-        super(position, MapDirection.N);
+        super(map, position, MapDirection.N);
         map.registerGrass(this);
     }
 
     @Override
     public void draw(GraphicsContext gc) {
-        gc.drawImage(image, 0, 0, 1, 1);
+        synchronized (world) {
+            gc.drawImage(image, 0, 0, 1, 1);
+        }
     }
 }
