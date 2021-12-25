@@ -26,6 +26,9 @@ public class StatsSaver {
         if (file != null) {
             try {
                 saveFile(file, stats);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Statistics saved");
+                alert.show();
             }
             catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
