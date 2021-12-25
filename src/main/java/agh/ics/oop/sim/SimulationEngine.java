@@ -1,7 +1,9 @@
 package agh.ics.oop.sim;
 
+import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.map.IAnimalAndGrassMap;
+import agh.ics.oop.map.MapDirection;
 import agh.ics.oop.objects.Animal;
 import agh.ics.oop.objects.Grass;
 
@@ -17,11 +19,14 @@ public class SimulationEngine implements Runnable {
     private int averageDeadLifetimeSum = 0;
     private int allDeadAnimalsCount = 0;
     private int day = 0;
+    private final SimulationConfig config;
+    private int magicLeft = 3;
 
-    public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals) {
+    public SimulationEngine(int simulationDelay, IAnimalAndGrassMap map, List<Animal> animals, SimulationConfig config) {
         this.simulationDelay = simulationDelay;
         this.map = map;
         this.animals = animals;
+        this.config = config;
     }
 
     public synchronized void addSimulationStateObserver(ISimulationStateObserver observer) {
@@ -58,8 +63,31 @@ public class SimulationEngine implements Runnable {
         moveAnimals();
         processEating();
         processReproduction();
+        doMagic();
         growPlants();
         passDay();
+    }
+
+    private void doMagic() {
+        if (!config.isMagic || magicLeft <= 0 || animals.size() != 5) return;
+        for (int i = 0; i < 5; i++) {
+            List<Vector2d> availablePos = new ArrayList<>();
+            for (int x = map.getMapArea().left(); x < map.getMapArea().right(); x++) {
+                for (int y = map.getMapArea().bottom(); y < map.getMapArea().top(); y++) {
+                    Vector2d pos = new Vector2d(x, y);
+                    if (map.getAnimalsAt(pos).isEmpty() && map.getGrassAt(pos) == null) {
+                        availablePos.add(pos);
+                    }
+                }
+            }
+            if (availablePos.size() < 1) {
+                break;
+            }
+            Vector2d pos = availablePos.get(new Random().nextInt(availablePos.size()));
+            animals.add(new Animal(config, map, pos, MapDirection.N));
+        }
+        magicLeft--;
+        magicHappened();
     }
 
     private void removeDeadAnimals() {
@@ -188,6 +216,12 @@ public class SimulationEngine implements Runnable {
     private void simulationStateChanged() {
         for (ISimulationStateObserver observer : observers) {
             observer.simulationStateChanged();
+        }
+    }
+
+    private void magicHappened() {
+        for (ISimulationStateObserver observer : observers) {
+            observer.magicHappened();
         }
     }
 

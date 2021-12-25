@@ -40,6 +40,11 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
     }
 
     @Override
+    public Rect getMapArea() {
+        return mapArea;
+    }
+
+    @Override
     public synchronized List<Animal> getAnimalsAt(Vector2d pos) {
         List<Animal> set = animals.get(pos);
         if (set == null) {

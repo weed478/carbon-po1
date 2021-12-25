@@ -23,10 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -147,7 +144,7 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             animals.add(new Animal(config, map, pos, MapDirection.N));
         }
 
-        simulationEngine = new SimulationEngine(500, map, animals);
+        simulationEngine = new SimulationEngine(500, map, animals, config);
         simulationEngine.addSimulationStateObserver(this);
         Thread simulationThread = new Thread(simulationEngine);
         simulationThread.setDaemon(true);
@@ -339,6 +336,16 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             scheduleUpdateCharts(stats);
             Platform.runLater(() -> worldAgeLabel.setText(String.valueOf(stats.day)));
         }
+    }
+
+    @Override
+    public void magicHappened() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Magic happened");
+            alert.setHeaderText("Some animals appeared");
+            alert.show();
+        });
     }
 
     @Override
