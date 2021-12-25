@@ -52,7 +52,7 @@ public class StatsSaver {
 
     private void saveFile(File f, List<SimulationStatistics> stats) throws IOException {
         FileWriter writer = new FileWriter(f);
-        writer.write("day,animals,plants,dominant genome,average energy,average lifetime,average children\n");
+        writer.write("day,animals,plants,average energy,average lifetime,average children\n");
         for (SimulationStatistics s : stats) {
             writer.write(String.valueOf(s.day));
             writer.write(",");
@@ -61,9 +61,6 @@ public class StatsSaver {
             writer.write(",");
 
             writer.write(String.valueOf(s.numGrass));
-            writer.write(",");
-
-            writer.write(genomeToString(s.dominantGenome));
             writer.write(",");
 
             writer.write(roundDigits(s.averageFood));
@@ -75,6 +72,9 @@ public class StatsSaver {
             writer.write(roundDigits(s.averageChildren));
             writer.write("\n");
         }
+
+
+
         writer.close();
     }
 }
