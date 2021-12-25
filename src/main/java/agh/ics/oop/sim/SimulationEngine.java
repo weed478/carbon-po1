@@ -84,7 +84,7 @@ public class SimulationEngine implements Runnable {
                 break;
             }
             Vector2d pos = availablePos.get(new Random().nextInt(availablePos.size()));
-            animals.add(new Animal(config, map, pos, MapDirection.N));
+            animals.add(new Animal(animals.get(new Random().nextInt(animals.size())), pos, MapDirection.N));
         }
         magicLeft--;
         magicHappened();

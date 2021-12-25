@@ -78,6 +78,21 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
     }
 
     /**
+     * Magic (genome copy) constructor
+     * @param template animal to copy
+     * @param position initial position
+     * @param direction initial direction
+     */
+    public Animal(Animal template, Vector2d position, MapDirection direction) {
+        super(template.world, position, direction);
+        this.config = template.config;
+        this.map = template.map;
+        this.food = config.startEnergy;
+        this.genome = template.genome.clone();
+        map.registerAnimal(this);
+    }
+
+    /**
      * Breeding constructor.
      * Child inherits parents' map and position.
      * @throws IllegalStateException if breeding was not possible
