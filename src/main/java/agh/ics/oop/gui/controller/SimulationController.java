@@ -29,10 +29,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
 public class SimulationController implements ISimulationStateObserver, IAnimalObserver {
@@ -127,14 +124,20 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
         List<Animal> animals = new ArrayList<>();
         for (int i = 0; i < config.initialAnimals; i++) {
-            animals.add(
-                    new Animal(
-                            config,
-                            map,
-                            new Vector2d(config.mapArea.width() / 2, config.mapArea.height() / 2),
-                            MapDirection.N
-                    )
-            );
+            List<Vector2d> availablePos = new ArrayList<>();
+            for (int x = config.mapArea.left(); x < config.mapArea.right(); x++) {
+                for (int y = config.mapArea.bottom(); y < config.mapArea.top(); y++) {
+                    Vector2d pos = new Vector2d(x, y);
+                    if (map.getAnimalsAt(pos).isEmpty()) {
+                        availablePos.add(pos);
+                    }
+                }
+            }
+            if (availablePos.size() < 1) {
+                throw new IllegalArgumentException("Animals cannot fit on map");
+            }
+            Vector2d pos = availablePos.get(new Random().nextInt(availablePos.size()));
+            animals.add(new Animal(config, map, pos, MapDirection.N));
         }
 
         simulationEngine = new SimulationEngine(500, map, animals);
