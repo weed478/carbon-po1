@@ -224,6 +224,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 trackedAnimalDescendantsLabel.setText("0");
                 trackedAnimal.addAnimalObserver(this);
             }
+
+            scheduleDrawMap();
         }
     }
 
