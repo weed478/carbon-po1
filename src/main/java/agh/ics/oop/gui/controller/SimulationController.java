@@ -6,6 +6,7 @@ import agh.ics.oop.core.SimulationConfig;
 import agh.ics.oop.core.Vector2d;
 import agh.ics.oop.gui.IDrawable;
 import agh.ics.oop.gui.MapPainter;
+import agh.ics.oop.gui.StatsSaver;
 import agh.ics.oop.map.IAnimalAndGrassDrawableMap;
 import agh.ics.oop.map.MapDirection;
 import agh.ics.oop.map.RectangularMap;
@@ -28,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -43,6 +45,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     private final Semaphore drawingDone = new Semaphore(1);
 
     private final Semaphore updatingChartsDone = new Semaphore(1);
+
+    private final List<SimulationStatistics> allStats = new ArrayList<>();
 
     @FXML
     public Canvas mapCanvas;
@@ -330,9 +334,10 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public void simulationStateChanged() {
         synchronized (map) {
             scheduleDrawMap();
-            scheduleUpdateCharts(simulationEngine.getStatistics());
-            int day = simulationEngine.getDay();
-            Platform.runLater(() -> worldAgeLabel.setText(String.valueOf(day)));
+            SimulationStatistics stats = simulationEngine.getStatistics();
+            allStats.add(stats);
+            scheduleUpdateCharts(stats);
+            Platform.runLater(() -> worldAgeLabel.setText(String.valueOf(stats.day)));
         }
     }
 
@@ -371,6 +376,13 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public void onDeselectClick(ActionEvent e) {
         deselectAnimals();
         scheduleDrawMap();
+    }
+
+    @FXML
+    public void onSaveClick(ActionEvent e) {
+        Stage stage = (Stage) mapCanvas.getScene().getWindow();
+        StatsSaver saver = new StatsSaver(stage);
+        saver.saveStats(allStats);
     }
 
     @Override

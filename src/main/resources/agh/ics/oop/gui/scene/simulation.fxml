@@ -36,6 +36,8 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" spacing="5.0">
                      <children>
+                        <Button mnemonicParsing="false" onAction="#onSaveClick" text="Save" />
+                        <Pane HBox.hgrow="ALWAYS" />
                         <Label text="Choose chart" />
                         <ChoiceBox fx:id="selectChartDropdown" prefWidth="150.0" />
                      </children>
