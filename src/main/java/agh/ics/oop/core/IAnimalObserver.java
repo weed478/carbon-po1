@@ -8,7 +8,7 @@ public interface IAnimalObserver {
 
     void onAnimalAgeChanged(Animal animal);
 
-    void onAnimalHadChild(Animal animal);
+    void onAnimalHadChild(Animal parent, Animal child);
 
     void onAnimalDied(Animal animal);
 }

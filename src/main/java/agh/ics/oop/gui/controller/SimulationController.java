@@ -30,7 +30,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 public class SimulationController implements ISimulationStateObserver, IAnimalObserver {
@@ -84,6 +86,12 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public Label dominantGenomeLabel;
 
     private Animal trackedAnimal = null;
+
+    private final Set<Animal> trackedAnimalAliveDescendants = new HashSet<>();
+
+    private int trackedAnimalNumDescendants = 0;
+
+    private int trackedAnimalNumChildren = 0;
 
     @FXML
     public Label trackedAnimalGenomeLabel;
@@ -181,8 +189,20 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         synchronized (map) {
             if (trackedAnimal != null) {
                 trackedAnimal.removeAnimalObserver(this);
+                trackedAnimal.deselect();
                 trackedAnimal = null;
             }
+
+            if (!trackedAnimalAliveDescendants.isEmpty()) {
+                for (Animal a : trackedAnimalAliveDescendants) {
+                    a.removeAnimalObserver(this);
+                    a.deselect();
+                }
+                trackedAnimalAliveDescendants.clear();
+            }
+
+            trackedAnimalNumDescendants = 0;
+            trackedAnimalNumChildren = 0;
 
             trackedAnimalGenomeLabel.setText("?");
             trackedAnimalEnergyLabel.setText("?");
@@ -201,6 +221,7 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 trackedAnimalEnergyLabel.setText(String.valueOf(trackedAnimal.getFood()));
                 trackedAnimalAgeLabel.setText(String.valueOf(trackedAnimal.getAge()));
                 trackedAnimalChildrenLabel.setText("0");
+                trackedAnimalDescendantsLabel.setText("0");
                 trackedAnimal.addAnimalObserver(this);
             }
         }
@@ -316,9 +337,6 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 String value = String.valueOf(animal.getFood());
                 Platform.runLater(() -> trackedAnimalEnergyLabel.setText(value));
             }
-            else {
-                throw new IllegalStateException("Passed animal was not tracked animal");
-            }
         }
     }
 
@@ -328,20 +346,25 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             if (animal == trackedAnimal) {
                 String value = String.valueOf(animal.getAge());
                 Platform.runLater(() -> trackedAnimalAgeLabel.setText(value));
-            } else {
-                throw new IllegalStateException("Passed animal was not tracked animal");
             }
         }
     }
 
     @Override
-    public void onAnimalHadChild(Animal animal) {
+    public void onAnimalHadChild(Animal parent, Animal child) {
         synchronized (map) {
-            if (animal == trackedAnimal) {
-                String value = String.valueOf(animal.getNumChildren());
+            if (trackedAnimalAliveDescendants.add(child)) {
+                child.addAnimalObserver(this);
+                child.select();
+                trackedAnimalNumDescendants++;
+                String value = String.valueOf(trackedAnimalNumDescendants);
+                Platform.runLater(() -> trackedAnimalDescendantsLabel.setText(value));
+            }
+
+            if (parent == trackedAnimal) {
+                trackedAnimalNumChildren++;
+                String value = String.valueOf(trackedAnimalNumChildren);
                 Platform.runLater(() -> trackedAnimalChildrenLabel.setText(value));
-            } else {
-                throw new IllegalStateException("Passed animal was not tracked animal");
             }
         }
     }
@@ -356,8 +379,9 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                     trackedAnimalDeathLabel.setText(value);
                     trackedAnimal = null;
                 });
-            } else {
-                throw new IllegalStateException("Passed animal was not tracked animal");
+            }
+            else if (!trackedAnimalAliveDescendants.remove(animal)) {
+                throw new IllegalStateException("Dead animal was not tracked");
             }
         }
     }
