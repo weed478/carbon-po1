@@ -10,14 +10,14 @@ import javafx.stage.Stage;
 
 public class SimulationScene {
 
-    public SimulationScene(Stage stage, SimulationConfig config) {
+    public SimulationScene(Stage stage, SimulationConfig configLeft, SimulationConfig configRight) {
         HBox root = new HBox(9);
 
         FXMLLoader loaderLeft = new FXMLLoader(getClass().getResource("simulation.fxml"));
         FXMLLoader loaderRight = new FXMLLoader(getClass().getResource("simulation.fxml"));
 
-        loaderLeft.setControllerFactory(t -> new SimulationController(config, true, false));
-        loaderRight.setControllerFactory(t -> new SimulationController(config, false, false));
+        loaderLeft.setControllerFactory(t -> new SimulationController(configLeft));
+        loaderRight.setControllerFactory(t -> new SimulationController(configRight));
 
         Pane separator = new Pane();
         separator.setMinWidth(2);

@@ -115,8 +115,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     @FXML
     public Label trackedAnimalDescendantsLabel;
 
-    public SimulationController(SimulationConfig config, boolean isToroidal, boolean isMagic) {
-        if (isToroidal) {
+    public SimulationController(SimulationConfig config) {
+        if (config.toroidalMap) {
             map = new ToroidalMap(
                     config.mapArea,
                     config.jungleArea

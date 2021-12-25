@@ -33,7 +33,7 @@ public class ConfigurationController {
     @FXML
     public void onPressStart(ActionEvent e) {
         try {
-            SimulationConfig config = SimulationConfig.parse(
+            SimulationConfig configLeft = SimulationConfig.parse(
                     mapWidthTF.getText(),
                     mapHeightTF.getText(),
                     jungleRatioTF.getText(),
@@ -41,9 +41,21 @@ public class ConfigurationController {
                     initialEnergyTF.getText(),
                     moveEnergyTF.getText(),
                     plantEnergyTF.getText(),
+                    magicalLeftCB.isSelected(),
+                    true
+            );
+            SimulationConfig configRight = SimulationConfig.parse(
+                    mapWidthTF.getText(),
+                    mapHeightTF.getText(),
+                    jungleRatioTF.getText(),
+                    initialAnimalsTF.getText(),
+                    initialEnergyTF.getText(),
+                    moveEnergyTF.getText(),
+                    plantEnergyTF.getText(),
+                    magicalRightCB.isSelected(),
                     false
             );
-            new SimulationScene((Stage) mapWidthTF.getScene().getWindow(), config);
+            new SimulationScene((Stage) mapWidthTF.getScene().getWindow(), configLeft, configRight);
         }
         catch (Exception ex) {
             alertException(ex);
@@ -53,7 +65,7 @@ public class ConfigurationController {
     private void alertException(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error starting simulation");
-        alert.setHeaderText("Invalid configuration");
+        alert.setHeaderText(e.toString());
         alert.setContentText(e.getMessage());
         alert.show();
     }

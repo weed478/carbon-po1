@@ -14,6 +14,7 @@ public class SimulationConfig {
     public final int minBreedingEnergy;
 
     public final boolean isMagic;
+    public final boolean toroidalMap;
 
     public static SimulationConfig parse(String mapWidth,
                                          String mapHeight,
@@ -22,7 +23,8 @@ public class SimulationConfig {
                                          String startEnergy,
                                          String moveEnergy,
                                          String plantEnergy,
-                                         boolean isMagic) {
+                                         boolean isMagic,
+                                         boolean toroidalMap) {
         return new SimulationConfig(
                 Integer.parseUnsignedInt(mapWidth),
                 Integer.parseUnsignedInt(mapHeight),
@@ -31,7 +33,8 @@ public class SimulationConfig {
                 Integer.parseUnsignedInt(startEnergy),
                 Integer.parseUnsignedInt(moveEnergy),
                 Integer.parseUnsignedInt(plantEnergy),
-                isMagic
+                isMagic,
+                toroidalMap
         );
     }
 
@@ -42,7 +45,8 @@ public class SimulationConfig {
                             int startEnergy,
                             int moveEnergy,
                             int plantEnergy,
-                            boolean isMagic) {
+                            boolean isMagic,
+                            boolean toroidalMap) {
         if (mapWidth < 1 || mapHeight < 1) {
             throw new IllegalArgumentException("Map width/height must be > 0");
         }
@@ -91,5 +95,6 @@ public class SimulationConfig {
         this.minBreedingEnergy = startEnergy / 2;
 
         this.isMagic = isMagic;
+        this.toroidalMap = toroidalMap;
     }
 }
