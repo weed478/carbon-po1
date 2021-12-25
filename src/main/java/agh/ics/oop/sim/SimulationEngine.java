@@ -141,6 +141,12 @@ public class SimulationEngine implements Runnable {
         simulationEnded();
     }
 
+    public List<Animal> getAnimals() {
+        synchronized (map) {
+            return animals;
+        }
+    }
+
     public SimulationStatistics getStatistics() {
         synchronized (map) {
             double averageFood = 0;

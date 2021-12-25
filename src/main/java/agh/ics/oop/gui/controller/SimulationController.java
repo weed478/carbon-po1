@@ -225,6 +225,11 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             trackedAnimalAliveDescendants.clear();
         }
 
+        for (Animal a : simulationEngine.getAnimals()) {
+            // clear dominant genome highlight
+            a.deselect();
+        }
+
         trackedAnimalNumDescendants = 0;
         trackedAnimalNumChildren = 0;
 
@@ -341,7 +346,14 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public void onDominantGenomeClick(ActionEvent e) {
-
+        deselectAnimals();
+        int[] dominantGenome = simulationEngine.getStatistics().dominantGenome;
+        for (Animal a : simulationEngine.getAnimals()) {
+            if (Arrays.equals(a.getGenome(), dominantGenome)) {
+                a.select();
+            }
+        }
+        scheduleDrawMap();
     }
 
     @FXML
