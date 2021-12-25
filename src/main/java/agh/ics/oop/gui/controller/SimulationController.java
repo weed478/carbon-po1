@@ -211,34 +211,36 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     }
 
     private void deselectAnimals() {
-        if (trackedAnimal != null) {
-            trackedAnimal.removeAnimalObserver(this);
-            trackedAnimal.deselect();
-            trackedAnimal = null;
-        }
+        synchronized (map) {
+            if (trackedAnimal != null) {
+                trackedAnimal.removeAnimalObserver(this);
+                trackedAnimal.deselect();
+                trackedAnimal = null;
+            }
 
-        if (!trackedAnimalAliveDescendants.isEmpty()) {
-            for (Animal a : trackedAnimalAliveDescendants) {
-                a.removeAnimalObserver(this);
+            if (!trackedAnimalAliveDescendants.isEmpty()) {
+                for (Animal a : trackedAnimalAliveDescendants) {
+                    a.removeAnimalObserver(this);
+                    a.deselect();
+                }
+                trackedAnimalAliveDescendants.clear();
+            }
+
+            for (Animal a : simulationEngine.getAnimals()) {
+                // clear dominant genome highlight
                 a.deselect();
             }
-            trackedAnimalAliveDescendants.clear();
+
+            trackedAnimalNumDescendants = 0;
+            trackedAnimalNumChildren = 0;
+
+            trackedAnimalGenomeLabel.setText("?");
+            trackedAnimalEnergyLabel.setText("?");
+            trackedAnimalAgeLabel.setText("?");
+            trackedAnimalChildrenLabel.setText("?");
+            trackedAnimalDeathLabel.setText("?");
+            trackedAnimalDescendantsLabel.setText("?");
         }
-
-        for (Animal a : simulationEngine.getAnimals()) {
-            // clear dominant genome highlight
-            a.deselect();
-        }
-
-        trackedAnimalNumDescendants = 0;
-        trackedAnimalNumChildren = 0;
-
-        trackedAnimalGenomeLabel.setText("?");
-        trackedAnimalEnergyLabel.setText("?");
-        trackedAnimalAgeLabel.setText("?");
-        trackedAnimalChildrenLabel.setText("?");
-        trackedAnimalDeathLabel.setText("?");
-        trackedAnimalDescendantsLabel.setText("?");
     }
 
     private static String genomeToString(int[] genome) {
@@ -346,11 +348,13 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public void onDominantGenomeClick(ActionEvent e) {
-        deselectAnimals();
-        int[] dominantGenome = simulationEngine.getStatistics().dominantGenome;
-        for (Animal a : simulationEngine.getAnimals()) {
-            if (Arrays.equals(a.getGenome(), dominantGenome)) {
-                a.select();
+        synchronized (map) {
+            deselectAnimals();
+            int[] dominantGenome = simulationEngine.getStatistics().dominantGenome;
+            for (Animal a : simulationEngine.getAnimals()) {
+                if (Arrays.equals(a.getGenome(), dominantGenome)) {
+                    a.select();
+                }
             }
         }
         scheduleDrawMap();
