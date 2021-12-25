@@ -127,12 +127,10 @@ public abstract class AbstractAnimalAndGrassDrawableBoundedJungleMap implements 
             if (!animals.get(animal.getPosition()).remove(animal)) {
                 throw new IllegalArgumentException("Animal was not found at old position");
             }
-            animal.removeMapElementObserver(this);
         }
         else if (object instanceof Grass) {
             Grass grass = (Grass) object;
             grasses.remove(grass.getPosition());
-            grass.removeMapElementObserver(this);
             if (jungleArea.contains(grass.getPosition())) {
                 jungleGrassCount--;
             }

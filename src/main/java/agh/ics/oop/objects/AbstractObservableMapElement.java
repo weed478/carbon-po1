@@ -66,6 +66,7 @@ public abstract class AbstractObservableMapElement extends AbstractMapElement {
             for (IMapElementObserver observer : observers) {
                 observer.mapElementRemoved(this);
             }
+            observers.clear();
         }
     }
 }
