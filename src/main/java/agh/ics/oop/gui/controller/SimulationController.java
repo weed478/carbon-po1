@@ -78,11 +78,11 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public Label worldAgeLabel;
-    private String worldAgeLabelBuffer;
+    private String worldAgeLabelBuffer = "?";
 
     @FXML
     public Label dominantGenomeLabel;
-    private String dominantGenomeLabelBuffer;
+    private String dominantGenomeLabelBuffer = "?";
 
     private Animal trackedAnimal = null;
 
@@ -94,27 +94,27 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public Label trackedAnimalGenomeLabel;
-    private String trackedAnimalGenomeLabelBuffer;
+    private String trackedAnimalGenomeLabelBuffer = "?";
 
     @FXML
     public Label trackedAnimalEnergyLabel;
-    private String trackedAnimalEnergyLabelBuffer;
+    private String trackedAnimalEnergyLabelBuffer = "?";
 
     @FXML
     public Label trackedAnimalAgeLabel;
-    private String trackedAnimalAgeLabelBuffer;
+    private String trackedAnimalAgeLabelBuffer = "?";
 
     @FXML
     public Label trackedAnimalChildrenLabel;
-    private String trackedAnimalChildrenLabelBuffer;
+    private String trackedAnimalChildrenLabelBuffer = "?";
 
     @FXML
     public Label trackedAnimalDeathLabel;
-    private String trackedAnimalDeathLabelBuffer;
+    private String trackedAnimalDeathLabelBuffer = "?";
 
     @FXML
     public Label trackedAnimalDescendantsLabel;
-    private String trackedAnimalDescendantsLabelBuffer;
+    private String trackedAnimalDescendantsLabelBuffer = "?";
 
     // Buffered UI update system.
     // To update UI:
