@@ -109,11 +109,7 @@
                   <VBox>
                      <children>
                         <Label text="Genome:" />
-                        <Label fx:id="trackedAnimalGenomeLabel" text="?">
-                           <VBox.margin>
-                              <Insets left="10.0" />
-                           </VBox.margin>
-                        </Label>
+                        <Label fx:id="trackedAnimalGenomeLabel" text="?" />
                         <HBox spacing="10.0">
                            <children>
                               <Label text="Energy:" />
