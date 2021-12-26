@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 public class SimulationController implements ISimulationStateObserver, IAnimalObserver {
 
@@ -39,11 +38,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     private final IDrawable drawableMap;
 
-    private final Semaphore drawingDone = new Semaphore(1);
-
-    private final Semaphore updatingChartsDone = new Semaphore(1);
-
     private final List<SimulationStatistics> allStats = new ArrayList<>();
+    private int numDrawnStats = 0;
 
     @FXML
     public Canvas mapCanvas;
@@ -82,9 +78,11 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public Label worldAgeLabel;
+    private String worldAgeLabelBuffer;
 
     @FXML
     public Label dominantGenomeLabel;
+    private String dominantGenomeLabelBuffer;
 
     private Animal trackedAnimal = null;
 
@@ -96,21 +94,124 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
 
     @FXML
     public Label trackedAnimalGenomeLabel;
+    private String trackedAnimalGenomeLabelBuffer;
 
     @FXML
     public Label trackedAnimalEnergyLabel;
+    private String trackedAnimalEnergyLabelBuffer;
 
     @FXML
     public Label trackedAnimalAgeLabel;
+    private String trackedAnimalAgeLabelBuffer;
 
     @FXML
     public Label trackedAnimalChildrenLabel;
+    private String trackedAnimalChildrenLabelBuffer;
 
     @FXML
     public Label trackedAnimalDeathLabel;
+    private String trackedAnimalDeathLabelBuffer;
 
     @FXML
     public Label trackedAnimalDescendantsLabel;
+    private String trackedAnimalDescendantsLabelBuffer;
+
+    // Buffered UI update system.
+    // To update UI:
+    // - lock buffers and state flags with synchronized(map)
+    // - update buffers
+    // - set uiNeedsUpdate = true
+    // Map object is used as lock to avoid synchronizing
+    // on both "this" and map (would cause deadlock).
+    // Access to uiNeedsUpdate and uiUpdateDone is locked with map object.
+    private boolean uiNeedsUpdate = true;
+    private boolean uiUpdateDone = true;
+
+    private void uiUpdaterTask() {
+        for (;;) {
+            try {
+                // lock access to uiNeedsUpdate and uiUpdateDone
+                synchronized (map) {
+                    // wait for uiNeedsUpdate && uiUpdateDone
+                    // lock is released upon wait() call
+                    while (!uiNeedsUpdate || !uiUpdateDone) map.wait();
+                    // lock is reacquired
+                    // mark UI update as in progress
+                    uiUpdateDone = false;
+                }
+            } catch (InterruptedException e) {
+                break;
+            }
+            Platform.runLater(() -> {
+                // lock buffers, map and state flags
+                synchronized (map) {
+                    // update on UI thread while labels and buffers are locked
+                    updateUI();
+                    // map and buffers were locked so now UI is up-to-date
+                    uiNeedsUpdate = false;
+                    uiUpdateDone = true;
+                    map.notifyAll();
+                }
+            });
+        }
+        System.out.println("UI updater stopped!");
+    }
+
+    /**
+     * Assumes all locks are acquired.
+     */
+    private void updateUI() {
+        updateLabels();
+        drawMap();
+        updateCharts();
+    }
+
+    private void updateLabels() {
+        worldAgeLabel.setText(worldAgeLabelBuffer);
+        dominantGenomeLabel.setText(dominantGenomeLabelBuffer);
+        trackedAnimalGenomeLabel.setText(trackedAnimalGenomeLabelBuffer);
+        trackedAnimalEnergyLabel.setText(trackedAnimalEnergyLabelBuffer);
+        trackedAnimalAgeLabel.setText(trackedAnimalAgeLabelBuffer);
+        trackedAnimalChildrenLabel.setText(trackedAnimalChildrenLabelBuffer);
+        trackedAnimalDeathLabel.setText(trackedAnimalDeathLabelBuffer);
+        trackedAnimalDescendantsLabel.setText(trackedAnimalDescendantsLabelBuffer);
+    }
+
+    private void drawMap() {
+        GraphicsContext gc = mapCanvas.getGraphicsContext2D();
+        gc.save();
+        Rect area = getCanvasArea();
+        gc.translate(area.left(), area.bottom());
+        gc.scale(area.width(), area.height());
+        gc.setFill(Color.rgb(0, 0, 0));
+        gc.fillRect(0, 0, 1, 1);
+        drawableMap.draw(gc);
+        gc.restore();
+    }
+
+    /**
+     * Adds all new stats to charts (based on numDrawnStats value).
+     */
+    private void updateCharts() {
+        for (int i = numDrawnStats; i < allStats.size(); i++) {
+            SimulationStatistics stats = allStats.get(i);
+            numAnimalsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numAnimals));
+            numPlantsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numGrass));
+            averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
+            averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
+            averageChildrenSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageChildren));
+        }
+        numDrawnStats = allStats.size();
+    }
+
+    private void markUIStale() {
+        synchronized (map) {
+            // state flags, buffers and map are locked
+            // mark UI as stale
+            uiNeedsUpdate = true;
+            map.notifyAll();
+        }
+    }
 
     public SimulationController(SimulationConfig config) {
         if (config.toroidalMap) {
@@ -152,6 +253,10 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         drawableMap = new MapPainter(map);
 
         simulationThread.start();
+
+        Thread uiUpdaterThread = new Thread(this::uiUpdaterTask);
+        uiUpdaterThread.setDaemon(true);
+        uiUpdaterThread.start();
     }
 
     @FXML
@@ -190,7 +295,10 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 "Average children");
         selectChartDropdown.setValue("Animals");
 
-        worldAgeLabel.setText(String.valueOf(simulationEngine.getDay()));
+        synchronized (map) {
+            worldAgeLabelBuffer = String.valueOf(simulationEngine.getDay());
+            markUIStale();
+        }
     }
 
     @FXML
@@ -204,15 +312,14 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             if (!animals.isEmpty()) {
                 trackedAnimal = animals.get(0);
                 trackedAnimal.select();
-                trackedAnimalGenomeLabel.setText(genomeToString(trackedAnimal.getGenome()));
-                trackedAnimalEnergyLabel.setText(String.valueOf(trackedAnimal.getFood()));
-                trackedAnimalAgeLabel.setText(String.valueOf(trackedAnimal.getAge()));
-                trackedAnimalChildrenLabel.setText("0");
-                trackedAnimalDescendantsLabel.setText("0");
+                trackedAnimalGenomeLabelBuffer = genomeToString(trackedAnimal.getGenome());
+                trackedAnimalEnergyLabelBuffer = String.valueOf(trackedAnimal.getFood());
+                trackedAnimalAgeLabelBuffer = String.valueOf(trackedAnimal.getAge());
+                trackedAnimalChildrenLabelBuffer = "0";
+                trackedAnimalDescendantsLabelBuffer = "0";
+                markUIStale();
                 trackedAnimal.addAnimalObserver(this);
             }
-
-            scheduleDrawMap();
         }
     }
 
@@ -240,12 +347,13 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
             trackedAnimalNumDescendants = 0;
             trackedAnimalNumChildren = 0;
 
-            trackedAnimalGenomeLabel.setText("?");
-            trackedAnimalEnergyLabel.setText("?");
-            trackedAnimalAgeLabel.setText("?");
-            trackedAnimalChildrenLabel.setText("?");
-            trackedAnimalDeathLabel.setText("?");
-            trackedAnimalDescendantsLabel.setText("?");
+            trackedAnimalGenomeLabelBuffer = "?";
+            trackedAnimalEnergyLabelBuffer = "?";
+            trackedAnimalAgeLabelBuffer = "?";
+            trackedAnimalChildrenLabelBuffer = "?";
+            trackedAnimalDeathLabelBuffer = "?";
+            trackedAnimalDescendantsLabelBuffer = "?";
+            markUIStale();
         }
     }
 
@@ -288,53 +396,14 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
         }
     }
 
-    private void scheduleDrawMap() {
-        if (drawingDone.tryAcquire()) {
-            Platform.runLater(() -> {
-                try {
-                    GraphicsContext gc = mapCanvas.getGraphicsContext2D();
-                    gc.save();
-                    Rect area = getCanvasArea();
-                    gc.translate(area.left(), area.bottom());
-                    gc.scale(area.width(), area.height());
-                    gc.setFill(Color.rgb(0, 0, 0));
-                    gc.fillRect(0, 0, 1, 1);
-                    drawableMap.draw(gc);
-                    gc.restore();
-                }
-                finally {
-                    drawingDone.release();
-                }
-            });
-        }
-    }
-
-    private void scheduleUpdateCharts(SimulationStatistics stats) {
-        if (updatingChartsDone.tryAcquire()) {
-            Platform.runLater(() -> {
-                try {
-                    numAnimalsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numAnimals));
-                    numPlantsSeries.getData().add(new XYChart.Data<>(stats.day, stats.numGrass));
-                    averageFoodSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageFood));
-                    averageLifetimeSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageLifetime));
-                    averageChildrenSeries.getData().add(new XYChart.Data<>(stats.day, stats.averageChildren));
-                    dominantGenomeLabel.setText(genomeToString(stats.dominantGenome));
-                }
-                finally {
-                    updatingChartsDone.release();
-                }
-            });
-        }
-    }
-
     @Override
     public void simulationStateChanged() {
         synchronized (map) {
-            scheduleDrawMap();
             SimulationStatistics stats = simulationEngine.getStatistics();
             allStats.add(stats);
-            scheduleUpdateCharts(stats);
-            Platform.runLater(() -> worldAgeLabel.setText(String.valueOf(stats.day)));
+            worldAgeLabelBuffer = String.valueOf(stats.day);
+            dominantGenomeLabelBuffer = genomeToString(stats.dominantGenome);
+            markUIStale();
         }
     }
 
@@ -375,29 +444,31 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                     a.select();
                 }
             }
+            // animal selections changed
+            markUIStale();
         }
-        scheduleDrawMap();
     }
 
     @FXML
     public void onDeselectClick(ActionEvent e) {
         deselectAnimals();
-        scheduleDrawMap();
     }
 
     @FXML
     public void onSaveClick(ActionEvent e) {
         Stage stage = (Stage) mapCanvas.getScene().getWindow();
         StatsSaver saver = new StatsSaver(stage);
-        saver.saveStats(allStats);
+        synchronized (map) {
+            saver.saveStats(allStats);
+        }
     }
 
     @Override
     public void onAnimalEnergyChanged(Animal animal) {
         synchronized (map) {
             if (animal == trackedAnimal) {
-                String value = String.valueOf(animal.getFood());
-                Platform.runLater(() -> trackedAnimalEnergyLabel.setText(value));
+                trackedAnimalEnergyLabelBuffer = String.valueOf(animal.getFood());
+                markUIStale();
             }
         }
     }
@@ -406,8 +477,8 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public void onAnimalAgeChanged(Animal animal) {
         synchronized (map) {
             if (animal == trackedAnimal) {
-                String value = String.valueOf(animal.getAge());
-                Platform.runLater(() -> trackedAnimalAgeLabel.setText(value));
+                trackedAnimalAgeLabelBuffer = String.valueOf(animal.getAge());
+                markUIStale();
             }
         }
     }
@@ -419,14 +490,18 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
                 child.addAnimalObserver(this);
                 child.select();
                 trackedAnimalNumDescendants++;
-                String value = String.valueOf(trackedAnimalNumDescendants);
-                Platform.runLater(() -> trackedAnimalDescendantsLabel.setText(value));
+                trackedAnimalDescendantsLabelBuffer = String.valueOf(trackedAnimalNumDescendants);
+                markUIStale();
             }
 
             if (parent == trackedAnimal) {
                 trackedAnimalNumChildren++;
-                String value = String.valueOf(trackedAnimalNumChildren);
-                Platform.runLater(() -> trackedAnimalChildrenLabel.setText(value));
+                trackedAnimalChildrenLabelBuffer = String.valueOf(trackedAnimalNumChildren);
+                // lock was constantly acquired
+                // so UI updater thread could not start
+                // previous UI update meaning UI gets
+                // updated only once
+                markUIStale();
             }
         }
     }
@@ -435,12 +510,10 @@ public class SimulationController implements ISimulationStateObserver, IAnimalOb
     public void onAnimalDied(Animal animal) {
         synchronized (map) {
             if (animal == trackedAnimal) {
-                String value = String.valueOf(simulationEngine.getDay());
-                Platform.runLater(() -> {
-                    trackedAnimalEnergyLabel.setText("0");
-                    trackedAnimalDeathLabel.setText(value);
-                    trackedAnimal = null;
-                });
+                trackedAnimalEnergyLabelBuffer = "0";
+                trackedAnimalDeathLabelBuffer = String.valueOf(simulationEngine.getDay());
+                trackedAnimal = null;
+                markUIStale();
             }
             else if (!trackedAnimalAliveDescendants.remove(animal)) {
                 throw new IllegalStateException("Dead animal was not tracked");
