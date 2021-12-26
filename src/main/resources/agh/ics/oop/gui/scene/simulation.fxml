@@ -48,7 +48,7 @@
                   </HBox>
                   <StackPane prefWidth="320.0">
                      <children>
-                        <LineChart fx:id="animalsChart" createSymbols="false" legendVisible="false" visible="false">
+                        <LineChart fx:id="animalsChart" animated="false" createSymbols="false" legendVisible="false" visible="false">
                           <xAxis>
                             <NumberAxis side="BOTTOM" />
                           </xAxis>
@@ -56,7 +56,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </LineChart>
-                        <LineChart fx:id="plantsChart" createSymbols="false" legendVisible="false" visible="false">
+                        <LineChart fx:id="plantsChart" animated="false" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
@@ -64,7 +64,7 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <LineChart fx:id="averageFoodChart" createSymbols="false" legendVisible="false" visible="false">
+                        <LineChart fx:id="averageFoodChart" animated="false" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
@@ -72,7 +72,7 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <LineChart fx:id="averageLifetimeChart" createSymbols="false" legendVisible="false" visible="false">
+                        <LineChart fx:id="averageLifetimeChart" animated="false" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
@@ -80,7 +80,7 @@
                               <NumberAxis side="LEFT" />
                            </yAxis>
                         </LineChart>
-                        <LineChart fx:id="averageChildrenChart" createSymbols="false" legendVisible="false" visible="false">
+                        <LineChart fx:id="averageChildrenChart" animated="false" createSymbols="false" legendVisible="false" visible="false">
                            <xAxis>
                               <NumberAxis side="BOTTOM" />
                            </xAxis>
