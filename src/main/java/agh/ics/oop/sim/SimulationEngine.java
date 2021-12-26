@@ -114,8 +114,24 @@ public class SimulationEngine implements Runnable {
             Vector2d pos = animal.getPosition();
             Grass grass = map.getGrassAt(pos);
             if (grass != null) {
-                animal = map.getAnimalsAt(pos).get(0);
-                animal.eatGrass(grass);
+                List<Animal> animalsAtPos = map.getAnimalsAt(pos);
+
+                // get animals with same energy
+                int topAnimalEnergy = animalsAtPos.get(0).getFood();
+                List<Animal> animalsToFeed = new ArrayList<>();
+                for (Animal a : animalsAtPos) {
+                    if (a.getFood() != topAnimalEnergy) break;
+                    animalsToFeed.add(a);
+                }
+
+                for (Animal a : animalsToFeed) {
+                    a.feed(config.plantEnergy / animalsToFeed.size());
+                }
+
+                // feed remainder of plant energy
+                animalsToFeed.get(0).feed(config.plantEnergy % animalsToFeed.size());
+
+                grass.elementRemoved();
             }
         }
     }

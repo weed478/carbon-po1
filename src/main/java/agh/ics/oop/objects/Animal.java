@@ -235,14 +235,13 @@ public class Animal extends AbstractObservableMapElement implements IDrawable {
         }
     }
 
-    public void eatGrass(Grass grass) {
+    /**
+     * Give food to animal.
+     * @param energy Food amount.
+     */
+    public void feed(int energy) {
         synchronized (world) {
-            if (!grass.getPosition().equals(getPosition())) {
-                throw new IllegalArgumentException("Cannot eat, grass is not at the animal position");
-            }
-            grass.elementRemoved();
-//            food += config.plantEnergy;
-            setFood(getFood() + config.plantEnergy);
+            setFood(getFood() + energy);
         }
     }
 
